@@ -13,17 +13,23 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 5px;
             font-family: 'Open Sans', sans-serif;
             font-size: 16px;
 
         }
 
-        td,
+        td {
+            border: 1px solid #ddd;
+            padding: 6px;
+            text-align: center;
+        }
+
         th {
             border: 1px solid #ddd;
             padding: 6px;
             text-align: center;
+            font-size: 12px;
         }
 
         .big-font {
@@ -54,18 +60,20 @@
             /* making background transparent */
             color: inherit;
             /* text color to inherit from parent, adjust if necessary */
-            margin-top: 10px;
+            margin-top: 0px;
             /* adding space on top */
 
         }
 
         footer {
-            margin-top: 30px;
-            padding: 10px;
-            text-align: center;
+            margin-top: 0px;
+            padding: 0px;
+            text-align: right;
+            font-family: 'Open Sans', sans-serif;
+
             font-style: italic;
             font-size: 16px;
-            border-top: 1px solid #ddd;
+            border-top: 0px solid #ddd;
         }
 
         .choices {
@@ -97,6 +105,7 @@
             /* For Firefox */
             background-color: #f9f9f9;
             transition: border-color 0.3s ease;
+            margin-bottom: 5px;
         }
 
         /* Hover effect */
@@ -150,10 +159,10 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Equation 1</th>
-                    <th>Equation 2</th>
-                    <th>Equation 3</th>
-                    <th>Equation 4</th>
+                    <th>Group 1</th>
+                    <th>Group 2</th>
+                    <th>Group 3</th>
+                    <th>Group 4</th>
                 </tr>
             </thead>
             <tbody>
@@ -193,9 +202,9 @@
             }
 
             switch (missingPos) {
-                case 0: return `_ ${operator} ${b} = ${result}`;
-                case 1: return `${a} ${operator} _ = ${result}`;
-                case 2: return `${a} ${operator} ${b} = _`;
+                case 0: return `__ ${operator} ${b} = ${result}`;
+                case 1: return `${a} ${operator} __ = ${result}`;
+                case 2: return `${a} ${operator} ${b} = __`;
             }
         }
 
