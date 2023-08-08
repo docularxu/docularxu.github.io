@@ -12,7 +12,8 @@
             margin-top: 20px;
         }
 
-        td, th {
+        td,
+        th {
             border: 1px solid #ddd;
             padding: 6px;
             text-align: center;
@@ -33,12 +34,16 @@
             flex: 1;
             text-align: center;
         }
+
         input[type="text"] {
-            height: 30px; /* Adjust height as needed */
-            font-size: 18px; /* Adjust font size as needed */
+            height: 30px;
+            /* Adjust height as needed */
+            font-size: 18px;
+            /* Adjust font size as needed */
             padding: 5px;
             border: 1px solid #ddd;
         }
+
         footer {
             margin-top: 30px;
             padding: 10px;
@@ -47,16 +52,29 @@
             font-size: 16px;
             border-top: 1px solid #ddd;
         }
+
+        .choices {
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 
 <body>
     <div class="title-section">
         <div>Name: <input type="text" size="16" placeholder="______________"></div>
-        <div>Date: <input type="text" size="2" placeholder="__">月<input type="text" size="2" placeholder="__">日 <input type="text" size="4" placeholder="____">年</div>
-        <div>Time Taken: <input type="text" size="2" placeholder="___">分 <input type="text" size="2" placeholder="___">秒</div>
+        <div>Date: <input type="text" size="2" placeholder="__">月<input type="text" size="2" placeholder="__">日 <input
+                type="text" size="4" placeholder="____">年</div>
+        <div>Time Taken: <input type="text" size="2" placeholder="___">分 <input type="text" size="2" placeholder="___">秒
+        </div>
     </div>
-
+    <div class="choices">
+        <label for="equationType">Choose equation type:</label>
+        <select id="equationType">
+            <option value="mixed" selected>Mixed 50:50</option>
+            <option value="multiplication">Multiplication only</option>
+            <option value="division">Division only</option>
+        </select>
+    </div>
     <table id="equationsTable">
         <thead>
             <tr>
@@ -73,58 +91,72 @@
     </table>
 
     <script>
+
+
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function getRandomEquation() {
+            let equationType = document.getElementById('equationType').value;
+            let isMultiplication = Math.random() < 0.5 || equationType === "multiplication";
+
+            let a, b, result, operator;
+            let missingPos = getRandomInt(0, 2); // 0 for left operand, 1 for right operand, 2 for result
+
+            // For division only option or mixed 50:50
+            if (equationType === "division" || (!isMultiplication && equationType === "mixed")) {
+                result = getRandomInt(1, 9);
+                b = getRandomInt(1, 9);
+                a = result * b;
+                operator = '÷';
+            } else {
+                // For multiplication only or mixed 50:50
+                a = getRandomInt(1, 9);
+                b = getRandomInt(1, 9);
+                result = a * b;
+                operator = '×';
+            }
+
+            switch (missingPos) {
+                case 0: return `_ ${operator} ${b} = ${result}`;
+                case 1: return `${a} ${operator} _ = ${result}`;
+                case 2: return `${a} ${operator} ${b} = _`;
+            }
+        }
+
+        function populateTable() {
+            const table = document.getElementById('equationsTable').querySelector('tbody');
+            // Clear existing rows
+            table.innerHTML = '';
+            console.log("Populating table...");
+            console.log("Selected equation type:", document.getElementById('equationType').value);
+
+            for (let i = 0; i < 25; i++) {
+                let row = table.insertRow(i);
+
+                let sequenceCell = row.insertCell(0);
+                sequenceCell.textContent = i + 1; // Row sequence number
+
+                for (let j = 1; j <= 4; j++) {
+                    let cell = row.insertCell(j);
+                    let equation = getRandomEquation();
+                    if (equation.includes('÷')) {
+                        let parts = equation.split(' ');
+                        parts[1] = `<span class="big-font">${parts[1]}</span>`;
+                        equation = parts.join(' ');
+                    }
+                    cell.innerHTML = equation;
+                }
+            }
+        }
+        document.getElementById('equationType').addEventListener('change', function () {
+            populateTable();
+        });
+
         window.onload = function () {
             populateTable();
 
-            function getRandomInt(min, max) {
-                return Math.floor(Math.random() * (max - min + 1)) + min;
-            }
-
-            function getRandomEquation() {
-                let a = getRandomInt(1, 9);
-                let b = getRandomInt(1, 9);
-                let result, operator;
-                let missingPos = getRandomInt(0, 2); // 0 for left operand, 1 for right operand, 2 for result
-            
-                if (Math.random() < 0.5) {
-                    // Generate multiplication equation
-                    operator = '×';
-                    result = a * b;
-                } else {
-                    // Generate division equation
-                    result = getRandomInt(1, 9);  // result is between 1 and 9
-                    b = getRandomInt(1, 9);       // divisor is between 1 and 9
-                    a = result * b;               // adjust the dividend
-                    operator = '÷';
-                }
-                    
-                switch (missingPos) {
-                    case 0: return `_ ${operator} ${b} = ${result}`;
-                    case 1: return `${a} ${operator} _ = ${result}`;
-                    case 2: return `${a} ${operator} ${b} = _`;
-                }
-            }
-
-            function populateTable() {
-                const table = document.getElementById('equationsTable').querySelector('tbody');
-                for (let i = 0; i < 25; i++) {
-                    let row = table.insertRow(i);
-                    
-                    let sequenceCell = row.insertCell(0);
-                    sequenceCell.textContent = i + 1; // Row sequence number
-
-                    for (let j = 1; j <= 4; j++) {
-                        let cell = row.insertCell(j);
-                        let equation = getRandomEquation();
-                        if (equation.includes('÷')) {
-                            let parts = equation.split(' ');
-                            parts[1] = `<span class="big-font">${parts[1]}</span>`;
-                            equation = parts.join(' ');
-                        }
-                        cell.innerHTML = equation;
-                    }
-                }
-            }
         }
     </script>
     <footer>
