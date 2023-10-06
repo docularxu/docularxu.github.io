@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fry Sight Words Flashcards</title> 
+  <script type="module" src="./fry-1000-wordsArray.js"></script> <!-- If you are using a separate file for your main JS code -->
+  <style>
+    #card {
+      width: 200px;
+      height: 100px;
+      border: 2px solid black;
+      text-align: center;
+      line-height: 100px;
+      font-size: 24px;
+      margin: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="card">Word will appear here</div>
+
+<script type="module">
+
+  import { allWords } from './fry-1000-wordsArray.js';
+
+  document.getElementById('card').textContent = allWords[0]; // Immediately show the first word
+</script>
+
+</body>
+</html>

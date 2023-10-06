@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fry Sight Words Flashcards</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+  <!-- Add a Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .header {
+      padding: 10px;
+      background-color: #f0f0f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    #card {
+      font-family: 'Varela Round', sans-serif;
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(to right, #ff7e5f, #feb47b);
+      /* Gradient background */
+      color: white;
+      font-size: 30vw;
+      /* Responsive font size */
+      text-align: center;
+      text-transform: lowercase;
+      border-radius: 15px;
+      /* Rounded corners */
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+      /* Box shadow */
+      padding: 20px;
+      /* Padding */
+      transition: background 0.5s ease-in-out, color 0.5s ease-in-out;
+      /* Transition effect */
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      margin: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <div class="controls">
+      <div>
+        <label for="delay">Select delay between cards:</label>
+        <select id="delay" onchange="updateFlashcards()">
+          <option value="1000">1 second</option>
+          <option value="2000">2 seconds</option>
+          <option value="3000">3 seconds</option>
+          <option value="4000">4 seconds</option>
+          <!-- Add more options as needed -->
+        </select>
+      </div>
+      <div>
+        <label for="wordset">Select word set:</label>
+        <select id="wordset" onchange="updateFlashcards()">
+          <option value="0">Words 1-100</option>
+          <option value="100">Words 101-200</option>
+          <option value="200">Words 201-300</option>
+          <option value="300">Words 301-400</option>
+          <option value="400">Words 401-500</option>
+          <option value="500">Words 501-600</option>
+          <option value="600">Words 601-700</option>
+          <option value="700">Words 701-800</option>
+          <option value="800">Words 801-900</option>
+          <option value="900">Words 901-1000</option>
+          <!-- Add more options as needed -->
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <button id="startButton">Start Flashcards</button>
+
+  <div id="card">Word will appear here</div>
+
+  <script type="module">
+    import { allWords } from './fry-1000-wordsArray.js';
+    document.addEventListener('DOMContentLoaded', (event) => {
+
+      let words = allWords.slice(0, 100);
+      let currentWordIndex = 0;
+      let delay = document.getElementById('delay').value;
+      let interval;
+
+      document.getElementById('delay').addEventListener('change', function () {
+        delay = this.value;
+        clearInterval(interval);
+        startFlashcards();
+      });
+
+      document.getElementById('wordset').addEventListener('change', function () {
+        const wordsetStart = parseInt(this.value);
+        words = allWords.slice(wordsetStart, wordsetStart + 100);
+        currentWordIndex = 0;
+        clearInterval(interval);
+        startFlashcards();
+      });
+
+      function showNextWord() {
+        if (currentWordIndex >= words.length) {
+          currentWordIndex = 0;
+        }
+
+        const card = document.getElementById('card');
+        const word = words[currentWordIndex];
+
+        // Adjust font size based on word length
+        let fontSize = 15; // Default font size (you can adjust this value)
+        if (word.length > 10) { // Threshold for long words (adjust as needed)
+          fontSize = 10; // Font size for long words (adjust as needed)
+        }
+        card.style.fontSize = `${fontSize}em`; // Set font size
+        card.textContent = word;
+
+        currentWordIndex++;
+      }
+
+      function startFlashcards() {
+        interval = setInterval(showNextWord, delay);
+      }
+
+      document.getElementById('startButton').addEventListener('click', function () {
+        clearInterval(interval);
+        startFlashcards();
+      });
+    });
+  </script>
+</body>
+
+</html>
