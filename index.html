@@ -9,23 +9,67 @@
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
+            color: #1a1a1a;
             margin: 0;
             padding: 0;
+            transition: background-color .2s ease, color .2s ease;
         }
 
         header {
-            background-color: #50b3a2;
             color: white;
             text-align: center;
-            padding: 1em 0;
+            padding: 3em 1em 4em 1em;
+            background: linear-gradient(135deg, #0ea5a0 0%, #50b3a2 50%, #0aa4b8 100%);
+            position: relative;
+        }
+
+        .hero {
+            max-width: 980px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .avatar {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: grid;
+            place-items: center;
+            border: 2px solid rgba(255,255,255,0.6);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            font-weight: bold;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            margin-top: 6px;
+            opacity: 0.95;
+        }
+
+        .toggle {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.5);
+            color: #fff;
+            padding: 6px 10px;
+            border-radius: 16px;
+            cursor: pointer;
         }
 
         main {
-            max-width: 800px;
-            margin: 2em auto;
-            padding: 1em;
+            max-width: 980px;
+            margin: -32px auto 2.5em auto;
+            padding: 24px;
             background-color: white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 14px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
         }
 
         h2 {
@@ -38,38 +82,220 @@
             margin-bottom: 20px;
         }
 
+        ul {
+            padding-left: 20px;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        a {
+            color: #0a7b6c;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .chips {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .chip {
+            background: #eef7f6;
+            color: #0a7b6c;
+            border: 1px solid #cfe9e6;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 14px;
+        }
+
+        .timeline {
+            position: relative;
+            margin: 10px 0 24px 0;
+            padding-left: 0;
+        }
+
+        .timeline::before {
+            content: "";
+            position: absolute;
+            left: 16px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #cfe9e6;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 18px;
+            padding-left: 36px; /* ensure text clears the bullet */
+        }
+
+        .timeline-item::marker { content: ""; }
+
+        .timeline-bullet {
+            position: absolute;
+            left: 10px; /* align with the vertical line */
+            top: 4px;
+            width: 10px;
+            height: 10px;
+            background: #0a7b6c;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            box-shadow: 0 0 0 2px #cfe9e6;
+        }
+
         footer {
             text-align: center;
             margin-top: 2em;
             color: #555;
         }
+
+        /* Dark Mode */
+        .dark body, body.dark {
+            background-color: #0e1716;
+            color: #d9e6e4;
+        }
+
+        body.dark main {
+            background-color: #10201e;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+        }
+
+        body.dark a { color: #7ae0d2; }
+        body.dark .chip { background: #12302c; color: #b4efe6; border-color: #275e57; }
+        body.dark .timeline::before { background: #275e57; }
+        body.dark .timeline-bullet { background: #7ae0d2; box-shadow: 0 0 0 2px #275e57; }
+
+        /* Recent works */
+        .works-list li { margin-bottom: 8px; }
+        .note { color: #666; font-size: 0.95em; }
+        body.dark .note { color: #a9c6c2; }
     </style>
 </head>
 
 <body>
 
     <header>
-        <h1>Guodong Xu</h1>
+        <button class="toggle" id="themeToggle" aria-label="Toggle dark mode">🌓</button>
+        <div class="hero">
+            <div class="avatar" aria-hidden="true">GX</div>
+            <div>
+                <h1>Guodong Xu</h1>
+                <div class="subtitle">Linux Kernel & Platform Software • Tech–Biz Hybrid • Open Source</div>
+            </div>
+        </div>
     </header>
 
     <main>
         <h2>About Me</h2>
-        <p>Greetings! I'm <strong>Guodong Xu</strong>. You might recognize me by several other names. <strong>徐国栋</strong> is my official Chinese name, as reflected in my passport. I've adopted <strong>docular</strong> and <strong>docularxu</strong> as my online aliases since 1999, playfully inspired by "Count Dracula" from Transylvania. Additionally, there's <strong>Christopher Xu</strong> or <strong>克里斯多福 <b>·</b> 徐</strong>, a cherished name bestowed upon me by my daughters.</p>
-        
-        
+        <p>Greetings! I'm <strong>Guodong Xu</strong> (徐国栋), also known online as <strong>docular</strong> / <strong>docularxu</strong>. I am a Linux kernel and platform software specialist with 20+ years of experience spanning embedded systems, BSP/device bring‑up, performance/power optimization, and upstreaming to mainline communities.</p>
+        <p>I combine deep technical expertise with business execution: leading cross‑border teams, aligning with customer needs, and delivering open‑source based solutions. I've been invited to speak at openEuler, RISC‑V ecosystem conferences, and other industry forums.</p>
 
-        <p>I'm a [your profession, e.g., "Web Developer"] from [Your City]. I specialize in [specific skills or specialties, e.g., "Front-end development using React and Vue"]. In my free time, I enjoy [your hobbies, e.g., "hiking, reading science fiction novels, and playing the guitar"].</p>
+        <h2>Recent Works</h2>
+        <p class="note">Selected recent benchmark write-ups and reports on RISC-V RVV optimization.</p>
+        <h3>SLEEF (Nonlinear Math)</h3>
+        <ul class="works-list">
+            <li><a href="https://docularxu.github.io/sleef/webpages/rvv_benchmark_16Oct2025.html" target="_blank" rel="noopener noreferrer">SLEEF RVV Benchmark Summary (16 Oct 2025)</a></li>
+            <li><a href="https://docularxu.github.io/sleef/webpages/rvv_benchmark_gelu_17Oct2025.html" target="_blank" rel="noopener noreferrer">GELU Kernel Benchmarks: erf/tanh on RVV (17 Oct 2025)</a></li>
+        </ul>
+
+        <h3>OpenBLAS (Linear Algebra)</h3>
+        <ul class="works-list">
+            <li><a href="https://docularxu.github.io/OpenBLAS/webpages/rvv_benchmark_openblas_gemv_16Oct2025.html" target="_blank" rel="noopener noreferrer">RISC-V GEMV Performance Summary (16 Oct 2025)</a></li>
+            <li><a href="https://docularxu.github.io/OpenBLAS/webpages/rvv_benchmark_openblas_16Oct2025.html" target="_blank" rel="noopener noreferrer">OpenBLAS RVV Benchmark Summary (16 Oct 2025)</a></li>
+        </ul>
+
+        <h3>SpacemiT K1 Linux Kernel Upstreaming</h3>
+        <ul class="works-list">
+            <li><a href="https://lore.kernel.org/all/20250822-working_dma_0701_v2-v5-0-f5c0eda734cc@riscstar.com/#r" target="_blank" rel="noopener noreferrer">PDMA: Working DMA driver for SpacemiT K1 (22 Aug 2025, merged into v6.18)</a></li>
+            <li><a href="https://lore.kernel.org/all/20250707222910-GYC408198@gentoo/#r" target="_blank" rel="noopener noreferrer">PWM: PWM support for SpacemiT K1 SoC (7 Jul 2025, merged into v6.17)</a></li>
+        </ul>
 
         <h2>Education & Experience</h2>
-        <p>I studied at [Your University/College] and graduated with a degree in [Your Degree, e.g., "Computer Science"]. Over the years, I've worked with companies like [Company A, Company B] where I gained experience in [specific tasks or projects, e.g., "building responsive websites and creating user-friendly interfaces"].</p>
+        <h3>Current</h3>
+        <p><strong>Director of China Operations, RISCstar</strong> — 2024.09 – Present (Beijing/Remote)<br>
+        RISCstar provides low‑level software solutions for Arm and RISC‑V. I drive China operations across BD/Sales and technical delivery: brand building, opportunity discovery, contract management, technical scoping/effort estimates, coordinating global teams, and directly contributing to Linux kernel upstream work for domestic RISC‑V chips. Secured multiple contracts, including the company’s first global deal; delivered keynotes and panels at openEuler and RVEI events.</p>
+
+        <h3>Previously</h3>
+        <div class="timeline">
+            <div class="timeline-item">
+                <span class="timeline-bullet"></span>
+                <p><strong>Senior Tech Lead, Linaro</strong> — 2012.01 – 2024.09: Led Linaro/HiSilicon Landing Team; Linux kernel, SVE/SVE2, Big Data, OpenSSL 3.0, JDK on Kirin/HiKey/Kunpeng; member relations and technical leadership.</p>
+            </div>
+            <div class="timeline-item">
+                <span class="timeline-bullet"></span>
+                <p><strong>Manager of Software Development, Flextronics (伟创力)</strong> — 2010.09 – 2011.10: Led BSP for dual‑screen Android; drivers/HAL for battery, charger, USB, PM, HDMI, Wi‑Fi.</p>
+            </div>
+            <div class="timeline-item">
+                <span class="timeline-bullet"></span>
+                <p><strong>Assistant Manager / Software Development, SK Telecom</strong> — 2007.12 – 2010.09: Smart SIM + Android; USB connectivity; kernel upgrades; Android porting for Smart SIM.</p>
+            </div>
+            <div class="timeline-item">
+                <span class="timeline-bullet"></span>
+                <p><strong>Senior Software Engineer, Motorola Mobile Devices</strong> — 2003.05 – 2007.11: Power management & Wi‑Fi driver on EZX (MontaVista 2.4.10); contributed to A910, first dual‑mode phone.</p>
+            </div>
+        </div>
+
+        <h3>Education</h3>
+        <ul>
+            <li><strong>M.S., Computer Science</strong> — Beijing University of Posts and Telecommunications (1999–2002)</li>
+            <li><strong>B.S., Computer Science</strong> — Qingdao University (1995–1999)</li>
+        </ul>
+
+        <h3>Selected Skills</h3>
+        <div class="chips">
+            <span class="chip">Linux Kernel</span>
+            <span class="chip">BSP & Bring‑up</span>
+            <span class="chip">Performance & Power</span>
+            <span class="chip">Upstreaming</span>
+            <span class="chip">Open‑Source Leadership</span>
+            <span class="chip">SVE/SVE2</span>
+            <span class="chip">OpenSSL · JDK</span>
+            <span class="chip">Tech‑Biz Delivery</span>
+        </div>
 
         <h2>Contact</h2>
-        <p>If you'd like to connect or collaborate, feel free to drop me an email at [youremail@example.com]. You can also find me on platforms like [LinkedIn, GitHub, etc. with appropriate links if you wish].</p>
+        <p>Beijing, China<br>
+        <a href="mailto:docularxu@msn.com">docularxu@msn.com</a> · <a href="tel:+8613811548651">(+86) 138‑1154‑8651</a><br>
+        LinkedIn: <a href="https://www.linkedin.com/in/docularxu/" target="_blank" rel="noopener noreferrer">linkedin.com/in/docularxu</a></p>
+
+        
     </main>
 
     <footer>
-        © [Year] Your Name. All rights reserved.
+        © <span id="year"></span> Guodong Xu. All rights reserved.
     </footer>
+
+    <script>
+        // Footer year
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Theme toggle with persistence
+        (function() {
+            var body = document.body;
+            var saved = localStorage.getItem('theme');
+            if (saved === 'dark') {
+                body.classList.add('dark');
+            }
+            var btn = document.getElementById('themeToggle');
+            if (btn) {
+                var setLabel = function() {
+                    btn.textContent = body.classList.contains('dark') ? '🌙' : '🌓';
+                };
+                setLabel();
+                btn.addEventListener('click', function() {
+                    body.classList.toggle('dark');
+                    localStorage.setItem('theme', body.classList.contains('dark') ? 'dark' : 'light');
+                    setLabel();
+                });
+            }
+        })();
+    </script>
 
 </body>
 
