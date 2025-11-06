@@ -334,6 +334,91 @@
         body.dark .event-title a {
             color: #7ab8e8;
         }
+
+        /* Blog card styles */
+        .blog-card {
+            border: 2px solid #003262;
+            border-radius: 12px;
+            padding: 20px;
+            box-sizing: border-box;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 50, 98, 0.15);
+        }
+
+        body.dark .blog-card {
+            border-color: #4a9eff;
+            background: linear-gradient(135deg, #1a2838 0%, #10201e 100%);
+        }
+
+        body.dark .blog-card:hover {
+            box-shadow: 0 8px 16px rgba(74, 158, 255, 0.25);
+        }
+
+        .blog-card-header {
+            font-size: 11px;
+            color: #003262;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        body.dark .blog-card-header {
+            color: #7ab8e8;
+        }
+
+        .blog-card-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #003262;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+
+        body.dark .blog-card-title {
+            color: #b4d8ff;
+        }
+
+        .blog-card-desc {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        body.dark .blog-card-desc {
+            color: #c4d6e5;
+        }
+
+        .blog-card-badge {
+            font-size: 11px;
+            color: #0a7b6c;
+            background: #eef7f6;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid #cfe9e6;
+        }
+
+        body.dark .blog-card-badge {
+            color: #7ae0d2;
+            background: #12302c;
+            border-color: #275e57;
+        }
+
+        .blog-card-date {
+            font-size: 10px;
+            color: #666;
+        }
+
+        body.dark .blog-card-date {
+            color: #a9c6c2;
+        }
     </style>
 </head>
 
@@ -382,6 +467,28 @@
                     <li><a href="downloads/Moving_to_RISC-V_Vector-_A_Practical_Journey_of_AI_Operator_Optimization_-_Guodong_Xu_RISCstar_Solutions_-_19Oct2025-with-script.pptx" target="_blank" rel="noopener noreferrer">Download Presentation Slides (PowerPoint)</a></li>
                 </ul>
             </div>
+        </div>
+
+        <h2>Blog Posts & Publications</h2>
+        <p class="note">Sharing insights and experiences from the RISC-V ecosystem and open source community.</p>
+
+        <div style="display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-start; margin-bottom: 20px;">
+            <a href="https://riscv.org/blog/2025/07/risc-v-summit-china-2025-reflections-from-a-risc-v-software-contributor/" target="_blank" rel="noopener noreferrer" style="text-decoration: none; flex: 1; min-width: 280px;">
+                <div class="blog-card">
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                        <img src="RISC-V_ Stacked_Color.png" alt="RISC-V International" style="width: 60px; height: 60px; object-fit: contain;">
+                        <div style="flex: 1;">
+                            <div class="blog-card-header">RISC-V International Blog</div>
+                            <div class="blog-card-date">July 2025</div>
+                        </div>
+                    </div>
+                    <div class="blog-card-title">RISC-V Summit China 2025: Reflections from a RISC-V Software Contributor</div>
+                    <div class="blog-card-desc">Insights and observations from attending the 5th RISC-V Summit China, sharing perspectives on ecosystem development and community growth.</div>
+                    <div class="blog-card-badge">
+                        📢 Republished by CRVA (China RISC-V Alliance)
+                    </div>
+                </div>
+            </a>
         </div>
 
         <h2>Linux Kernel Upstreaming</h2>
