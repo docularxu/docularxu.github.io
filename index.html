@@ -175,6 +175,165 @@
         .works-list li { margin-bottom: 8px; }
         .note { color: #666; font-size: 0.95em; }
         body.dark .note { color: #a9c6c2; }
+
+        /* Two-column layout for Recent Works */
+        .works-two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 20px;
+        }
+
+        .works-column h3 {
+            margin-top: 0;
+        }
+
+        @media (max-width: 768px) {
+            .works-two-column {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+
+        /* Conference Timeline Chart */
+        .conference-timeline-chart {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #dbeafe 100%);
+            padding: 40px 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 40px;
+        }
+
+        .chart-title {
+            font-size: 48px;
+            font-weight: bold;
+            color: #2c2416;
+            line-height: 1.3;
+            margin: 0;
+        }
+
+        .chart-meta {
+            text-align: right;
+        }
+
+        .chart-date {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .chart-period {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2c2416;
+            margin-bottom: 10px;
+        }
+
+        .chart-note {
+            font-size: 13px;
+            color: #666;
+            margin-top: 8px;
+        }
+
+        .chart-year-divider {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #7a9b5a;
+        }
+
+        .year-label {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c2416;
+            background: #c4d6a4;
+            padding: 5px 20px;
+            border-radius: 4px;
+        }
+
+        .events-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .event-item {
+            flex: 1;
+            min-width: 200px;
+            max-width: 280px;
+        }
+
+        .event-date {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c2416;
+            margin-bottom: 12px;
+        }
+
+        .event-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c2416;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .event-title a {
+            color: #1a5f9f;
+            text-decoration: none;
+        }
+
+        .event-title a:hover {
+            text-decoration: underline;
+        }
+
+        .event-details {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #4a4239;
+        }
+
+        body.dark .conference-timeline-chart {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%);
+        }
+
+        body.dark .chart-title,
+        body.dark .chart-period,
+        body.dark .year-label,
+        body.dark .event-date,
+        body.dark .event-title {
+            color: #e8dcc8;
+        }
+
+        body.dark .chart-date,
+        body.dark .chart-note {
+            color: #b8a890;
+        }
+
+        body.dark .event-details {
+            color: #c4b8a0;
+        }
+
+        body.dark .year-label {
+            background: #4a5238;
+        }
+
+        body.dark .chart-year-divider {
+            border-bottom-color: #5a6e42;
+        }
+
+        body.dark .event-title a {
+            color: #7ab8e8;
+        }
     </style>
 </head>
 
@@ -198,19 +357,37 @@
 
         <h2>Recent Works</h2>
         <p class="note">Selected recent benchmark write-ups and reports on RISC-V RVV optimization.</p>
-        <h3>SLEEF (Nonlinear Math)</h3>
-        <ul class="works-list">
-            <li><a href="https://docularxu.github.io/sleef/webpages/rvv_benchmark_16Oct2025.html" target="_blank" rel="noopener noreferrer">SLEEF RVV Benchmark Summary (16 Oct 2025)</a></li>
-            <li><a href="https://docularxu.github.io/sleef/webpages/rvv_benchmark_gelu_17Oct2025.html" target="_blank" rel="noopener noreferrer">GELU Kernel Benchmarks: erf/tanh on RVV (17 Oct 2025)</a></li>
-        </ul>
 
-        <h3>OpenBLAS (Linear Algebra)</h3>
-        <ul class="works-list">
-            <li><a href="https://docularxu.github.io/OpenBLAS/webpages/rvv_benchmark_openblas_gemv_16Oct2025.html" target="_blank" rel="noopener noreferrer">RISC-V GEMV Performance Summary (16 Oct 2025)</a></li>
-            <li><a href="https://docularxu.github.io/OpenBLAS/webpages/rvv_benchmark_openblas_16Oct2025.html" target="_blank" rel="noopener noreferrer">OpenBLAS RVV Benchmark Summary (16 Oct 2025)</a></li>
-        </ul>
+        <div class="works-two-column">
+            <div class="works-column">
+                <h3>SLEEF (Nonlinear Math)</h3>
+                <ul class="works-list">
+                    <li><a href="https://docularxu.github.io/sleef/webpages/rvv_benchmark_16Oct2025.html" target="_blank" rel="noopener noreferrer">SLEEF RVV Benchmark Summary (16 Oct 2025)</a></li>
+                    <li><a href="https://docularxu.github.io/sleef/webpages/rvv_benchmark_gelu_17Oct2025.html" target="_blank" rel="noopener noreferrer">GELU Kernel Benchmarks: erf/tanh on RVV (17 Oct 2025)</a></li>
+                </ul>
 
-        <h3>SpacemiT K1 Linux Kernel Upstreaming</h3>
+                <h3>OpenBLAS (Linear Algebra)</h3>
+                <ul class="works-list">
+                    <li><a href="https://docularxu.github.io/OpenBLAS/webpages/rvv_benchmark_openblas_gemv_16Oct2025.html" target="_blank" rel="noopener noreferrer">RISC-V GEMV Performance Summary (16 Oct 2025)</a></li>
+                    <li><a href="https://docularxu.github.io/OpenBLAS/webpages/rvv_benchmark_openblas_16Oct2025.html" target="_blank" rel="noopener noreferrer">OpenBLAS RVV Benchmark Summary (16 Oct 2025)</a></li>
+                </ul>
+            </div>
+
+            <div class="works-column">
+                <h3>RISC-V Summit NA 2025 Presentation</h3>
+                <p class="note">Conference talk on practical AI operator optimization using RISC-V Vector Extension, presented at RISC-V Summit North America, October 23, 2025.</p>
+                <ul class="works-list">
+                    <li><a href="https://www.youtube.com/watch?v=ASA2XYi_QwA&list=PL85jopFZCnbNUnI0l_jg5C8UKNiuAwdVq&index=55" target="_blank" rel="noopener noreferrer">Watch on YouTube: "Moving to RISC-V Vector: A Practical Journey of AI Operator Optimization"</a></li>
+                    <li><a href="downloads/Moving_to_RISC-V_Vector-_A_Practical_Journey_of_AI_Operator_Optimization_-_Guodong_Xu_RISCstar_Solutions_-_19Oct2025-with-script.pdf" target="_blank" rel="noopener noreferrer">Download Presentation Slides (PDF)</a></li>
+                    <li><a href="downloads/Moving_to_RISC-V_Vector-_A_Practical_Journey_of_AI_Operator_Optimization_-_Guodong_Xu_RISCstar_Solutions_-_19Oct2025-with-script.pptx" target="_blank" rel="noopener noreferrer">Download Presentation Slides (PowerPoint)</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <h2>Linux Kernel Upstreaming</h2>
+        <p class="note">Selected contributions to the Linux kernel mainline for RISC-V platforms.</p>
+
+        <h3>SpacemiT K1 SoC Support</h3>
         <ul class="works-list">
             <li><a href="https://lore.kernel.org/all/20250822-working_dma_0701_v2-v5-0-f5c0eda734cc@riscstar.com/#r" target="_blank" rel="noopener noreferrer">PDMA: Working DMA driver for SpacemiT K1 (22 Aug 2025, merged into v6.18)</a></li>
             <li><a href="https://lore.kernel.org/all/20250707222910-GYC408198@gentoo/#r" target="_blank" rel="noopener noreferrer">PWM: PWM support for SpacemiT K1 SoC (7 Jul 2025, merged into v6.17)</a></li>
@@ -298,7 +475,165 @@
         <script type="text/javascript" async src="//cdn.credly.com/assets/utilities/embed.js"></script>
 
         <h2>Conference Speaking Engagements</h2>
-        
+
+        <!-- Visual Timeline Chart -->
+        <div class="conference-timeline-chart">
+            <div class="chart-header">
+                <h3 class="chart-title">开源社区<br>运作、参与和贡献</h3>
+                <div class="chart-meta">
+                    <div class="chart-date">Nov/06/2025</div>
+                    <div class="chart-period">2022 ~ 2025</div>
+                    <div class="chart-note">注：收录国内操作系统社区相关的活动</div>
+                </div>
+            </div>
+
+            <!-- 2022 & 2023 Events -->
+            <div class="chart-year-divider">
+                <span class="year-label">2022</span>
+                <span class="year-label">2023</span>
+            </div>
+            <div class="events-container">
+                <div class="event-item">
+                    <div class="event-date">5月16日</div>
+                    <div class="event-title"><a href="#conferences">openEuler</a> + Linaro Developer Day</div>
+                    <div class="event-details">演讲<br>《利用 Arm SVE 向量指令加速高性能计算》</div>
+                </div>
+                <div class="event-item">
+                    <div class="event-date">8月19日</div>
+                    <div class="event-title"><a href="https://apachecon.com/acasia2023/tracks/performance.html" target="_blank" rel="noopener noreferrer">ApacheCon 2023</a></div>
+                    <div class="event-details">演讲<br>《优化HDFS性能:在KUNPENG920上实现硬件加速器和ARM64多核能力的均衡利用》<br><span class="note">主要内容：HDFS，大数据，MD5，Multi-buffer，UADK 加速，OPENSSL</span></div>
+                </div>
+            </div>
+
+            <!-- 2024 Events -->
+            <div class="chart-year-divider">
+                <span class="year-label">2024</span>
+            </div>
+            <div class="events-container">
+                <div class="event-item">
+                    <div class="event-date">7月5日</div>
+                    <div class="event-title"><a href="#conferences">openEuler</a> 大数据 Meetup</div>
+                    <div class="event-details">演讲<br>《大数据领域使用 UADK 加速的优势和挑战》</div>
+                </div>
+                <div class="event-item">
+                    <div class="event-date">12月18日</div>
+                    <div class="event-title">此芯科技2024生态大会</div>
+                    <div class="event-details">圆桌论坛：与 红帽 / Ubuntu / 统信 Deepin / 麒麟 <a href="#conferences">openEuler</a> 共话《拥抱社区，开放共赢》</div>
+                </div>
+                <div class="event-item">
+                    <div class="event-date">12月28日</div>
+                    <div class="event-title">2024 RISC-V 产业发展大会</div>
+                    <div class="event-details">演讲<br>《跨越鸿沟：从Arm到RISC-V的生态转型与挑战》</div>
+                </div>
+            </div>
+
+            <!-- 2025 Events -->
+            <div class="chart-year-divider" style="margin-top: 40px;">
+                <span class="year-label">2025</span>
+            </div>
+            <div class="events-container">
+                <div class="event-item">
+                    <div class="event-date">2月28日</div>
+                    <div class="event-title">2025 中国 RISC-V 生态大会</div>
+                    <div class="event-details">演讲<br>《RISC-V Linux内核开源upstream现状》</div>
+                </div>
+                <div class="event-item">
+                    <div class="event-date">3月22日</div>
+                    <div class="event-title"><a href="#conferences">openEuler on RISC-V</a> & <a href="#conferences">Deepin</a> Meetup</div>
+                    <div class="event-details">演讲<br>《从 Arm 生态的发展看 RISC-V 生态的发展阶段和构建之路》</div>
+                </div>
+                <div class="event-item">
+                    <div class="event-date">7月16日</div>
+                    <div class="event-title">第五届RISC-V中国峰会</div>
+                    <div class="event-details">Poster<br>《RISC-V Linux 内核/启动固件2025进展报告》</div>
+                </div>
+                <div class="event-item">
+                    <div class="event-date">10月23日</div>
+                    <div class="event-title">RISC-V Summit 2025 NA</div>
+                    <div class="event-details">Talk<br>"Moving to RISC-V Vector: A Practical Journey of AI Operator Optimization"</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- English Visual Timeline Chart -->
+        <div class="conference-timeline-chart" style="margin-top: 50px;">
+            <div class="chart-header">
+                <h3 class="chart-title">Conference Speaking<br>Engagements Timeline</h3>
+                <div class="chart-meta">
+                    <div class="chart-date">Nov/06/2025</div>
+                    <div class="chart-period">2022 ~ 2025</div>
+                    <div class="chart-note">Note: Includes open source and ecosystem events</div>
+                </div>
+            </div>
+
+            <!-- 2022 & 2023 Events -->
+            <div class="chart-year-divider">
+                <span class="year-label">2022</span>
+                <span class="year-label">2023</span>
+            </div>
+            <div class="events-container">
+                <div class="event-item">
+                    <div class="event-date">May 16</div>
+                    <div class="event-title"><a href="#conferences">openEuler</a> + Linaro Developer Day</div>
+                    <div class="event-details">Talk<br>"Accelerating High-Performance Computing with Arm SVE Vector Instructions"</div>
+                </div>
+                <div class="event-item">
+                    <div class="event-date">August 19</div>
+                    <div class="event-title"><a href="https://apachecon.com/acasia2023/tracks/performance.html" target="_blank" rel="noopener noreferrer">ApacheCon 2023</a></div>
+                    <div class="event-details">Talk<br>"Optimizing HDFS Performance: Balanced Utilization of Hardware Accelerators and ARM64 Multi-core Capabilities on KUNPENG920"</div>
+                </div>
+            </div>
+
+            <!-- 2024 Events -->
+            <div class="chart-year-divider" style="margin-top: 40px;">
+                <span class="year-label">2024</span>
+            </div>
+            <div class="events-container">
+                <div class="event-item">
+                    <div class="event-date">July 5</div>
+                    <div class="event-title"><a href="#conferences">openEuler</a> Big Data Meetup</div>
+                    <div class="event-details">Talk<br>"Advantages and Challenges of Using UADK Acceleration in Big Data"</div>
+                </div>
+                <div class="event-item">
+                    <div class="event-date">December 18</div>
+                    <div class="event-title">SpacemiT 2024 Ecosystem Conference</div>
+                    <div class="event-details">Panel Discussion<br>"Embracing Community, Open and Win-Win"</div>
+                </div>
+                <div class="event-item">
+                    <div class="event-date">December 28</div>
+                    <div class="event-title">RISC-V Industry Development Conference 2024</div>
+                    <div class="event-details">Talk<br>"Crossing the Chasm: Ecosystem Transition and Challenges from Arm to RISC-V"</div>
+                </div>
+            </div>
+
+            <!-- 2025 Events -->
+            <div class="chart-year-divider" style="margin-top: 40px;">
+                <span class="year-label">2025</span>
+            </div>
+            <div class="events-container">
+                <div class="event-item">
+                    <div class="event-date">February 28</div>
+                    <div class="event-title">2025 China RISC-V Ecosystem Conference</div>
+                    <div class="event-details">Talk<br>"Current Status of RISC-V Linux Kernel Open Source Upstream"</div>
+                </div>
+                <div class="event-item">
+                    <div class="event-date">March 22</div>
+                    <div class="event-title"><a href="#conferences">openEuler on RISC-V</a> & <a href="#conferences">deepin</a> Meetup</div>
+                    <div class="event-details">Lightning Talk<br>"Understanding RISC-V Ecosystem Development Stages and Construction Path from the Perspective of Arm Ecosystem Development"</div>
+                </div>
+                <div class="event-item">
+                    <div class="event-date">July 16</div>
+                    <div class="event-title">The 5th RISC-V Summit China</div>
+                    <div class="event-details">Poster<br>"RISC-V Linux Kernel / Boot Firmware 2025 Progress Report: Challenges from Upstream and Downstream"</div>
+                </div>
+                <div class="event-item">
+                    <div class="event-date">October 23</div>
+                    <div class="event-title">RISC-V Summit 2025 NA</div>
+                    <div class="event-details">Talk<br>"Moving to RISC-V Vector: A Practical Journey of AI Operator Optimization"</div>
+                </div>
+            </div>
+        </div>
+
         <h3>English</h3>
         <ul class="works-list">
             <li>16 May 2022, openEuler + Linaro Developer Day, Talk: "Accelerating High-Performance Computing with Arm SVE Vector Instructions"</li>
@@ -326,7 +661,7 @@
             <li>16 Jul 2025，第五届RISC-V中国峰会，The 5th RISC-V Summit China, 上海。Posters，《RISC-V Linux 内核/启动固件2025进展报告 - 从上游支持到生产级部署的实践与挑战》</li>
             <li>23 Oct 2025，RISC-V Summit 2025 NA，"Moving to RISC-V Vector: A Practical Journey of AI Operator Optimization - Guodong Xu, RISCstar Solutions"</li>
         </ul>
-        
+
     </main>
 
     <footer>
