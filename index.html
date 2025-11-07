@@ -34,16 +34,26 @@
         }
 
         .avatar {
-            width: 96px;
-            height: 96px;
+            width: 128px;
+            height: 128px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.2);
-            display: grid;
-            place-items: center;
             border: 2px solid rgba(255,255,255,0.6);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-            font-weight: bold;
-            font-size: 28px;
+            box-shadow: 0 12px 24px rgba(0,0,0,0.18);
+            overflow: hidden;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: 50% 22%;
+        }
+
+        @media (max-width: 600px) {
+            .avatar {
+                width: 110px;
+                height: 110px;
+            }
         }
 
         .subtitle {
@@ -427,7 +437,9 @@
     <header>
         <button class="toggle" id="themeToggle" aria-label="Toggle dark mode">🌓</button>
         <div class="hero">
-            <div class="avatar" aria-hidden="true">GX</div>
+            <div class="avatar" aria-hidden="true">
+                <img src="Guodong.Xu.2025.07.jpg" alt="Guodong Xu">
+            </div>
             <div>
                 <h1>Guodong Xu</h1>
                 <div class="subtitle">Linux Kernel & Platform Software • Tech–Biz Hybrid • Open Source</div>
