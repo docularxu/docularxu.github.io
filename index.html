@@ -431,6 +431,13 @@
         body.dark .blog-card-date {
             color: #a9c6c2;
         }
+
+        .blog-card-lead {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
     </style>
 </head>
 
@@ -451,7 +458,7 @@
 
     <main>
         <h2>About Me</h2>
-        <p>Greetings! I'm <strong>Guodong Xu</strong> (徐国栋), also known online as <strong>docular</strong> / <strong>docularxu</strong>. I am a Linux kernel and platform software specialist with 20+ years of experience spanning embedded systems, BSP/device bring‑up, performance/power optimization, and upstreaming to mainline communities.</p>
+        <p>Greetings! I'm <strong>Guodong Xu</strong> (徐国栋), also known online as <strong>docular</strong> / <strong>docularxu</strong>. I am a Linux kernel and platform software specialist, open-source enthusiast, with 20+ years of experience spanning embedded systems, BSP/device bring‑up, server software, performance/power optimization, and upstreaming to mainline communities.</p>
         <p>I combine deep technical expertise with business execution: leading cross‑border teams, aligning with customer needs, and delivering open‑source based solutions. I've been invited to speak at openEuler, RISC‑V ecosystem conferences, and other industry forums.</p>
 
         <h2>Recent Works</h2>
@@ -510,7 +517,7 @@
         <div style="display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-start; margin-bottom: 20px;">
             <a href="https://riscv.org/blog/2025/07/risc-v-summit-china-2025-reflections-from-a-risc-v-software-contributor/" target="_blank" rel="noopener noreferrer" style="text-decoration: none; flex: 1; min-width: 280px;">
                 <div class="blog-card">
-                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                    <div class="blog-card-lead">
                         <img src="RISC-V_ Stacked_Color.png" alt="RISC-V International" style="width: 60px; height: 60px; object-fit: contain;">
                         <div style="flex: 1;">
                             <div class="blog-card-header">RISC-V International Blog</div>
@@ -526,15 +533,15 @@
             </a>
             <a href="https://riscstar.com/blog/risc-v-linux-kernel-upstreaming-china-conference/" target="_blank" rel="noopener noreferrer" style="text-decoration: none; flex: 1; min-width: 280px;">
                 <div class="blog-card">
-                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-                        <img src="RISC-V_ Stacked_Color.png" alt="RISCstar Solutions" style="width: 60px; height: 60px; object-fit: contain;">
+                    <div class="blog-card-lead">
+                        <img src="RiscStar_Logo08.png" alt="RISCstar Solutions" style="width: 60px; height: 60px; object-fit: contain;">
                         <div style="flex: 1;">
                             <div class="blog-card-header">RISCstar Solutions Blog</div>
                             <div class="blog-card-date">April 14, 2025</div>
                         </div>
                     </div>
                     <div class="blog-card-title">RISC-V Linux Kernel Upstreaming: Insights from the 2025 China RISC-V Ecosystem Conference</div>
-                    <div class="blog-card-desc">Key insights on the current state of RISC-V Linux kernel upstreaming, challenges faced by the community, and the path forward for ecosystem development.</div>
+                    <div class="blog-card-desc">Key insights on the current state of RISC-V Linux kernel upstreaming and challenges faced by the community.</div>
                     <div class="blog-card-badge">
                         🔧 Linux Kernel • RISC-V
                     </div>
@@ -565,12 +572,11 @@
             <a href="https://www.youtube.com/watch?v=h4Cx7BNKm3c" target="_blank" rel="noopener noreferrer" style="text-decoration: none; flex: 1; min-width: 280px;">
                 <div class="blog-card">
                     <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-                        <div style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #e63946 0%, #f1faee 100%); border-radius: 8px; font-size: 24px;">
-                            🎤
+                        <div style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; background: url('openEuler_logo.png') no-repeat center center; background-size: contain; border-radius: 8px; font-size: 24px;">
                         </div>
                         <div style="flex: 1;">
                             <div class="blog-card-header">openEuler Interview</div>
-                            <div class="blog-card-date">2025</div>
+                            <div class="blog-card-date">Dec 16, 2024</div>
                         </div>
                     </div>
                     <div class="blog-card-title">openEuler Quick Interview – Xu Guodong, RISCstar Solutions, Director</div>
@@ -891,6 +897,57 @@
             <li>23 Oct 2025，RISC-V Summit 2025 NA，"Moving to RISC-V Vector: A Practical Journey of AI Operator Optimization - Guodong Xu, RISCstar Solutions"</li>
             <li>25 Nov 2025，<a href="http://www.rdsa-summit.com/" target="_blank" rel="noopener noreferrer">RISC-V产业发展大会暨RDSA国际论坛</a>，人才分论坛，珠海/澳门，演讲《〈Porting Code to RISC-V〉：加速 RISC-V 开发者生态的课程实践》</li>
         </ul>
+
+        <h2>Other Videos & References</h2>
+        <p class="note">Additional talks, interviews, and resources.</p>
+
+        <div style="display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-start; margin-bottom: 20px;">
+            <a href="https://www.youtube.com/shorts/O3rmJaGWz7g" target="_blank" rel="noopener noreferrer" style="text-decoration: none; flex: 1; min-width: 280px;">
+                <div class="blog-card">
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                        <div style="flex: 1;">
+                            <div class="blog-card-header">FOSSASIA Summit 2024</div>
+                            <div class="blog-card-date">Apr 10, 2024</div>
+                        </div>
+                    </div>
+                    <div class="blog-card-title">Optimizing Workload Distribution</div>
+                    <div class="blog-card-desc">How to synergize #Arm64 multi-core CPUs with #hardware accelerators for enhanced system efficiency.</div>
+                    <div class="blog-card-badge">
+                        🎥 YouTube Short
+                    </div>
+                </div>
+            </a>
+            <a href="https://www.youtube.com/watch?v=qoO86Xzcz90" target="_blank" rel="noopener noreferrer" style="text-decoration: none; flex: 1; min-width: 280px;">
+                <div class="blog-card">
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                        <div style="flex: 1;">
+                            <div class="blog-card-header">Interview</div>
+                            <div class="blog-card-date">Apr 9, 2024</div>
+                        </div>
+                    </div>
+                    <div class="blog-card-title">Pre-session Interview in FOSSASIA Summit 2024</div>
+                    <div class="blog-card-desc">Interview session discussing technology and ecosystem topics.</div>
+                    <div class="blog-card-badge">
+                        🎥 YouTube
+                    </div>
+                </div>
+            </a>
+            <a href="https://resources.linaro.org/zh/resource/iWPCMqGmwAAipyWu2Q8AZ3" target="_blank" rel="noopener noreferrer" style="text-decoration: none; flex: 1; min-width: 280px;">
+                <div class="blog-card">
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                        <div style="flex: 1;">
+                            <div class="blog-card-header">Linaro Resource</div>
+                            <div class="blog-card-date">May 16, 2022</div>
+                        </div>
+                    </div>
+                    <div class="blog-card-title">Accelerating HPC with Arm SVE</div>
+                    <div class="blog-card-desc">Online talk: Accelerating for high performance computing with Arm SVE vector instructions.</div>
+                    <div class="blog-card-badge">
+                        🔗 Linaro
+                    </div>
+                </div>
+            </a>
+        </div>
 
     </main>
 
