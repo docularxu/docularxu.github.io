@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RISC-V RVA23 Profile Analyzer</title>
+    <!-- Chosen Palette: Warm Stone & Earth Tones (Stone, Amber, Emerald, Slate) -->
+    <!-- Application Structure Plan: 
+         1. Header & Context: Introduction to RVA23 profiles and the specific analysis scope (Linux 6.18 DT).
+         2. High-Level Dashboard: KPI Cards for quick stats and Chart.js visualizations for Profile Composition and Adoption Rates.
+         3. Interactive Data Explorer: A powerful filterable table allowing deep dives into specific extensions, filtering by profile, status, and implementation support.
+         4. Gap Analysis: A focused section highlighting 'At Risk' items—mandatory extensions missing in implementations.
+         5. Footer: Credits/Source.
+         Rationale: This structure moves from the big picture (dashboard) to the details (explorer) to actionable insights (gaps), prioritizing user understanding of the compliance landscape.
+    -->
+    <!-- Visualization & Content Choices:
+         1. Profile Composition (Doughnut Chart): Goal -> Inform. Shows the breakdown of Mandatory vs. Optional extensions. Justification -> Quickly visualizes the weight of the profile requirements.
+         2. Implementation Coverage (Bar Chart): Goal -> Compare. Tracks Linux 6.18 coverage of Mandatory extensions. Justification -> Assessing readiness.
+         3. Interactive Explorer (Table): Goal -> Organize & Search. Main interaction point. Allows text search and multifaceted filtering.
+         4. Gap Analysis (Cards): Goal -> Inform/Alert. Highlights missing mandatory extensions.
+         Confirming NO SVG graphics used. NO Mermaid JS used.
+    -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Updated Chart.js to UMD build for better compatibility in various environments -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* Chart Container Styling - Mandatory Strict Compliance */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* Tailwind max-w-xl is approx 576px, max-w-2xl is 672px. Using explicit 600px for safety */
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        
+        /* Custom Scrollbar for Table */
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 8px;
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f5f5f4;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #d6d3d1; 
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #a8a29e; 
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800 antialiased selection:bg-amber-200 selection:text-stone-900">
+
+    <!-- Navigation / Header -->
+    <nav class="bg-white border-b border-stone-200 shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold tracking-tight text-stone-700">RVA23<span class="text-amber-600">.Analyzer</span></span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <button onclick="scrollToSection('dashboard')" class="text-stone-500 hover:text-amber-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Dashboard</button>
+                    <button onclick="scrollToSection('gaps')" class="text-stone-500 hover:text-amber-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Gap Analysis</button>
+                    <button onclick="scrollToSection('explorer')" class="text-stone-500 hover:text-amber-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Extension Explorer</button>
+                    <a href="https://docularxu.github.io/" target="_blank" rel="noopener" class="text-sm font-semibold text-white bg-amber-500 hover:bg-amber-600 px-4 py-2 rounded-md shadow-sm transition-colors">About the author</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero / Intro -->
+    <div class="bg-stone-100 border-b border-stone-200">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <h1 class="text-3xl font-bold text-stone-900 mb-4">RISC-V RVA23 Profile Analysis</h1>
+            <p class="text-lg text-stone-600 max-w-3xl">
+                This interactive tool breaks down the <strong>RVA23 Profile</strong> (User-mode and Supervisor-mode), tracking the status of standard extensions and their inclusion in the <strong>Linux Kernel v6.18 Device Tree</strong>. Use the dashboard to gauge compliance and the explorer to drill down into specific instruction set extensions.
+            </p>
+            <div class="mt-4 text-sm text-stone-500 space-y-1">
+                <p><strong>Note 1:</strong> Linux kernel v6.18 supports if the extension string exists in file <a href="https://github.com/torvalds/linux/blob/v6.18/Documentation/devicetree/bindings/riscv/extensions.yaml" class="text-amber-600 hover:underline" target="_blank">extensions.yaml</a> and <a href="https://github.com/torvalds/linux/blob/v6.18/Documentation/devicetree/bindings/riscv/cpus.yaml" class="text-amber-600 hover:underline" target="_blank">cpus.yaml</a>.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
+
+        <!-- Section 1: Dashboard -->
+        <section id="dashboard" class="space-y-6">
+            <div class="border-l-4 border-amber-500 pl-4">
+                <h2 class="text-2xl font-bold text-stone-800">Compliance Dashboard</h2>
+                <p class="text-stone-500 mt-1">High-level overview of profile composition and implementation readiness.</p>
+            </div>
+
+            <!-- KPI Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+                    <div class="text-sm font-medium text-stone-500 uppercase">Total Extensions</div>
+                    <div class="mt-2 text-3xl font-bold text-stone-800" id="totalExtensions">0</div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+                    <div class="text-sm font-medium text-stone-500 uppercase">Mandatory Exts</div>
+                    <div class="mt-2 text-3xl font-bold text-amber-600" id="mandatoryExtensions">0</div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+                    <div class="text-sm font-medium text-stone-500 uppercase">New in RVA23</div>
+                    <div class="mt-2 text-3xl font-bold text-emerald-600" id="newExtensions">0</div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+                    <div class="text-sm font-medium text-stone-500 uppercase">Linux v6.18 Coverage</div>
+                    <div class="mt-2 flex items-baseline">
+                        <span class="text-3xl font-bold text-sky-600" id="linuxCoverage">0%</span>
+                        <span class="ml-2 text-sm text-stone-400">of Mandatory</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Gap Analysis -->
+        <section id="gaps" class="space-y-6">
+            <div class="border-l-4 border-red-500 pl-4">
+                <h2 class="text-2xl font-bold text-stone-800">Gap Analysis</h2>
+                <p class="text-stone-500 mt-1">Identifying <span class="font-semibold text-red-600">Mandatory</span> extensions that are currently missing or unsupported in the target implementations.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Coverage Card -->
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200 flex flex-col">
+                    <h3 class="text-lg font-semibold text-stone-800 mb-4">Mandatory Extension Coverage</h3>
+                    <div class="flex-grow flex items-center justify-center bg-stone-50 rounded-md p-4">
+                        <div class="chart-container">
+                            <canvas id="coverageChart"></canvas>
+                        </div>
+                    </div>
+                    <p class="text-sm text-stone-500 mt-4 italic text-center">Linux v6.18 Device Tree coverage for Mandatory extensions.</p>
+                </div>
+
+                <!-- Linux Gaps -->
+                <div class="bg-white rounded-lg shadow-sm border border-stone-200 overflow-hidden flex flex-col h-full">
+                    <div class="bg-sky-50 px-6 py-4 border-b border-sky-100">
+                        <h3 class="font-bold text-sky-800">Missing in Linux v6.18 DT</h3>
+                        <p class="text-xs text-sky-600 mt-1">Mandatory extensions not explicitly found in standard DT bindings.</p>
+                    </div>
+                    <div class="p-6 flex-grow">
+                        <ul id="linuxGapList" class="space-y-2 text-sm text-stone-600">
+                            <!-- JS populated -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Data Explorer -->
+        <section id="explorer" class="space-y-6">
+            <div class="border-l-4 border-sky-500 pl-4">
+                <h2 class="text-2xl font-bold text-stone-800">Extension Explorer</h2>
+                <p class="text-stone-500 mt-1">Search, filter, and inspect individual extensions. Use the controls to narrow down the view.</p>
+            </div>
+
+            <!-- Filters -->
+            <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- Text Search -->
+                    <div class="col-span-1 md:col-span-2">
+                        <label for="searchInput" class="block text-sm font-medium text-stone-700 mb-1">Search Extensions</label>
+                        <input type="text" id="searchInput" placeholder="e.g., Zv, Vector, Cache..." class="w-full rounded-md border-stone-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 bg-stone-50 border px-3 py-2 text-stone-800">
+                    </div>
+                    
+                    <!-- Profile Filter -->
+                    <div>
+                        <label for="profileFilter" class="block text-sm font-medium text-stone-700 mb-1">Profile Category</label>
+                        <select id="profileFilter" class="w-full rounded-md border-stone-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 bg-stone-50 border px-3 py-2 text-stone-800">
+                            <option value="all">All Profiles</option>
+                            <option value="RVA23U64">RVA23U64 (User)</option>
+                            <option value="RVA23S64">RVA23S64 (Supervisor)</option>
+                        </select>
+                    </div>
+
+                    <!-- Status Filter -->
+                    <div>
+                        <label for="statusFilter" class="block text-sm font-medium text-stone-700 mb-1">Requirement Status</label>
+                        <select id="statusFilter" class="w-full rounded-md border-stone-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 bg-stone-50 border px-3 py-2 text-stone-800">
+                            <option value="all">All Statuses</option>
+                            <option value="Mandatory">Mandatory</option>
+                            <option value="Optional">Optional (All Types)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Toggle Filters -->
+                <div class="mt-4 flex flex-wrap gap-4">
+                    <label class="inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="newOnlyToggle" class="rounded border-stone-300 text-amber-600 shadow-sm focus:border-amber-300 focus:ring focus:ring-amber-200 focus:ring-opacity-50">
+                        <span class="ml-2 text-sm text-stone-600">New in RVA23 Only</span>
+                    </label>
+                    <label class="inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="missingLinuxToggle" class="rounded border-stone-300 text-amber-600 shadow-sm focus:border-amber-300 focus:ring focus:ring-amber-200 focus:ring-opacity-50">
+                        <span class="ml-2 text-sm text-stone-600">Missing in Linux DT</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="bg-white rounded-lg shadow-sm border border-stone-200 overflow-hidden">
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="min-w-full divide-y divide-stone-200">
+                        <thead class="bg-stone-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider cursor-pointer hover:text-stone-700" onclick="sortData('name')">Extension ↕</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider cursor-pointer hover:text-stone-700" onclick="sortData('category')">Profile ↕</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider cursor-pointer hover:text-stone-700" onclick="sortData('status')">Status ↕</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider cursor-pointer hover:text-stone-700" onclick="sortData('history')">History ↕</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider cursor-pointer hover:text-stone-700" onclick="sortData('linux')">Linux v6.18 ↕</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody" class="bg-white divide-y divide-stone-200">
+                            <!-- Rows generated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="bg-stone-50 px-6 py-3 border-t border-stone-200 text-sm text-stone-500 flex justify-between">
+                    <span id="resultCount">Showing 0 extensions</span>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-stone-800 text-stone-300 py-10 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <p class="font-semibold text-lg text-white mb-2">RISC-V RVA23 Profile Analyzer</p>
+                <p class="text-sm text-stone-400">Generated based on RVA23 Profile Ratified Specs and Linux Kernel v6.18 documentation.</p>
+                <p class="text-xs text-stone-500 mt-4">&copy; 2025 Analysis Tool. NO SVG/Mermaid JS used.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Source ---
+        // Derived from the provided rva23_profile_table.md
+        const extensionsData = [
+            { name: "M", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "Yes (as 'm')" },
+            { name: "A", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "Yes (as 'a')" },
+            { name: "F", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "Yes (as 'f')" },
+            { name: "D", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "Yes (as 'd')" },
+            { name: "C", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "Yes (as 'c')" },
+            { name: "B", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "Yes (uses zba/zbb/zbc/zbs)" },
+            { name: "Zicsr", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "Yes" },
+            { name: "Zicntr", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "Yes" },
+            { name: "Zihpm", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "Yes" },
+            { name: "Ziccif", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "No" },
+            { name: "Ziccrse", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "No" },
+            { name: "Ziccamoa", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "No" },
+            { name: "Zicclsm", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "No" },
+            { name: "Za64rs", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "No" },
+            { name: "Zihintpause", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "Yes" },
+            { name: "Zic64b", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "No" },
+            { name: "Zicbom", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "Yes" },
+            { name: "Zicbop", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "Yes" },
+            { name: "Zicboz", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "Yes" },
+            { name: "Zfhmin", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "Yes" },
+            { name: "Zkt", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "Yes" },
+            { name: "V", category: "RVA23U64", status: "Mandatory", history: "new in RVA23U64", linux: "Yes (as 'v')" },
+            { name: "Zvfhmin", category: "RVA23U64", status: "Mandatory", history: "new in RVA23U64", linux: "Yes" },
+            { name: "Zvbb", category: "RVA23U64", status: "Mandatory", history: "new in RVA23U64", linux: "Yes" },
+            { name: "Zvkt", category: "RVA23U64", status: "Mandatory", history: "new in RVA23U64", linux: "Yes" },
+            { name: "Zihintntl", category: "RVA23U64", status: "Mandatory", history: "new in RVA23U64", linux: "Yes" },
+            { name: "Zicond", category: "RVA23U64", status: "Mandatory", history: "new in RVA23U64", linux: "Yes" },
+            { name: "Zimop", category: "RVA23U64", status: "Mandatory", history: "new in RVA23U64", linux: "Yes" },
+            { name: "Zcmop", category: "RVA23U64", status: "Mandatory", history: "new in RVA23U64", linux: "Yes" },
+            { name: "Zcb", category: "RVA23U64", status: "Mandatory", history: "new in RVA23U64", linux: "Yes" },
+            { name: "Zfa", category: "RVA23U64", status: "Mandatory", history: "new in RVA23U64", linux: "Yes" },
+            { name: "Zawrs", category: "RVA23U64", status: "Mandatory", history: "new in RVA23U64", linux: "Yes" },
+            { name: "Supm", category: "RVA23U64", status: "Mandatory", history: "new in RVA23U64", linux: "Yes (as 'ssnpm')" },
+            { name: "Zvkng", category: "RVA23U64", status: "Optional (Localized)", history: "new in RVA23U64", linux: "Yes" },
+            { name: "Zvksg", category: "RVA23U64", status: "Optional (Localized)", history: "new in RVA23U64", linux: "Yes" },
+            { name: "Zabha", category: "RVA23U64", status: "Optional (Development)", history: "new in RVA23U64", linux: "Yes" },
+            { name: "Zacas", category: "RVA23U64", status: "Optional (Development)", history: "new in RVA23U64", linux: "Yes" },
+            { name: "Ziccamoc", category: "RVA23U64", status: "Optional (Development)", history: "new in RVA23U64", linux: "No" },
+            { name: "Zvbc", category: "RVA23U64", status: "Optional (Development)", history: "new in RVA23U64", linux: "Yes" },
+            { name: "Zama16b", category: "RVA23U64", status: "Optional (Development)", history: "new in RVA23U64", linux: "No" },
+            { name: "Zfh", category: "RVA23U64", status: "Optional (Expansion)", history: "present in RVA22U64", linux: "Yes" },
+            { name: "Zbc", category: "RVA23U64", status: "Optional (Expansion)", history: "new in RVA23U64", linux: "Yes" },
+            { name: "Zicfilp", category: "RVA23U64", status: "Optional (Expansion)", history: "new in RVA23U64", linux: "Yes" },
+            { name: "Zicfiss", category: "RVA23U64", status: "Optional (Expansion)", history: "new in RVA23U64", linux: "Yes" },
+            { name: "Zvfh", category: "RVA23U64", status: "Optional (Expansion)", history: "new in RVA23U64", linux: "Yes" },
+            { name: "Zfbfmin", category: "RVA23U64", status: "Optional (Expansion)", history: "new in RVA23U64", linux: "Yes" },
+            { name: "Zvfbfmin", category: "RVA23U64", status: "Optional (Expansion)", history: "new in RVA23U64", linux: "Yes" },
+            { name: "Zvfbfwma", category: "RVA23U64", status: "Optional (Expansion)", history: "new in RVA23U64", linux: "Yes" },
+            
+            // Supervisor (RVA23S64) - Note: RVA23S64 includes U64 mandatories, but table lists S64 specific ones separately.
+            { name: "Zifencei", category: "RVA23S64", status: "Mandatory", history: "present in RVA22S64", linux: "Yes" },
+            { name: "Ss1p13", category: "RVA23S64", status: "Mandatory", history: "new in RVA23S64", linux: "No" },
+            { name: "Svbare", category: "RVA23S64", status: "Mandatory", history: "present in RVA22S64", linux: "Yes (as 'riscv,none')" },
+            { name: "Sv39", category: "RVA23S64", status: "Mandatory", history: "present in RVA22S64", linux: "Yes (as 'riscv,sv39')" },
+            { name: "Svade", category: "RVA23S64", status: "Mandatory", history: "present in RVA22S64", linux: "Yes" },
+            { name: "Ssccptr", category: "RVA23S64", status: "Mandatory", history: "present in RVA22S64", linux: "No" },
+            { name: "Sstvecd", category: "RVA23S64", status: "Mandatory", history: "present in RVA22S64", linux: "No" },
+            { name: "Sstvala", category: "RVA23S64", status: "Mandatory", history: "present in RVA22S64", linux: "No" },
+            { name: "Sscounterenw", category: "RVA23S64", status: "Mandatory", history: "present in RVA22S64", linux: "No" },
+            { name: "Svpbmt", category: "RVA23S64", status: "Mandatory", history: "present in RVA22S64", linux: "Yes" },
+            { name: "Svinval", category: "RVA23S64", status: "Mandatory", history: "present in RVA22S64", linux: "Yes" },
+            { name: "Svnapot", category: "RVA23S64", status: "Mandatory", history: "new in RVA23S64", linux: "Yes" },
+            { name: "Sstc", category: "RVA23S64", status: "Mandatory", history: "new in RVA23S64", linux: "Yes" },
+            { name: "Sscofpmf", category: "RVA23S64", status: "Mandatory", history: "new in RVA23S64", linux: "Yes" },
+            { name: "Ssnpm", category: "RVA23S64", status: "Mandatory", history: "new in RVA23S64", linux: "Yes" },
+            { name: "Ssu64xl", category: "RVA23S64", status: "Mandatory", history: "new in RVA23S64", linux: "No" },
+            { name: "Sha", category: "RVA23S64", status: "Mandatory", history: "new in RVA23S64", linux: "No" },
+            { name: "H", category: "RVA23S64 (Sha)", status: "Mandatory", history: "new in RVA23S64", linux: "Yes (as 'h')" },
+            { name: "Ssstateen", category: "RVA23S64 (Sha)", status: "Mandatory", history: "new in RVA23S64", linux: "Yes (as 'smstateen')" },
+            { name: "Shcounterenw", category: "RVA23S64 (Sha)", status: "Mandatory", history: "new in RVA23S64", linux: "No" },
+            { name: "Shvstvala", category: "RVA23S64 (Sha)", status: "Mandatory", history: "new in RVA23S64", linux: "No" },
+            { name: "Shtvala", category: "RVA23S64 (Sha)", status: "Mandatory", history: "new in RVA23S64", linux: "No" },
+            { name: "Shvstvecd", category: "RVA23S64 (Sha)", status: "Mandatory", history: "new in RVA23S64", linux: "No" },
+            { name: "Shvsatpa", category: "RVA23S64 (Sha)", status: "Mandatory", history: "new in RVA23S64", linux: "No" },
+            { name: "Shgatpa", category: "RVA23S64 (Sha)", status: "Mandatory", history: "new in RVA23S64", linux: "No" },
+            
+            // Supervisor Optional
+            { name: "Sv48", category: "RVA23S64", status: "Optional (Expansion)", history: "present in RVA22S64", linux: "Yes (as 'riscv,sv48')" },
+            { name: "Sv57", category: "RVA23S64", status: "Optional (Expansion)", history: "present in RVA22S64", linux: "Yes (as 'riscv,sv57')" },
+            { name: "Zkr", category: "RVA23S64", status: "Optional (Expansion)", history: "present in RVA22S64", linux: "Yes" },
+            { name: "Svadu", category: "RVA23S64", status: "Optional (Expansion)", history: "new in RVA23S64", linux: "Yes" },
+            { name: "Sdtrig", category: "RVA23S64", status: "Optional (Expansion)", history: "new in RVA23S64", linux: "Yes" },
+            { name: "Ssstrict", category: "RVA23S64", status: "Optional (Expansion)", history: "new in RVA23S64", linux: "No" },
+            { name: "Svvptc", category: "RVA23S64", status: "Optional (Expansion)", history: "new in RVA23S64", linux: "Yes" },
+            { name: "Sspm", category: "RVA23S64", status: "Optional (Expansion)", history: "new in RVA23S64", linux: "Yes" }
+        ];
+
+        // --- Helper Functions ---
+        
+        function normalizeBool(val) {
+            // Returns true if "Yes" or similar is found
+            if (!val) return false;
+            return val.toLowerCase().includes("yes");
+        }
+
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // --- Core Logic ---
+
+        let currentSort = { column: 'name', asc: true };
+        let filteredData = [...extensionsData];
+
+        function initDashboard() {
+            // Calculate Stats
+            const total = extensionsData.length;
+            const mandatories = extensionsData.filter(e => e.status.includes("Mandatory"));
+            const mandatory = mandatories.length;
+            const newExts = extensionsData.filter(e => e.history.toLowerCase().includes("new")).length;
+            
+            // Coverage Stats (Mandatory Only)
+            const linuxSupported = mandatories.filter(e => normalizeBool(e.linux)).length;
+            const linuxPct = Math.round((linuxSupported / mandatory) * 100);
+
+            const mandatoryU64 = mandatories.filter(e => e.category.includes("RVA23U64")).length;
+            const mandatoryS64 = mandatories.filter(e => e.category.includes("RVA23S64")).length;
+            const linuxSupportedU64 = mandatories.filter(e => e.category.includes("RVA23U64") && normalizeBool(e.linux)).length;
+            const linuxSupportedS64 = mandatories.filter(e => e.category.includes("RVA23S64") && normalizeBool(e.linux)).length;
+
+            // Update DOM
+            document.getElementById('totalExtensions').textContent = total;
+            document.getElementById('mandatoryExtensions').textContent = mandatory;
+            document.getElementById('newExtensions').textContent = newExts;
+            document.getElementById('linuxCoverage').textContent = `${linuxPct}%`;
+
+            renderCharts(
+                { u64: mandatoryU64, s64: mandatoryS64 },
+                { u64: linuxSupportedU64, s64: linuxSupportedS64 }
+            );
+        }
+
+        function renderCharts(mandatoryTotals, linuxCounts) {
+            if (typeof Chart === 'undefined') {
+                console.error("Chart.js not loaded");
+                document.getElementById('coverageChart').parentElement.innerHTML = '<p class="text-red-500 text-center p-4">Error loading Chart.js library. Please check internet connection.</p>';
+                return;
+            }
+
+            // Chart 1: Composition
+            /* Removed Profile Composition Chart per user request */
+
+            // Chart 2: Coverage
+            const ctxCov = document.getElementById('coverageChart').getContext('2d');
+            
+            const labels = ['RVA23U64', 'RVA23S64'];
+            const totalData = [mandatoryTotals.u64, mandatoryTotals.s64];
+            const coverageData = [linuxCounts.u64, linuxCounts.s64];
+            const maxVal = Math.max(...totalData, ...coverageData, 5);
+
+            new Chart(ctxCov, {
+                type: 'bar',
+                data: {
+                    labels,
+                    datasets: [
+                        {
+                            label: 'Total Mandatory Extensions',
+                            data: totalData,
+                            backgroundColor: '#f97316',
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'Linux v6.18 DT Coverage',
+                            data: coverageData,
+                            backgroundColor: '#38bdf8',
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: maxVal,
+                            title: { display: true, text: 'Number of Extensions' }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'bottom',
+                            labels: {
+                                color: '#57534e',
+                                boxWidth: 18
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderTable(data) {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+            
+            if(data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-stone-500">No extensions match your filters.</td></tr>';
+                document.getElementById('resultCount').textContent = 'Showing 0 extensions';
+                return;
+            }
+
+            data.forEach(ext => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-stone-50 transition-colors';
+                
+                // Styling helpers
+                const isMandatory = ext.status.includes("Mandatory");
+                const statusClass = isMandatory 
+                    ? "bg-amber-100 text-amber-800" 
+                    : "bg-stone-100 text-stone-600";
+                
+                const linuxYes = normalizeBool(ext.linux);
+                const linuxClass = linuxYes ? "text-emerald-600 font-semibold" : "text-stone-400";
+                const linuxIcon = linuxYes ? "✓" : "—";
+
+                tr.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-stone-900">${ext.name}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-stone-600">${ext.category}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">
+                            ${ext.status}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-stone-500">${ext.history}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm ${linuxClass}">
+                        <span class="mr-1">${linuxIcon}</span> ${ext.linux.replace("Yes", "").replace("(","").replace(")","") || "Yes"}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+            
+            document.getElementById('resultCount').textContent = `Showing ${data.length} extension${data.length !== 1 ? 's' : ''}`;
+        }
+
+        function runFilters() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const profile = document.getElementById('profileFilter').value;
+            const status = document.getElementById('statusFilter').value;
+            const newOnly = document.getElementById('newOnlyToggle').checked;
+            const missingLinux = document.getElementById('missingLinuxToggle').checked;
+
+            filteredData = extensionsData.filter(ext => {
+                const matchesSearch = ext.name.toLowerCase().includes(search) || ext.category.toLowerCase().includes(search);
+                const matchesProfile = profile === 'all' || ext.category.includes(profile);
+                const matchesStatus = status === 'all' 
+                    ? true 
+                    : (status === 'Mandatory' ? ext.status.includes('Mandatory') : !ext.status.includes('Mandatory'));
+                
+                const matchesNew = !newOnly || ext.history.toLowerCase().includes('new');
+                const matchesMissingLinux = !missingLinux || !normalizeBool(ext.linux);
+
+                return matchesSearch && matchesProfile && matchesStatus && matchesNew && matchesMissingLinux;
+            });
+
+            // Re-apply sort
+            sortFilteredData();
+            renderTable(filteredData);
+        }
+
+        function sortData(column) {
+            if (currentSort.column === column) {
+                currentSort.asc = !currentSort.asc;
+            } else {
+                currentSort.column = column;
+                currentSort.asc = true;
+            }
+            sortFilteredData();
+            renderTable(filteredData);
+        }
+
+        function sortFilteredData() {
+            const col = currentSort.column;
+            const asc = currentSort.asc ? 1 : -1;
+            
+            filteredData.sort((a, b) => {
+                const valA = (a[col] || "").toString().toLowerCase();
+                const valB = (b[col] || "").toString().toLowerCase();
+                if (valA < valB) return -1 * asc;
+                if (valA > valB) return 1 * asc;
+                return 0;
+            });
+        }
+
+        function renderGapAnalysis() {
+            const linuxList = document.getElementById('linuxGapList');
+            const mandatory = extensionsData.filter(e => e.status.includes("Mandatory"));
+
+            const linuxGaps = mandatory.filter(e => !normalizeBool(e.linux));
+
+            // Helper to create list items with per-profile styling
+            const createItem = (ext) => {
+                const li = document.createElement('li');
+                const isU64 = ext.category.includes('RVA23U64');
+                const badgeLabel = isU64 ? 'RVA23U64' : 'RVA23S64';
+                const rowColor = isU64 ? 'bg-amber-50 border-amber-100' : 'bg-sky-50 border-sky-100';
+                const badgeColor = isU64 ? 'bg-amber-200/80 text-amber-900' : 'bg-sky-200/80 text-sky-900';
+                li.className = `rounded-md px-4 py-2 border text-sm ${rowColor}`;
+                li.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <span class="font-semibold text-stone-900">${ext.name}</span>
+                        <span class="px-2 py-0.5 ml-3 rounded-full text-xs font-semibold ${badgeColor}">
+                            ${badgeLabel}
+                        </span>
+                    </div>
+                `;
+                return li;
+            };
+
+            linuxList.innerHTML = '';
+
+            if (linuxGaps.length === 0) {
+                linuxList.innerHTML = '<li class="text-emerald-600 font-medium">No Mandatory gaps found!</li>';
+            } else {
+                linuxGaps.forEach(g => linuxList.appendChild(createItem(g)));
+            }
+        }
+
+        // --- Initialization ---
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            initDashboard();
+            renderTable(extensionsData);
+            renderGapAnalysis();
+
+            // Event Listeners
+            document.getElementById('searchInput').addEventListener('input', runFilters);
+            document.getElementById('profileFilter').addEventListener('change', runFilters);
+            document.getElementById('statusFilter').addEventListener('change', runFilters);
+            document.getElementById('newOnlyToggle').addEventListener('change', runFilters);
+            document.getElementById('missingLinuxToggle').addEventListener('change', runFilters);
+        });
+
+    </script>
+</body>
+</html>
