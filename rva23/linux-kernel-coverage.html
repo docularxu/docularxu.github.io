@@ -234,6 +234,91 @@
             </div>
         </section>
 
+        <!-- Section 4: Appendix -->
+        <section id="appendix" class="space-y-6">
+            <div class="border-l-4 border-stone-400 pl-4">
+                <h2 class="text-2xl font-bold text-stone-800">Appendix: Linux Kernel References</h2>
+                <p class="text-stone-500 mt-1">Deep links to upstream sources that justify individual coverage decisions.</p>
+            </div>
+
+            <div class="space-y-10">
+                <!-- Supm Entry -->
+                <article class="bg-white p-6 rounded-lg shadow-sm border border-stone-200 space-y-6">
+                    <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                            <p class="text-xs font-semibold text-stone-400 uppercase tracking-[0.2em]">Extension Spotlight</p>
+                            <h3 class="text-xl font-semibold text-stone-900">Supm — Userspace Pointer Masking</h3>
+                        </div>
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800">Mandatory · RVA23U64</span>
+                    </div>
+                    <p class="text-sm text-stone-600">Linux enables Supm automatically on 64-bit systems and aliases the capability to whichever pointer-masking extension (Smnpm or Ssnpm) firmware reports, ensuring the Explorer&rsquo;s &ldquo;Yes&rdquo; status.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <section class="bg-stone-50 border border-stone-200 rounded-lg p-4 space-y-3">
+                            <div>
+                                <p class="text-xs font-semibold text-stone-500 uppercase tracking-wide">Kernel Config</p>
+                                <a href="https://github.com/torvalds/linux/blob/v6.18/arch/riscv/Kconfig" class="text-amber-600 hover:underline text-sm font-medium" target="_blank" rel="noopener">arch/riscv/Kconfig</a>
+                            </div>
+                            <pre class="bg-stone-900 text-stone-100 text-xs rounded-lg p-4 overflow-x-auto leading-5">
+config RISCV_ISA_SUPM
+	bool "Supm extension for userspace pointer masking"
+	depends on 64BIT
+	default y
+	help
+	  Add support for pointer masking in userspace (Supm) when the
+	  underlying hardware extension (Smnpm or Ssnpm) is detected at boot.
+
+	  If this option is disabled, userspace will be unable to use
+	  the prctl(PR_{SET,GET}_TAGGED_ADDR_CTRL) API.
+                            </pre>
+                            <p class="text-xs text-stone-500">`default y` ties Supm exposure directly to firmware-reported hardware capabilities.</p>
+                        </section>
+                        <section class="bg-stone-50 border border-stone-200 rounded-lg p-4 space-y-3">
+                            <div>
+                                <p class="text-xs font-semibold text-stone-500 uppercase tracking-wide">HWCAP Alias</p>
+                                <a href="https://github.com/torvalds/linux/blob/v6.18/arch/riscv/include/asm/hwcap.h" class="text-amber-600 hover:underline text-sm font-medium" target="_blank" rel="noopener">arch/riscv/include/asm/hwcap.h</a>
+                            </div>
+                            <pre class="bg-stone-900 text-stone-100 text-xs rounded-lg p-4 overflow-x-auto leading-5">
+#ifdef CONFIG_RISCV_M_MODE
+#define RISCV_ISA_EXT_SxAIA		RISCV_ISA_EXT_SMAIA
+#define RISCV_ISA_EXT_SUPM		RISCV_ISA_EXT_SMNPM
+#else
+#define RISCV_ISA_EXT_SxAIA		RISCV_ISA_EXT_SSAIA
+#define RISCV_ISA_EXT_SUPM		RISCV_ISA_EXT_SSNPM
+#endif
+                            </pre>
+                            <p class="text-xs text-stone-500">The mapping surfaces Supm to user space whether the platform boots in M-mode (`Smpnm`) or S-mode (`Ssnpm`).</p>
+                        </section>
+                    </div>
+                </article>
+
+                <!-- Zic64b Entry -->
+                <article class="bg-white p-6 rounded-lg shadow-sm border border-stone-200 space-y-6">
+                    <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                            <p class="text-xs font-semibold text-stone-400 uppercase tracking-[0.2em]">Extension Spotlight</p>
+                            <h3 class="text-xl font-semibold text-stone-900">Zic64b — 64&nbsp;Byte Cache Blocks</h3>
+                        </div>
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">Mandatory · RVA23U64</span>
+                    </div>
+                    <p class="text-sm text-stone-600">Linux does not require a literal `zic64b` string in Device Tree. Instead, the binding mandates cache block size properties so the kernel can validate the 64-byte requirement that accompanies Zic64b.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <section class="bg-stone-50 border border-stone-200 rounded-lg p-4 space-y-3">
+                            <div>
+                                <p class="text-xs font-semibold text-stone-500 uppercase tracking-wide">Device Tree Binding</p>
+                                <a href="https://github.com/torvalds/linux/blob/v6.18/Documentation/devicetree/bindings/riscv/extensions.yaml" class="text-amber-600 hover:underline text-sm font-medium" target="_blank" rel="noopener">Documentation/devicetree/bindings/riscv/extensions.yaml</a>
+                            </div>
+                            <ul class="list-disc ml-5 text-sm text-stone-600 space-y-1">
+                                <li>`riscv,cbom-block-size`, `riscv,cbop-block-size`, and `riscv,cboz-block-size` must be provided per hart.</li>
+                                <li>Each property encodes the cache block size (in bytes) for the corresponding CBO operation family.</li>
+                                <li>For Zic64b-compliant platforms these values are set to 64, satisfying the RVA23 requirement the Explorer checks.</li>
+                            </ul>
+                            <p class="text-xs text-stone-500">Because the block sizes are explicit, Linux can enforce Zic64b semantics even without parsing a `zic64b` ISA string.</p>
+                        </section>
+                    </div>
+                </article>
+            </div>
+        </section>
+
     </main>
 
     <!-- Footer -->
@@ -284,7 +369,7 @@
             { name: "Zcb", category: "RVA23U64", status: "Mandatory", history: "new in RVA23U64", linux: "Yes" },
             { name: "Zfa", category: "RVA23U64", status: "Mandatory", history: "new in RVA23U64", linux: "Yes" },
             { name: "Zawrs", category: "RVA23U64", status: "Mandatory", history: "new in RVA23U64", linux: "Yes" },
-            { name: "Supm", category: "RVA23U64", status: "Mandatory", history: "new in RVA23U64", linux: "Yes (as 'ssnpm')" },
+            { name: "Supm", category: "RVA23U64", status: "Mandatory", history: "new in RVA23U64", linux: "Yes (RISCV_ISA_SUPM=y; Smnpm/Ssnpm hwcap alias)" },
             { name: "Zvkng", category: "RVA23U64", status: "Optional (Localized)", history: "new in RVA23U64", linux: "Yes" },
             { name: "Zvksg", category: "RVA23U64", status: "Optional (Localized)", history: "new in RVA23U64", linux: "Yes" },
             { name: "Zabha", category: "RVA23U64", status: "Optional (Development)", history: "new in RVA23U64", linux: "Yes" },
