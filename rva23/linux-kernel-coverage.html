@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RISC-V RVA23 Profile Analyzer</title>
+    <title>RVA23 Profile Linux Kernel Coverage Analysis</title>
     <!-- Chosen Palette: Warm Stone & Earth Tones (Stone, Amber, Emerald, Slate) -->
     <!-- Application Structure Plan: 
          1. Header & Context: Introduction to RVA23 profiles and the specific analysis scope (Linux 6.18 DT).
@@ -120,7 +120,7 @@
                     <div class="text-sm font-medium text-stone-500 uppercase">Linux v6.18 Coverage</div>
                     <div class="mt-2 flex items-baseline">
                         <span class="text-3xl font-bold text-sky-600" id="linuxCoverage">0%</span>
-                        <span class="ml-2 text-sm text-stone-400">of Mandatory</span>
+                        <span class="ml-2 text-sm text-stone-400" id="linuxCoverageDetail">of Mandatory</span>
                     </div>
                 </div>
             </div>
@@ -267,7 +267,7 @@
             { name: "Zicclsm", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "No" },
             { name: "Za64rs", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "No" },
             { name: "Zihintpause", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "Yes" },
-            { name: "Zic64b", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "No" },
+            { name: "Zic64b", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "Yes (DT cache blocks fixed at 64B)", note: "Linux does not parse a 'zic64b' string; Device Tree provides the mandated 64-byte cache blocks via <code>riscv,cbom-block-size</code>, <code>riscv,cbop-block-size</code>, and <code>riscv,cboz-block-size</code> properties." },
             { name: "Zicbom", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "Yes" },
             { name: "Zicbop", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "Yes" },
             { name: "Zicboz", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "Yes" },
@@ -377,6 +377,7 @@
             document.getElementById('mandatoryExtensions').textContent = mandatory;
             document.getElementById('newExtensions').textContent = newExts;
             document.getElementById('linuxCoverage').textContent = `${linuxPct}%`;
+            document.getElementById('linuxCoverageDetail').textContent = `of Mandatory (${linuxSupported}/${mandatory})`;
 
             renderCharts(
                 { u64: mandatoryU64, s64: mandatoryS64 },
@@ -469,6 +470,8 @@
                 const linuxClass = linuxYes ? "text-emerald-600 font-semibold" : "text-stone-400";
                 const linuxIcon = linuxYes ? "✓" : "—";
 
+                const noteMarkup = ext.note ? `<div class="text-[11px] text-stone-400 italic mt-1 whitespace-normal">${ext.note}</div>` : '';
+
                 tr.innerHTML = `
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-stone-900">${ext.name}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-stone-600">${ext.category}</td>
@@ -480,6 +483,7 @@
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-stone-500">${ext.history}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm ${linuxClass}">
                         <span class="mr-1">${linuxIcon}</span> ${ext.linux.replace("Yes", "").replace("(","").replace(")","") || "Yes"}
+                        ${noteMarkup}
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -558,6 +562,7 @@
                             ${badgeLabel}
                         </span>
                     </div>
+                    ${ext.note ? `<p class="text-xs text-stone-500 mt-2 leading-snug">${ext.note}</p>` : ''}
                 `;
                 return li;
             };
