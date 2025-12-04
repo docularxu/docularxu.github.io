@@ -270,7 +270,7 @@ config RISCV_ISA_SUPM
 	  If this option is disabled, userspace will be unable to use
 	  the prctl(PR_{SET,GET}_TAGGED_ADDR_CTRL) API.
                             </pre>
-                            <p class="text-xs text-stone-500">`default y` ties Supm exposure directly to firmware-reported hardware capabilities.</p>
+                            <p class="text-xs text-stone-500">'default y' ties Supm exposure directly to firmware-reported hardware capabilities.</p>
                         </section>
                         <section class="bg-stone-50 border border-stone-200 rounded-lg p-4 space-y-3">
                             <div>
@@ -286,7 +286,7 @@ config RISCV_ISA_SUPM
 #define RISCV_ISA_EXT_SUPM		RISCV_ISA_EXT_SSNPM
 #endif
                             </pre>
-                            <p class="text-xs text-stone-500">The mapping surfaces Supm to user space whether the platform boots in M-mode (`Smpnm`) or S-mode (`Ssnpm`).</p>
+                            <p class="text-xs text-stone-500">The mapping surfaces Supm to user space whether the platform boots in M-mode ('Smpnm') or S-mode ('Ssnpm').</p>
                         </section>
                     </div>
                 </article>
@@ -300,7 +300,7 @@ config RISCV_ISA_SUPM
                         </div>
                         <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">Mandatory · RVA23U64</span>
                     </div>
-                    <p class="text-sm text-stone-600">Linux does not require a literal `zic64b` string in Device Tree. Instead, the binding mandates cache block size properties so the kernel can validate the 64-byte requirement that accompanies Zic64b.</p>
+                    <p class="text-sm text-stone-600">Linux does not require a literal 'zic64b' string in Device Tree. Instead, the binding mandates cache block size properties so the kernel can validate the 64-byte requirement that accompanies Zic64b.</p>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <section class="bg-stone-50 border border-stone-200 rounded-lg p-4 space-y-3">
                             <div>
@@ -308,11 +308,46 @@ config RISCV_ISA_SUPM
                                 <a href="https://github.com/torvalds/linux/blob/v6.18/Documentation/devicetree/bindings/riscv/extensions.yaml" class="text-amber-600 hover:underline text-sm font-medium" target="_blank" rel="noopener">Documentation/devicetree/bindings/riscv/extensions.yaml</a>
                             </div>
                             <ul class="list-disc ml-5 text-sm text-stone-600 space-y-1">
-                                <li>`riscv,cbom-block-size`, `riscv,cbop-block-size`, and `riscv,cboz-block-size` must be provided per hart.</li>
+                                <li>'riscv,cbom-block-size', 'riscv,cbop-block-size', and 'riscv,cboz-block-size' must be provided per hart.</li>
                                 <li>Each property encodes the cache block size (in bytes) for the corresponding CBO operation family.</li>
                                 <li>For Zic64b-compliant platforms these values are set to 64, satisfying the RVA23 requirement the Explorer checks.</li>
                             </ul>
-                            <p class="text-xs text-stone-500">Because the block sizes are explicit, Linux can enforce Zic64b semantics even without parsing a `zic64b` ISA string.</p>
+                            <p class="text-xs text-stone-500">Because the block sizes are explicit, Linux can enforce Zic64b semantics even without parsing a 'zic64b' ISA string.</p>
+                        </section>
+                    </div>
+                </article>
+
+                <!-- Ssstateen Entry -->
+                <article class="bg-white p-6 rounded-lg shadow-sm border border-stone-200 space-y-6">
+                    <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                            <p class="text-xs font-semibold text-stone-400 uppercase tracking-[0.2em]">Extension Spotlight</p>
+                            <h3 class="text-xl font-semibold text-stone-900">Ssstateen — State Enable Controls</h3>
+                        </div>
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-sky-100 text-sky-800">Mandatory · RVA23S64 (Sha)</span>
+                    </div>
+                    <p class="text-sm text-stone-600">Linux doesn&rsquo;t require a distinct 'ssstateen' token in Device Tree. When DT advertises 'smstateen', the binding guarantees that the state-enable machinery controlling CSR visibility across H/S/VS/U/VU modes is present, so 'Ssstateen' is marked as covered by the Linux Kernel.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <section class="bg-stone-50 border border-stone-200 rounded-lg p-4 space-y-3">
+                            <div>
+                                <p class="text-xs font-semibold text-stone-500 uppercase tracking-wide">Device Tree Binding</p>
+                                <a href="https://github.com/torvalds/linux/blob/v6.18/Documentation/devicetree/bindings/riscv/extensions.yaml" class="text-amber-600 hover:underline text-sm font-medium" target="_blank" rel="noopener">Documentation/devicetree/bindings/riscv/extensions.yaml</a>
+                            </div>
+                            <pre class="bg-stone-900 text-stone-100 text-xs rounded-lg p-4 overflow-x-auto leading-5">
+        - const: smstateen
+
+          description: |
+
+            The standard Smstateen extension for controlling access to CSRs
+
+            added by other RISC-V extensions in H/S/VS/U/VU modes and as
+
+            ratified at commit a28bfae (Ratified (#7)) of riscv-state-enable.
+                            </pre>
+                            <ul class="list-disc ml-5 text-sm text-stone-600 space-y-1">
+                                <li>The schema exposes only the lowercase 'smstateen' string; there is no separate 'ssstateen' property.</li>
+                                <li>By definition this entry covers CSR gating in all hypervisor-visible modes, which is the behavior RVA23S64 (Sha) mandates for 'Ssstateen'.</li>
+                            </ul>
                         </section>
                     </div>
                 </article>
@@ -461,8 +496,8 @@ config RISCV_ISA_SUPM
             document.getElementById('totalExtensions').textContent = total;
             document.getElementById('mandatoryExtensions').textContent = mandatory;
             document.getElementById('newExtensions').textContent = newExts;
-            document.getElementById('linuxCoverage').textContent = `${linuxPct}%`;
-            document.getElementById('linuxCoverageDetail').textContent = `of Mandatory (${linuxSupported}/${mandatory})`;
+            document.getElementById('linuxCoverage').textContent = linuxPct + '%';
+            document.getElementById('linuxCoverageDetail').textContent = 'of Mandatory (' + linuxSupported + '/' + mandatory + ')';
 
             renderCharts(
                 { u64: mandatoryU64, s64: mandatoryS64 },
@@ -555,26 +590,25 @@ config RISCV_ISA_SUPM
                 const linuxClass = linuxYes ? "text-emerald-600 font-semibold" : "text-stone-400";
                 const linuxIcon = linuxYes ? "✓" : "—";
 
-                const noteMarkup = ext.note ? `<div class="text-[11px] text-stone-400 italic mt-1 whitespace-normal">${ext.note}</div>` : '';
+                const noteMarkup = ext.note ? '<div class="text-[11px] text-stone-400 italic mt-1 whitespace-normal">' + ext.note + '</div>' : '';
 
-                tr.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-stone-900">${ext.name}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-stone-600">${ext.category}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">
-                            ${ext.status}
-                        </span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-stone-500">${ext.history}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm ${linuxClass}">
-                        <span class="mr-1">${linuxIcon}</span> ${ext.linux.replace("Yes", "").replace("(","").replace(")","") || "Yes"}
-                        ${noteMarkup}
-                    </td>
-                `;
+                tr.innerHTML =
+                    '<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-stone-900">' + ext.name + '</td>' +
+                    '<td class="px-6 py-4 whitespace-nowrap text-sm text-stone-600">' + ext.category + '</td>' +
+                    '<td class="px-6 py-4 whitespace-nowrap">' +
+                        '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ' + statusClass + '">' +
+                            ext.status +
+                        '</span>' +
+                    '</td>' +
+                    '<td class="px-6 py-4 whitespace-nowrap text-sm text-stone-500">' + ext.history + '</td>' +
+                    '<td class="px-6 py-4 whitespace-nowrap text-sm ' + linuxClass + '">' +
+                        '<span class="mr-1">' + linuxIcon + '</span> ' + (ext.linux.replace('Yes', '').replace('(', '').replace(')', '') || 'Yes') +
+                        noteMarkup +
+                    '</td>';
                 tbody.appendChild(tr);
             });
             
-            document.getElementById('resultCount').textContent = `Showing ${data.length} extension${data.length !== 1 ? 's' : ''}`;
+            document.getElementById('resultCount').textContent = 'Showing ' + data.length + ' extension' + (data.length !== 1 ? 's' : '');
         }
 
         function runFilters() {
@@ -639,16 +673,16 @@ config RISCV_ISA_SUPM
                 const badgeLabel = isU64 ? 'RVA23U64' : 'RVA23S64';
                 const rowColor = isU64 ? 'bg-amber-50 border-amber-100' : 'bg-sky-50 border-sky-100';
                 const badgeColor = isU64 ? 'bg-amber-200/80 text-amber-900' : 'bg-sky-200/80 text-sky-900';
-                li.className = `rounded-md px-4 py-2 border text-sm ${rowColor}`;
-                li.innerHTML = `
-                    <div class="flex items-center justify-between">
-                        <span class="font-semibold text-stone-900">${ext.name}</span>
-                        <span class="px-2 py-0.5 ml-3 rounded-full text-xs font-semibold ${badgeColor}">
-                            ${badgeLabel}
-                        </span>
-                    </div>
-                    ${ext.note ? `<p class="text-xs text-stone-500 mt-2 leading-snug">${ext.note}</p>` : ''}
-                `;
+                li.className = 'rounded-md px-4 py-2 border text-sm ' + rowColor;
+                const noteDetail = ext.note ? '<p class="text-xs text-stone-500 mt-2 leading-snug">' + ext.note + '</p>' : '';
+                li.innerHTML =
+                    '<div class="flex items-center justify-between">' +
+                        '<span class="font-semibold text-stone-900">' + ext.name + '</span>' +
+                        '<span class="px-2 py-0.5 ml-3 rounded-full text-xs font-semibold ' + badgeColor + '">' +
+                            badgeLabel +
+                        '</span>' +
+                    '</div>' +
+                    noteDetail;
                 return li;
             };
 
