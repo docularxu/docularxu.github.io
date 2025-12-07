@@ -88,6 +88,7 @@
             </p>
             <div class="mt-4 text-sm text-stone-500 space-y-1">
                 <p><strong>Note 1:</strong> Linux kernel v6.18 supports if the extension string exists in file <a href="https://github.com/torvalds/linux/blob/v6.18/Documentation/devicetree/bindings/riscv/extensions.yaml" class="text-amber-600 hover:underline" target="_blank">extensions.yaml</a> and <a href="https://github.com/torvalds/linux/blob/v6.18/Documentation/devicetree/bindings/riscv/cpus.yaml" class="text-amber-600 hover:underline" target="_blank">cpus.yaml</a>.</p>
+                <p><strong>Note 2:</strong> QEMU rva23s64 is dumped from: <code>qemu-system-riscv64</code> version <span class="font-semibold text-stone-700">10.1.92</span> (<span class="text-stone-600">v10.2.0-rc2-7-g1053bb627c</span>), launched with <code>-machine virt,acpi=off -cpu rva23s64</code>.</p>
             </div>
         </div>
     </div>
@@ -218,9 +219,10 @@
                             <tr>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider cursor-pointer hover:text-stone-700" onclick="sortData('name')">Extension ↕</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider cursor-pointer hover:text-stone-700" onclick="sortData('category')">Profile ↕</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider cursor-pointer hover:text-stone-700" onclick="sortData('status')">Status ↕</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider cursor-pointer hover:text-stone-700 w-36" onclick="sortData('status')">Status ↕</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider cursor-pointer hover:text-stone-700" onclick="sortData('history')">History ↕</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider cursor-pointer hover:text-stone-700" onclick="sortData('linux')">Linux v6.18 ↕</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider cursor-pointer hover:text-stone-700 whitespace-nowrap w-64" onclick="sortData('qemu')">QEMU rva23s64 ↕</th>
                             </tr>
                         </thead>
                         <tbody id="tableBody" class="bg-white divide-y divide-stone-200">
@@ -459,6 +461,28 @@ config RISCV_ISA_SUPM
             { name: "Sspm", category: "RVA23S64", status: "Optional (Expansion)", history: "new in RVA23S64", linux: "Yes" }
         ];
 
+        // QEMU rva23s64 coverage captured from /proc/device-tree/cpus/cpu@0/riscv,isa-extensions
+        const qemuRva23s64Set = new Set([
+            "i", "m", "a", "f", "d", "c", "b", "v", "h",
+            "zic64b", "zicbom", "zicbop", "zicboz", "ziccamoa", "ziccif", "zicclsm", "ziccrse", "zicond", "zicntr",
+            "zicsr", "zifencei", "zihintntl", "zihintpause", "zihpm", "zimop", "zmmul", "za64rs", "zaamo", "zalrsc", "zawrs",
+            "zfa", "zfhmin", "zca", "zcb", "zcd", "zcmop", "zba", "zbb", "zbs", "zkt", "zvbb",
+            "zve32f", "zve32x", "zve64f", "zve64d", "zve64x", "zvfhmin", "zvkb", "zvkt",
+            "sdtrig", "shcounterenw", "sha", "shgatpa", "shtvala", "shvsatpa", "shvstvala", "shvstvecd",
+            "smnpm", "smstateen", "ssccptr", "sscofpmf", "sscounterenw", "ssnpm", "ssstateen", "ssstrict", "sstc", "sstvala", "sstvecd", "ssu64xl",
+            "supm", "svade", "svinval", "svnapot", "svpbmt"
+        ]);
+
+        // Annotate each extension with QEMU support (Yes/No) for easier rendering/sorting
+        extensionsData.forEach(ext => {
+            const token = (ext.name || "").toLowerCase();
+            ext.qemu = qemuRva23s64Set.has(token) ? "Yes" : "No";
+        });
+
+        // Explicit alias note for Sv39 reported via riscv,sv39 DT string
+        const sv39 = extensionsData.find(e => e.name === "Sv39");
+        if (sv39) sv39.qemu = "Yes (as 'riscv,sv39')";
+
         // --- Helper Functions ---
         
         function normalizeBool(val) {
@@ -571,7 +595,7 @@ config RISCV_ISA_SUPM
             tbody.innerHTML = '';
             
             if(data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-stone-500">No extensions match your filters.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-4 text-center text-stone-500">No extensions match your filters.</td></tr>';
                 document.getElementById('resultCount').textContent = 'Showing 0 extensions';
                 return;
             }
@@ -590,12 +614,16 @@ config RISCV_ISA_SUPM
                 const linuxClass = linuxYes ? "text-emerald-600 font-semibold" : "text-stone-400";
                 const linuxIcon = linuxYes ? "✓" : "—";
 
+                const qemuYes = normalizeBool(ext.qemu);
+                const qemuClass = qemuYes ? "text-emerald-600 font-semibold" : "text-stone-400";
+                const qemuIcon = qemuYes ? "✓" : "—";
+
                 const noteMarkup = ext.note ? '<div class="text-[11px] text-stone-400 italic mt-1 whitespace-normal">' + ext.note + '</div>' : '';
 
                 tr.innerHTML =
                     '<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-stone-900">' + ext.name + '</td>' +
                     '<td class="px-6 py-4 whitespace-nowrap text-sm text-stone-600">' + ext.category + '</td>' +
-                    '<td class="px-6 py-4 whitespace-nowrap">' +
+                    '<td class="px-4 py-4 whitespace-nowrap w-36">' +
                         '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ' + statusClass + '">' +
                             ext.status +
                         '</span>' +
@@ -604,6 +632,9 @@ config RISCV_ISA_SUPM
                     '<td class="px-6 py-4 whitespace-nowrap text-sm ' + linuxClass + '">' +
                         '<span class="mr-1">' + linuxIcon + '</span> ' + (ext.linux.replace('Yes', '').replace('(', '').replace(')', '') || 'Yes') +
                         noteMarkup +
+                    '</td>' +
+                    '<td class="px-6 py-4 whitespace-nowrap w-64 text-sm ' + qemuClass + '">' +
+                        '<span class="mr-1">' + qemuIcon + '</span> ' + ext.qemu +
                     '</td>';
                 tbody.appendChild(tr);
             });
