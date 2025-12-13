@@ -58,54 +58,193 @@
 					<span class="text-2xl font-bold tracking-tight text-stone-700">RVA23<span
 							class="text-indigo-600">.KernelCheck</span></span>
 				</div>
+				<div class="flex items-center gap-3">
+					<button id="logToggleBtn" onclick="toggleLogs()"
+						class="text-stone-500 hover:text-stone-700 text-sm px-3 py-1.5 rounded-md hover:bg-stone-50 transition-colors flex items-center gap-1">
+						<span class="text-xs">show logs</span>
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+						</svg>
+					</button>
+				</div>
 			</div>
 		</div>
 	</nav>
 
 	<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
 
-		<!-- Evolution Chart Section -->
-		<div id="evolutionSection"
-			class="bg-gradient-to-br from-indigo-50 to-purple-50 p-6 rounded-xl shadow-sm border border-indigo-200">
-			<div class="max-w-4xl">
-				<h2 class="text-2xl font-bold text-stone-900 mb-2">Extension Support Evolution</h2>
-				<p class="text-stone-600 mb-4">
-					Track how RVA23 mandatory extension support has evolved across multiple kernel
-					versions.
-				</p>
+		<!-- Control Panels Section -->
+		<div class="space-y-6">
+			<!-- Evolution Chart Controls -->
+			<div id="evolutionControlSection"
+				class="bg-gradient-to-br from-indigo-50 to-purple-50 p-6 rounded-xl shadow-sm border border-indigo-200">
+				<div class="max-w-4xl">
+					<h2 class="text-2xl font-bold text-stone-900 mb-2">Extension Support Evolution</h2>
+					<p class="text-stone-600 mb-4">
+						Track how RVA23 mandatory extension support has evolved across multiple kernel
+						versions.
+					</p>
 
-				<div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end mb-4">
-					<div>
-						<label class="block text-sm font-medium text-stone-700 mb-1">Start
-							Version</label>
-						<select id="evolutionStart"
-							class="w-full px-3 py-2 rounded-md border-stone-300 focus:ring-indigo-500 focus:border-indigo-500 text-sm border">
-							<option disabled selected>Loading tags...</option>
-						</select>
-					</div>
-					<div>
-						<label class="block text-sm font-medium text-stone-700 mb-1">End Version
-							(or latest)</label>
-						<select id="evolutionEnd"
-							class="w-full px-3 py-2 rounded-md border-stone-300 focus:ring-indigo-500 focus:border-indigo-500 text-sm border">
-							<option value="auto" selected>Auto (Latest)</option>
-							<option disabled>Loading tags...</option>
-						</select>
-					</div>
-					<div>
-						<button onclick="analyzeEvolution()" id="evolutionBtn"
-							class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition-all flex items-center justify-center gap-2">
-							<span>Analyze Evolution</span>
-							<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4"
-								fill="none" viewBox="0 0 24 24" stroke="currentColor">
-								<path stroke-linecap="round" stroke-linejoin="round"
-									stroke-width="2"
-									d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-							</svg>
-						</button>
+					<div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+						<div>
+							<label class="block text-sm font-medium text-stone-700 mb-1">Start
+								Version</label>
+							<select id="evolutionStart"
+								class="w-full px-3 py-2 rounded-md border-stone-300 focus:ring-indigo-500 focus:border-indigo-500 text-sm border">
+								<option disabled selected>Loading tags...</option>
+							</select>
+						</div>
+						<div>
+							<label class="block text-sm font-medium text-stone-700 mb-1">End Version
+								(or latest)</label>
+							<select id="evolutionEnd"
+								class="w-full px-3 py-2 rounded-md border-stone-300 focus:ring-indigo-500 focus:border-indigo-500 text-sm border">
+								<option value="auto" selected>Auto (Latest)</option>
+								<option disabled>Loading tags...</option>
+							</select>
+						</div>
+						<div>
+							<button onclick="analyzeEvolution()" id="evolutionBtn"
+								class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition-all flex items-center justify-center gap-2">
+								<span>Analyze Evolution</span>
+								<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4"
+									fill="none" viewBox="0 0 24 24" stroke="currentColor">
+									<path stroke-linecap="round" stroke-linejoin="round"
+										stroke-width="2"
+										d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+								</svg>
+							</button>
+						</div>
 					</div>
 				</div>
+			</div>
 
+			<!-- Kernel Version Comparison Controls -->
+			<div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+				<div class="max-w-5xl">
+					<h1 class="text-2xl font-bold text-stone-900 mb-2">Linux Kernel Version Comparison</h1>
+					<p class="text-stone-600 mb-6">
+						Compare <strong>RVA23 Profile</strong> extension support across three Linux Kernel stable releases.
+						This tool fetches <code>extensions.yaml</code> and <code>cpus.yaml</code>
+						directly from the official kernel git repository.
+					</p>
+
+					<div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+						<div>
+							<label for="kernelVersion1"
+								class="block text-sm font-medium text-stone-700 mb-1">Version 1</label>
+							<div class="flex shadow-sm rounded-md">
+								<span
+									class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-stone-300 bg-stone-50 text-stone-500 text-sm">v</span>
+								<select id="kernelVersion1"
+									class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border-stone-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border">
+									<option value="6.6" selected>6.6</option>
+									<option disabled>Loading tags...</option>
+								</select>
+							</div>
+						</div>
+						<div>
+							<label for="kernelVersion2"
+								class="block text-sm font-medium text-stone-700 mb-1">Version 2</label>
+							<div class="flex shadow-sm rounded-md">
+								<span
+									class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-stone-300 bg-stone-50 text-stone-500 text-sm">v</span>
+								<select id="kernelVersion2"
+									class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border-stone-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border">
+									<option value="6.12" selected>6.12</option>
+									<option disabled>Loading tags...</option>
+								</select>
+							</div>
+						</div>
+						<div>
+							<label for="kernelVersion3"
+								class="block text-sm font-medium text-stone-700 mb-1">Version 3</label>
+							<div class="flex shadow-sm rounded-md">
+								<span
+									class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-stone-300 bg-stone-50 text-stone-500 text-sm">v</span>
+								<select id="kernelVersion3"
+									class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border-stone-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border">
+									<option value="6.18" selected>6.18</option>
+									<option disabled>Loading tags...</option>
+								</select>
+							</div>
+						</div>
+						<div>
+							<button onclick="analyzeKernel()" id="analyzeBtn"
+								class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition-colors flex items-center justify-center gap-2">
+								<span>Compare Versions</span>
+								<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4"
+									fill="none" viewBox="0 0 24 24" stroke="currentColor">
+									<path stroke-linecap="round" stroke-linejoin="round"
+										stroke-width="2"
+										d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+								</svg>
+							</button>
+						</div>
+					</div>
+					<p class="mt-2 text-xs text-stone-400">Default: v6.6 & v6.12 (LTS), v6.18 (Latest). 
+						<span id="tagLoadStatus" class="text-indigo-600"></span>
+					</p>
+
+					<!-- Advanced Options -->
+					<div class="mt-4 pt-4 border-t border-stone-100">
+						<details class="text-sm text-stone-500">
+							<summary class="cursor-pointer hover:text-stone-700 font-medium">
+								Advanced / Proxy Settings</summary>
+							<div class="mt-3 space-y-3 pl-2 border-l-2 border-stone-200">
+								<div>
+									<label class="flex items-center gap-2">
+										<input type="checkbox" id="useProxy" checked
+											class="rounded border-stone-300 text-indigo-600 focus:ring-indigo-500">
+										<span>Use CORS Proxy (Required for browser-based
+											fetching from git.kernel.org)</span>
+									</label>
+									<p class="text-xs text-stone-400 mt-1 ml-6">Tries
+										multiple proxies to bypass browser CORS
+										restrictions. Will fallback to direct fetch if
+										needed.</p>
+								</div>
+								<div>
+									<label class="flex items-center gap-2">
+										<input type="checkbox" id="debugMode"
+											class="rounded border-stone-300 text-indigo-600 focus:ring-indigo-500">
+										<span>Debug Mode (Show response previews)</span>
+									</label>
+									<p class="text-xs text-stone-400 mt-1 ml-6">Shows first
+										500 chars of responses to help diagnose issues.
+									</p>
+								</div>
+								<div class="pt-3 border-t border-stone-200">
+									<div class="flex items-center justify-between">
+										<div>
+											<h4
+												class="font-medium text-stone-700 mb-1">
+												📁 Local Database</h4>
+											<p class="text-xs text-stone-500"
+												id="dbStatus">Loading database
+												status...</p>
+										</div>
+										<button onclick="showDatabaseInfo()"
+											class="text-xs bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-3 py-1.5 rounded border border-indigo-200 transition-colors">
+											View Database
+										</button>
+									</div>
+									<p class="text-xs text-stone-400 mt-2">💡 Versions in
+										the database load instantly without fetching
+										from kernel.org</p>
+								</div>
+							</div>
+						</details>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Evolution Results Section -->
+		<div id="evolutionResultsSection" class="hidden space-y-6">
+			<div class="bg-gradient-to-br from-indigo-50 to-purple-50 p-6 rounded-xl shadow-sm border border-indigo-200">
+				<h3 class="text-xl font-bold text-stone-900 mb-4">Evolution Analysis Results</h3>
+				
 				<!-- Progress Bar -->
 				<div id="evolutionProgress" class="hidden mb-4">
 					<div class="flex justify-between text-sm text-stone-600 mb-1">
@@ -189,134 +328,15 @@
 			</div>
 		</div>
 
-		<!-- Intro / Controls -->
-		<div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
-			<div class="max-w-5xl">
-				<h1 class="text-2xl font-bold text-stone-900 mb-2">Linux Kernel Version Comparison</h1>
-				<p class="text-stone-600 mb-6">
-					Compare <strong>RVA23 Profile</strong> extension support across three Linux Kernel stable releases.
-					This tool fetches <code>extensions.yaml</code> and <code>cpus.yaml</code>
-					directly from the official kernel git repository.
-				</p>
-
-				<div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-					<div>
-						<label for="kernelVersion1"
-							class="block text-sm font-medium text-stone-700 mb-1">Version 1</label>
-						<div class="flex shadow-sm rounded-md">
-							<span
-								class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-stone-300 bg-stone-50 text-stone-500 text-sm">v</span>
-							<select id="kernelVersion1"
-								class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border-stone-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border">
-								<option value="6.6" selected>6.6</option>
-								<option disabled>Loading tags...</option>
-							</select>
-						</div>
-					</div>
-					<div>
-						<label for="kernelVersion2"
-							class="block text-sm font-medium text-stone-700 mb-1">Version 2</label>
-						<div class="flex shadow-sm rounded-md">
-							<span
-								class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-stone-300 bg-stone-50 text-stone-500 text-sm">v</span>
-							<select id="kernelVersion2"
-								class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border-stone-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border">
-								<option value="6.12" selected>6.12</option>
-								<option disabled>Loading tags...</option>
-							</select>
-						</div>
-					</div>
-					<div>
-						<label for="kernelVersion3"
-							class="block text-sm font-medium text-stone-700 mb-1">Version 3</label>
-						<div class="flex shadow-sm rounded-md">
-							<span
-								class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-stone-300 bg-stone-50 text-stone-500 text-sm">v</span>
-							<select id="kernelVersion3"
-								class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border-stone-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border">
-								<option value="6.18" selected>6.18</option>
-								<option disabled>Loading tags...</option>
-							</select>
-						</div>
-					</div>
-					<div>
-						<button onclick="analyzeKernel()" id="analyzeBtn"
-							class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition-colors flex items-center justify-center gap-2">
-							<span>Compare Versions</span>
-							<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4"
-								fill="none" viewBox="0 0 24 24" stroke="currentColor">
-								<path stroke-linecap="round" stroke-linejoin="round"
-									stroke-width="2"
-									d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-							</svg>
-						</button>
-					</div>
-				</div>
-				<p class="mt-2 text-xs text-stone-400">Default: v6.6 & v6.12 (LTS), v6.18 (Latest). 
-					<span id="tagLoadStatus" class="text-indigo-600"></span>
-				</p>
-
-				<!-- Advanced Options -->
-				<div class="mt-4 pt-4 border-t border-stone-100">
-					<details class="text-sm text-stone-500">
-						<summary class="cursor-pointer hover:text-stone-700 font-medium">
-							Advanced / Proxy Settings</summary>
-						<div class="mt-3 space-y-3 pl-2 border-l-2 border-stone-200">
-							<div>
-								<label class="flex items-center gap-2">
-									<input type="checkbox" id="useProxy" checked
-										class="rounded border-stone-300 text-indigo-600 focus:ring-indigo-500">
-									<span>Use CORS Proxy (Required for browser-based
-										fetching from git.kernel.org)</span>
-								</label>
-								<p class="text-xs text-stone-400 mt-1 ml-6">Tries
-									multiple proxies to bypass browser CORS
-									restrictions. Will fallback to direct fetch if
-									needed.</p>
-							</div>
-							<div>
-								<label class="flex items-center gap-2">
-									<input type="checkbox" id="debugMode"
-										class="rounded border-stone-300 text-indigo-600 focus:ring-indigo-500">
-									<span>Debug Mode (Show response previews)</span>
-								</label>
-								<p class="text-xs text-stone-400 mt-1 ml-6">Shows first
-									500 chars of responses to help diagnose issues.
-								</p>
-							</div>
-							<div class="pt-3 border-t border-stone-200">
-								<div class="flex items-center justify-between">
-									<div>
-										<h4
-											class="font-medium text-stone-700 mb-1">
-											📁 Local Database</h4>
-										<p class="text-xs text-stone-500"
-											id="dbStatus">Loading database
-											status...</p>
-									</div>
-									<button onclick="showDatabaseInfo()"
-										class="text-xs bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-3 py-1.5 rounded border border-indigo-200 transition-colors">
-										View Database
-									</button>
-								</div>
-								<p class="text-xs text-stone-400 mt-2">💡 Versions in
-									the database load instantly without fetching
-									from kernel.org</p>
-							</div>
-						</div>
-					</details>
-				</div>
+		<!-- Comparison Results Section -->
+		<div id="comparisonResultsSection" class="hidden">
+			<div class="bg-white p-4 rounded-xl shadow-sm border border-stone-200 mb-6">
+				<h3 class="text-xl font-bold text-stone-900">Version Comparison Results</h3>
 			</div>
-		</div>
-
-		<!-- Status Log -->
-		<div id="statusArea"
-			class="hidden bg-stone-900 text-stone-300 p-4 rounded-md font-mono text-xs overflow-x-auto">
-			<div id="statusLog"></div>
-		</div>
-
+			<div class="space-y-6">
+		
 		<!-- Dashboard -->
-		<div id="resultsDashboard" class="hidden space-y-6">
+		<div id="resultsDashboard" class="space-y-6">
 
 			<!-- Summary Stats - Comparison View -->
 			<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -444,7 +464,9 @@
 					</div>
 				</div>
 			</div>
+			</div>
 		</div>
+		<!-- End of Comparison Results Section -->
 
 	</main>
 
@@ -949,7 +971,17 @@
 			}
 
 			logDiv.appendChild(entry);
-			document.getElementById('statusArea').classList.remove('hidden');
+
+			// Only auto-show logs if user hasn't manually hidden them
+			if (!logsManuallyHidden) {
+				document.getElementById('statusArea').classList.remove('hidden');
+				// Update button state if it's currently showing "show logs"
+				const toggleBtn = document.getElementById('logToggleBtn');
+				if (toggleBtn.innerHTML.includes('show logs')) {
+					toggleBtn.innerHTML = '<span class="text-xs">hide logs</span> <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" /></svg>';
+				}
+			}
+
 			logDiv.scrollTop = logDiv.scrollHeight;
 		}
 
@@ -1213,7 +1245,16 @@
 		}
 
 		function renderDashboard() {
-			document.getElementById('resultsDashboard').classList.remove('hidden');
+			// Show comparison results section
+			document.getElementById('comparisonResultsSection').classList.remove('hidden');
+
+			// Scroll to results
+			setTimeout(() => {
+				document.getElementById('comparisonResultsSection').scrollIntoView({ 
+					behavior: 'smooth', 
+					block: 'start' 
+				});
+			}, 300);
 
 			// Update version displays
 			document.getElementById('version1Display').textContent = `v${comparisonVersions[0]}`;
@@ -1377,6 +1418,7 @@
 
 		let evolutionChart = null;
 		let optionalChart = null;
+		let logsManuallyHidden = false;
 
 		async function analyzeEvolution() {
 			const startVersion = document.getElementById('evolutionStart').value;
@@ -1517,11 +1559,22 @@
 
 				log('Evolution analysis complete!');
 
+				// Show results section
+				document.getElementById('evolutionResultsSection').classList.remove('hidden');
+
 				// Render charts
 				renderEvolutionChart(evolutionData);
 				renderOptionalChart(evolutionData);
 				renderEvolutionStats(evolutionData);
 				renderOptionalStats(evolutionData);
+
+				// Scroll to results
+				setTimeout(() => {
+					document.getElementById('evolutionResultsSection').scrollIntoView({ 
+						behavior: 'smooth', 
+						block: 'start' 
+					});
+				}, 300);
 
 			} catch (err) {
 				log(`Critical error in evolution analysis: ${err.message}`, 'error');
@@ -1989,6 +2042,7 @@
 								maxRotation: 0,
 								minRotation: 0,
 								autoSkip: false,
+								align: 'start',
 								font: {
 									size: 9
 								}
@@ -2297,6 +2351,7 @@
 								maxRotation: 0,
 								minRotation: 0,
 								autoSkip: false,
+								align: 'start',
 								font: {
 									size: 9
 								}
@@ -2323,7 +2378,41 @@
 			document.getElementById('latestOptionalCount').textContent = last.optionalSupportedCount;
 			document.getElementById('optionalGrowth').textContent = `${growthSign}${growth}`;
 		}
+
+		// Toggle log visibility
+		function toggleLogs() {
+			const statusArea = document.getElementById('statusArea');
+			const toggleBtn = document.getElementById('logToggleBtn');
+			const isHidden = statusArea.classList.contains('hidden');
+
+			if (isHidden) {
+				statusArea.classList.remove('hidden');
+				logsManuallyHidden = false;
+				toggleBtn.innerHTML = '<span class="text-xs">hide logs</span> <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" /></svg>';
+				// Scroll to logs
+				setTimeout(() => {
+					statusArea.scrollIntoView({ behavior: 'smooth', block: 'end' });
+				}, 100);
+			} else {
+				statusArea.classList.add('hidden');
+				logsManuallyHidden = true;
+				toggleBtn.innerHTML = '<span class="text-xs">show logs</span> <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>';
+			}
+		}
 	</script>
+
+	<!-- Status Log (Hidden by default, can be toggled) -->
+	<div id="statusArea"
+		class="hidden bg-stone-900 text-stone-300 p-4 rounded-md font-mono text-xs overflow-x-auto max-w-7xl mx-auto mb-8">
+		<div class="flex items-center justify-between mb-2">
+			<h4 class="text-stone-200 font-semibold">Analysis Logs</h4>
+			<button onclick="toggleLogs()" class="text-stone-400 hover:text-stone-200 text-xs underline">
+				hide logs
+			</button>
+		</div>
+		<div id="statusLog"></div>
+	</div>
+
 </body>
 
 </html>
