@@ -1,0 +1,2170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Linux Kernel RVA23 Compliance Checker</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+	<!-- JS-YAML for parsing the kernel files -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+		body {
+			font-family: 'Inter', sans-serif;
+		}
+
+		.custom-scrollbar::-webkit-scrollbar {
+			height: 8px;
+			width: 8px;
+		}
+
+		.custom-scrollbar::-webkit-scrollbar-track {
+			background: #f5f5f4;
+		}
+
+		.custom-scrollbar::-webkit-scrollbar-thumb {
+			background: #d6d3d1;
+			border-radius: 4px;
+		}
+
+		.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+			background: #a8a29e;
+		}
+	</style>
+</head>
+
+<body class="bg-stone-50 text-stone-800 antialiased">
+
+	<!-- Header -->
+	<nav class="bg-white border-b border-stone-200 shadow-sm sticky top-0 z-50">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="flex justify-between h-16">
+				<div class="flex items-center gap-3">
+					<span class="text-2xl font-bold tracking-tight text-stone-700">RVA23<span
+							class="text-indigo-600">.KernelCheck</span></span>
+				</div>
+			</div>
+		</div>
+	</nav>
+
+	<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+
+		<!-- Intro / Controls -->
+		<div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+			<div class="max-w-3xl">
+				<h1 class="text-2xl font-bold text-stone-900 mb-2">Linux Kernel Version Analyzer</h1>
+				<p class="text-stone-600 mb-6">
+					Check which <strong>RVA23 Profile</strong> extensions are supported in a
+					specific Linux Kernel stable release.
+					This tool fetches <code>extensions.yaml</code> and <code>cpus.yaml</code>
+					directly from the official kernel git repository.
+				</p>
+
+				<div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+					<div class="col-span-2">
+						<label for="kernelVersion"
+							class="block text-sm font-medium text-stone-700 mb-1">Kernel
+							Version (Tag)</label>
+						<div class="flex shadow-sm rounded-md">
+							<span
+								class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-stone-300 bg-stone-50 text-stone-500 text-sm">v</span>
+							<select id="kernelVersion"
+								class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border-stone-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border">
+								<option value="6.6" selected>6.6 (Default)</option>
+								<option disabled>Loading tags...</option>
+							</select>
+						</div>
+						<p class="mt-1 text-xs text-stone-400">Select a stable version tag (&gt;
+							v6.4). <span id="tagLoadStatus" class="text-indigo-600"></span>
+						</p>
+					</div>
+					<div>
+						<button onclick="analyzeKernel()" id="analyzeBtn"
+							class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition-colors flex items-center justify-center gap-2">
+							<span>Analyze Version</span>
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4"
+								fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round"
+									stroke-width="2"
+									d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+							</svg>
+						</button>
+					</div>
+				</div>
+
+				<!-- Advanced Options -->
+				<div class="mt-4 pt-4 border-t border-stone-100">
+					<details class="text-sm text-stone-500">
+						<summary class="cursor-pointer hover:text-stone-700 font-medium">
+							Advanced / Proxy Settings</summary>
+						<div class="mt-3 space-y-3 pl-2 border-l-2 border-stone-200">
+							<div>
+								<label class="flex items-center gap-2">
+									<input type="checkbox" id="useProxy" checked
+										class="rounded border-stone-300 text-indigo-600 focus:ring-indigo-500">
+									<span>Use CORS Proxy (Required for browser-based
+										fetching from git.kernel.org)</span>
+								</label>
+								<p class="text-xs text-stone-400 mt-1 ml-6">Tries
+									multiple proxies to bypass browser CORS
+									restrictions. Will fallback to direct fetch if
+									needed.</p>
+							</div>
+							<div>
+								<label class="flex items-center gap-2">
+									<input type="checkbox" id="debugMode"
+										class="rounded border-stone-300 text-indigo-600 focus:ring-indigo-500">
+									<span>Debug Mode (Show response previews)</span>
+								</label>
+								<p class="text-xs text-stone-400 mt-1 ml-6">Shows first
+									500 chars of responses to help diagnose issues.
+								</p>
+							</div>
+							<div class="pt-3 border-t border-stone-200">
+								<div class="flex items-center justify-between">
+									<div>
+										<h4
+											class="font-medium text-stone-700 mb-1">
+											📁 Local Database</h4>
+										<p class="text-xs text-stone-500"
+											id="dbStatus">Loading database
+											status...</p>
+									</div>
+									<button onclick="showDatabaseInfo()"
+										class="text-xs bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-3 py-1.5 rounded border border-indigo-200 transition-colors">
+										View Database
+									</button>
+								</div>
+								<p class="text-xs text-stone-400 mt-2">💡 Versions in
+									the database load instantly without fetching
+									from kernel.org</p>
+							</div>
+						</div>
+					</details>
+				</div>
+			</div>
+		</div>
+
+		<!-- Status Log -->
+		<div id="statusArea"
+			class="hidden bg-stone-900 text-stone-300 p-4 rounded-md font-mono text-xs overflow-x-auto">
+			<div id="statusLog"></div>
+		</div>
+
+		<!-- Evolution Chart Section -->
+		<div id="evolutionSection"
+			class="bg-gradient-to-br from-indigo-50 to-purple-50 p-6 rounded-xl shadow-sm border border-indigo-200">
+			<div class="max-w-4xl">
+				<h2 class="text-2xl font-bold text-stone-900 mb-2">Extension Support Evolution</h2>
+				<p class="text-stone-600 mb-4">
+					Track how RVA23 mandatory extension support has evolved across multiple kernel
+					versions.
+				</p>
+
+				<div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end mb-4">
+					<div>
+						<label class="block text-sm font-medium text-stone-700 mb-1">Start
+							Version</label>
+						<select id="evolutionStart"
+							class="w-full px-3 py-2 rounded-md border-stone-300 focus:ring-indigo-500 focus:border-indigo-500 text-sm border">
+							<option disabled selected>Loading tags...</option>
+						</select>
+					</div>
+					<div>
+						<label class="block text-sm font-medium text-stone-700 mb-1">End Version
+							(or latest)</label>
+						<select id="evolutionEnd"
+							class="w-full px-3 py-2 rounded-md border-stone-300 focus:ring-indigo-500 focus:border-indigo-500 text-sm border">
+							<option value="auto" selected>Auto (Latest)</option>
+							<option disabled>Loading tags...</option>
+						</select>
+					</div>
+					<div>
+						<button onclick="analyzeEvolution()" id="evolutionBtn"
+							class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition-all flex items-center justify-center gap-2">
+							<span>Analyze Evolution</span>
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4"
+								fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round"
+									stroke-width="2"
+									d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+							</svg>
+						</button>
+					</div>
+				</div>
+
+				<!-- Progress Bar -->
+				<div id="evolutionProgress" class="hidden mb-4">
+					<div class="flex justify-between text-sm text-stone-600 mb-1">
+						<span id="evolutionProgressText">Analyzing...</span>
+						<span id="evolutionProgressPercent">0%</span>
+					</div>
+					<div class="w-full bg-stone-200 rounded-full h-2.5">
+						<div id="evolutionProgressBar"
+							class="bg-gradient-to-r from-indigo-600 to-purple-600 h-2.5 rounded-full transition-all duration-300"
+							style="width: 0%"></div>
+					</div>
+				</div>
+
+				<!-- Mandatory Extensions Chart Container -->
+				<div id="evolutionChartContainer"
+					class="hidden bg-white p-6 rounded-lg shadow-sm border border-stone-200 mt-4">
+					<div class="flex justify-between items-center mb-4">
+						<h4 class="text-sm font-semibold text-stone-700">Mandatory Extensions Coverage Timeline</h4>
+						<p class="text-xs text-stone-500 italic">💡 Hover over data points to
+							see missing extensions and improvements</p>
+					</div>
+					<div style="height: 700px; width: 100%; overflow-y: auto;">
+						<canvas id="evolutionChart"></canvas>
+					</div>
+				</div>
+
+				<!-- Optional Extensions Chart Container -->
+				<div id="optionalChartContainer"
+					class="hidden bg-white p-6 rounded-lg shadow-sm border border-stone-200 mt-4">
+					<div class="flex justify-between items-center mb-4">
+						<h4 class="text-sm font-semibold text-stone-700">Optional Extensions Support Timeline</h4>
+						<p class="text-xs text-stone-500 italic">💡 Hover over data points to
+							see supported optional extensions</p>
+					</div>
+					<div style="height: 500px; width: 100%; overflow-y: auto;">
+						<canvas id="optionalChart"></canvas>
+					</div>
+				</div>
+
+				<!-- Evolution Stats -->
+				<div id="evolutionStats" class="hidden grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+					<div class="bg-white p-4 rounded-lg shadow-sm border border-stone-200">
+						<h4 class="text-xs font-medium text-stone-500 uppercase mb-1">Mandatory Coverage
+							Improvement</h4>
+						<div class="text-2xl font-bold text-indigo-600"
+							id="coverageImprovement">--</div>
+						<div class="text-xs text-stone-400 mt-1">Since first version</div>
+					</div>
+					<div class="bg-white p-4 rounded-lg shadow-sm border border-stone-200">
+						<h4 class="text-xs font-medium text-stone-500 uppercase mb-1">Latest Mandatory
+							Coverage</h4>
+						<div class="text-2xl font-bold text-stone-800" id="latestCoverage">--
+						</div>
+						<div class="text-xs text-stone-400 mt-1">Most recent version</div>
+					</div>
+					<div class="bg-white p-4 rounded-lg shadow-sm border border-stone-200">
+						<h4 class="text-xs font-medium text-stone-500 uppercase mb-1">Versions
+							Analyzed</h4>
+						<div class="text-2xl font-bold text-purple-600" id="versionsAnalyzed">--
+						</div>
+						<div class="text-xs text-stone-400 mt-1">Major releases</div>
+					</div>
+				</div>
+
+				<!-- Optional Extensions Stats -->
+				<div id="optionalStats" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+					<div class="bg-white p-4 rounded-lg shadow-sm border border-stone-200">
+						<h4 class="text-xs font-medium text-stone-500 uppercase mb-1">Latest Optional
+							Extensions</h4>
+						<div class="text-2xl font-bold text-emerald-600" id="latestOptionalCount">--
+						</div>
+						<div class="text-xs text-stone-400 mt-1">Supported in latest version</div>
+					</div>
+					<div class="bg-white p-4 rounded-lg shadow-sm border border-stone-200">
+						<h4 class="text-xs font-medium text-stone-500 uppercase mb-1">Optional Growth</h4>
+						<div class="text-2xl font-bold text-emerald-600" id="optionalGrowth">--
+						</div>
+						<div class="text-xs text-stone-400 mt-1">New optional since first version</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Dashboard -->
+		<div id="resultsDashboard" class="hidden space-y-6">
+
+			<!-- Summary Stats -->
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+				<div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+					<h3 class="text-sm font-medium text-stone-500 uppercase">Analysis Target</h3>
+					<div class="mt-2 text-2xl font-bold text-indigo-600" id="targetVersionDisplay">
+						--</div>
+					<div class="text-xs text-stone-400 mt-1">Based on upstream bindings</div>
+				</div>
+				<div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+					<h3 class="text-sm font-medium text-stone-500 uppercase">Mandatory RVA23
+						Coverage</h3>
+					<div class="mt-2 text-2xl font-bold text-stone-800" id="coverageDisplay">0%
+					</div>
+					<div class="text-xs text-stone-400 mt-1"><span id="coverageCount">0</span>
+						extensions found</div>
+				</div>
+				<div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+					<h3 class="text-sm font-medium text-stone-500 uppercase">Missing Mandatories
+					</h3>
+					<div class="mt-2 text-2xl font-bold text-amber-600" id="missingCountDisplay">0
+					</div>
+					<div class="text-xs text-stone-400 mt-1">Extensions not found in yaml</div>
+				</div>
+			</div>
+
+			<!-- Main Table -->
+			<div class="bg-white rounded-lg shadow-sm border border-stone-200 overflow-hidden">
+				<div
+					class="px-6 py-4 border-b border-stone-200 bg-stone-50 flex justify-between items-center">
+					<h3 class="font-bold text-stone-800">RVA23 Profile Compliance Table</h3>
+					<div class="flex gap-2 text-sm">
+						<select id="filterProfile" onchange="renderTable()"
+							class="border-stone-300 rounded-md text-sm p-1">
+							<option value="all">All Profiles</option>
+							<option value="RVA23U64">User (U64)</option>
+							<option value="RVA23S64">Supervisor (S64)</option>
+						</select>
+					</div>
+				</div>
+				<div class="overflow-x-auto custom-scrollbar">
+					<table class="min-w-full divide-y divide-stone-200">
+						<thead class="bg-stone-50">
+							<tr>
+								<th
+									class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">
+									Extension</th>
+								<th
+									class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">
+									Profile</th>
+								<th
+									class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">
+									Status</th>
+								<th
+									class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">
+									Kernel Support</th>
+								<th
+									class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">
+									Found In</th>
+							</tr>
+						</thead>
+						<tbody id="resultsBody" class="bg-white divide-y divide-stone-200">
+							<!-- JS Generated -->
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<!-- Missing List -->
+			<div class="bg-amber-50 border border-amber-200 rounded-lg p-6">
+				<h3 class="text-lg font-bold text-amber-800 mb-2">Missing Mandatory Extensions 
+					<span id="missingVersionBadge" class="text-sm font-normal text-amber-600"></span>
+				</h3>
+				<p class="text-sm text-amber-700 mb-4">The following extensions are required by RVA23
+					but were not explicitly found in <strong id="missingVersionText">this kernel version's</strong> 
+					<code>extensions.yaml</code> or <code>cpus.yaml</code> bindings. 
+					These extensions may be implemented but not yet documented in the device tree bindings, 
+					or they may not be supported in this kernel release.
+				</p>
+				<ul id="missingList"
+					class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 text-sm text-amber-900">
+					<!-- JS Generated -->
+				</ul>
+			</div>
+		</div>
+
+	</main>
+
+	<script>
+		// --- Data Definitions (RVA23 Baseline) ---
+		// Sourced from RVA23 Profile Spec
+		const rva23Data = [
+			// RVA23U64 Mandatory
+			{ name: "M", category: "RVA23U64", status: "Mandatory", keywords: ["m"] },
+			{ name: "A", category: "RVA23U64", status: "Mandatory", keywords: ["a"] },
+			{ name: "F", category: "RVA23U64", status: "Mandatory", keywords: ["f"] },
+			{ name: "D", category: "RVA23U64", status: "Mandatory", keywords: ["d"] },
+			{ name: "C", category: "RVA23U64", status: "Mandatory", keywords: ["c"] },
+			{ name: "B", category: "RVA23U64", status: "Mandatory", keywords: ["b", "zba", "zbb", "zbs"] },
+			{ name: "Zicsr", category: "RVA23U64", status: "Mandatory", keywords: ["zicsr"] },
+			{ name: "Zicntr", category: "RVA23U64", status: "Mandatory", keywords: ["zicntr"] },
+			{ name: "Zihpm", category: "RVA23U64", status: "Mandatory", keywords: ["zihpm"] },
+			{ name: "Ziccif", category: "RVA23U64", status: "Mandatory", keywords: ["ziccif"] },
+			{ name: "Ziccrse", category: "RVA23U64", status: "Mandatory", keywords: ["ziccrse"] },
+			{ name: "Ziccamoa", category: "RVA23U64", status: "Mandatory", keywords: ["ziccamoa"] },
+			{ name: "Zicclsm", category: "RVA23U64", status: "Mandatory", keywords: ["zicclsm"] },
+			{ name: "Za64rs", category: "RVA23U64", status: "Mandatory", keywords: ["za64rs"] },
+			{ name: "Zihintpause", category: "RVA23U64", status: "Mandatory", keywords: ["zihintpause"] },
+			{ name: "Zic64b", category: "RVA23U64", status: "Mandatory", keywords: ["zic64b"], special_check: "block_size" },
+			{ name: "Zicbom", category: "RVA23U64", status: "Mandatory", keywords: ["zicbom"] },
+			{ name: "Zicbop", category: "RVA23U64", status: "Mandatory", keywords: ["zicbop"] },
+			{ name: "Zicboz", category: "RVA23U64", status: "Mandatory", keywords: ["zicboz"] },
+			{ name: "Zfhmin", category: "RVA23U64", status: "Mandatory", keywords: ["zfhmin"] },
+			{ name: "Zkt", category: "RVA23U64", status: "Mandatory", keywords: ["zkt"] },
+			{ name: "V", category: "RVA23U64", status: "Mandatory", keywords: ["v"] },
+			{ name: "Zvfhmin", category: "RVA23U64", status: "Mandatory", keywords: ["zvfhmin"] },
+			{ name: "Zvbb", category: "RVA23U64", status: "Mandatory", keywords: ["zvbb"] },
+			{ name: "Zvkt", category: "RVA23U64", status: "Mandatory", keywords: ["zvkt"] },
+			{ name: "Zihintntl", category: "RVA23U64", status: "Mandatory", keywords: ["zihintntl"] },
+			{ name: "Zicond", category: "RVA23U64", status: "Mandatory", keywords: ["zicond"] },
+			{ name: "Zimop", category: "RVA23U64", status: "Mandatory", keywords: ["zimop"] },
+			{ name: "Zcmop", category: "RVA23U64", status: "Mandatory", keywords: ["zcmop"] },
+			{ name: "Zcb", category: "RVA23U64", status: "Mandatory", keywords: ["zcb"] },
+			{ name: "Zfa", category: "RVA23U64", status: "Mandatory", keywords: ["zfa"] },
+			{ name: "Zawrs", category: "RVA23U64", status: "Mandatory", keywords: ["zawrs"] },
+			{ name: "Supm", category: "RVA23U64", status: "Mandatory", keywords: ["supm", "smnpm", "ssnpm"] }, // Supm maps to pointer masking
+
+			// RVA23S64 Mandatory
+			{ name: "Zifencei", category: "RVA23S64", status: "Mandatory", keywords: ["zifencei"] },
+			{ name: "Ss1p13", category: "RVA23S64", status: "Mandatory", keywords: ["ss1p13"] },
+			{ name: "Svbare", category: "RVA23S64", status: "Mandatory", keywords: ["svbare", "riscv,none"] },
+			{ name: "Sv39", category: "RVA23S64", status: "Mandatory", keywords: ["sv39", "riscv,sv39"] },
+			{ name: "Svade", category: "RVA23S64", status: "Mandatory", keywords: ["svade"] },
+			{ name: "Ssccptr", category: "RVA23S64", status: "Mandatory", keywords: ["ssccptr"] },
+			{ name: "Sstvecd", category: "RVA23S64", status: "Mandatory", keywords: ["sstvecd"] },
+			{ name: "Sstvala", category: "RVA23S64", status: "Mandatory", keywords: ["sstvala"] },
+			{ name: "Sscounterenw", category: "RVA23S64", status: "Mandatory", keywords: ["sscounterenw"] },
+			{ name: "Svpbmt", category: "RVA23S64", status: "Mandatory", keywords: ["svpbmt"] },
+			{ name: "Svinval", category: "RVA23S64", status: "Mandatory", keywords: ["svinval"] },
+			{ name: "Svnapot", category: "RVA23S64", status: "Mandatory", keywords: ["svnapot"] },
+			{ name: "Sstc", category: "RVA23S64", status: "Mandatory", keywords: ["sstc"] },
+			{ name: "Sscofpmf", category: "RVA23S64", status: "Mandatory", keywords: ["sscofpmf"] },
+			{ name: "Ssnpm", category: "RVA23S64", status: "Mandatory", keywords: ["ssnpm"] },
+			{ name: "Ssu64xl", category: "RVA23S64", status: "Mandatory", keywords: ["ssu64xl"] },
+			{ name: "Sha", category: "RVA23S64", status: "Mandatory", keywords: ["sha"] },
+			{ name: "H", category: "RVA23S64", status: "Mandatory", keywords: ["h"] },
+			{ name: "Ssstateen", category: "RVA23S64", status: "Mandatory", keywords: ["ssstateen", "smstateen"] },
+			{ name: "Shcounterenw", category: "RVA23S64", status: "Mandatory", keywords: ["shcounterenw"] },
+			{ name: "Shvstvala", category: "RVA23S64", status: "Mandatory", keywords: ["shvstvala"] },
+			{ name: "Shtvala", category: "RVA23S64", status: "Mandatory", keywords: ["shtvala"] },
+			{ name: "Shvstvecd", category: "RVA23S64", status: "Mandatory", keywords: ["shvstvecd"] },
+			{ name: "Shvsatpa", category: "RVA23S64", status: "Mandatory", keywords: ["shvsatpa"] },
+			{ name: "Shgatpa", category: "RVA23S64", status: "Mandatory", keywords: ["shgatpa"] },
+
+			// Selected Optionals for context
+			{ name: "Sv48", category: "RVA23S64", status: "Optional", keywords: ["sv48", "riscv,sv48"] },
+			{ name: "Sv57", category: "RVA23S64", status: "Optional", keywords: ["sv57", "riscv,sv57"] },
+			{ name: "Svadu", category: "RVA23S64", status: "Optional", keywords: ["svadu"] }
+		];
+
+		// Global State
+		let analysisResults = [];
+		let fetchedExtensions = new Set();
+		let fetchedProperties = new Set(); // For block sizes etc
+		let kernelDatabase = null; // Local database of pre-computed results
+
+		// --- Tag Fetching Logic ---
+
+		async function fetchTags() {
+			const select = document.getElementById('kernelVersion');
+			const evolutionStartSelect = document.getElementById('evolutionStart');
+			const evolutionEndSelect = document.getElementById('evolutionEnd');
+			const statusEl = document.getElementById('tagLoadStatus');
+			const useProxy = document.getElementById('useProxy').checked;
+
+			// Update UI to show loading
+			select.innerHTML = '<option disabled selected>Loading tags from kernel.org...</option>';
+			if (statusEl) statusEl.textContent = 'Loading...';
+
+			// Only try if proxy is enabled
+			if (!useProxy) {
+				console.log("Proxy disabled, using fallback versions.");
+				const fallbackVersions = ['6.6', '6.12', '6.18'];
+				select.innerHTML = fallbackVersions.map((v, i) => `<option value="${v}"${i === 0 ? ' selected' : ''}>${v}</option>`).join('');
+				populateEvolutionDropdowns(fallbackVersions);
+				if (statusEl) statusEl.textContent = '(Proxy disabled - using fallback versions)';
+				return;
+			}
+
+			try {
+				// Use git info/refs endpoint which returns plain text
+				const refsUrl = "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/info/refs?service=git-upload-pack";
+				const proxyUrl = "https://corsproxy.io/?";
+				const target = proxyUrl + encodeURIComponent(refsUrl);
+
+				console.log("Fetching tags from:", target);
+				if (statusEl) statusEl.textContent = 'Fetching from kernel.org...';
+
+				const response = await fetch(target);
+				if (!response.ok) {
+					throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+				}
+
+				const text = await response.text();
+				console.log("Received response, length:", text.length);
+				if (statusEl) statusEl.textContent = 'Parsing tags...';
+
+				// Parse refs/tags from git protocol output
+				// Format: <hash> refs/tags/v6.x.x
+				const lines = text.split('\n');
+				const tags = [];
+
+				for (const line of lines) {
+					// Match lines like: 1234abcd refs/tags/v6.12.4
+					const match = line.match(/refs\/tags\/v(6\.\d+(?:\.\d+)?)\s*$/);
+					if (match) {
+						tags.push(match[1]);
+					}
+				}
+
+				console.log("Found", tags.length, "v6.x tags");
+
+				// Filter: only versions > 6.4 (6.5+)
+				const validTags = tags.filter(t => {
+					const parts = t.split('.').map(Number);
+					if (parts[0] < 6) return false;
+					if (parts[0] === 6 && parts[1] <= 4) return false;
+					return true;
+				});
+
+				console.log("Valid tags (>6.4):", validTags.length);
+
+				// Sort: Descending Semver
+				validTags.sort((a, b) => {
+					const pa = a.split('.').map(Number);
+					const pb = b.split('.').map(Number);
+					for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+						const na = pa[i] || 0;
+						const nb = pb[i] || 0;
+						if (na > nb) return -1;
+						if (na < nb) return 1;
+					}
+					return 0;
+				});
+
+				// Populate Select
+				select.innerHTML = '';
+
+				if (validTags.length === 0) {
+					console.warn("No valid tags found, using fallback");
+					select.innerHTML = '<option value="6.6">6.6 (no tags found)</option>';
+					populateEvolutionDropdowns(['6.6']);
+					if (statusEl) statusEl.textContent = '⚠️ No tags found - check console';
+					return;
+				}
+
+				console.log("Populating dropdown with", validTags.length, "tags");
+
+				validTags.forEach(t => {
+					const opt = document.createElement('option');
+					opt.value = t;
+					opt.textContent = t;
+					// Default to 6.6 if available, otherwise first in list
+					if (t === '6.6') opt.selected = true;
+					select.appendChild(opt);
+				});
+
+				// Ensure selection
+				if (!validTags.includes('6.6') && validTags.length > 0) {
+					select.value = validTags[0];
+				}
+
+				// Populate evolution dropdowns with the same tags
+				populateEvolutionDropdowns(validTags);
+
+				console.log("Dropdown populated successfully");
+				if (statusEl) statusEl.textContent = `✓ Loaded ${validTags.length} tags`;
+
+			} catch (e) {
+				console.error("Tag fetch error:", e);
+				// Fallback to common versions
+				const fallbackVersions = ['6.6', '6.12', '6.18'];
+				select.innerHTML = fallbackVersions.map((v, i) => `<option value="${v}"${i === 0 ? ' selected' : ''}>${v}</option>`).join('');
+				populateEvolutionDropdowns(fallbackVersions);
+				if (statusEl) statusEl.innerHTML = `⚠️ Fetch failed: ${e.message} - <a href="#" onclick="alert('Check browser console (F12) for details'); return false;" class="underline">see console</a>`;
+			}
+		}
+
+		function populateEvolutionDropdowns(tags) {
+			const evolutionStartSelect = document.getElementById('evolutionStart');
+			const evolutionEndSelect = document.getElementById('evolutionEnd');
+
+			// Get only major versions (X.Y, not X.Y.Z)
+			const majorVersions = tags.filter(t => {
+				const parts = t.split('.');
+				return parts.length === 2; // Only major.minor
+			}).sort((a, b) => {
+				const pa = a.split('.').map(Number);
+				const pb = b.split('.').map(Number);
+				// Sort ascending for start/end dropdowns
+				if (pa[0] !== pb[0]) return pa[0] - pb[0];
+				return pa[1] - pb[1];
+			});
+
+			// If no major versions, extract them from patch versions
+			let versionsToUse = majorVersions;
+			if (majorVersions.length === 0) {
+				const seenMajor = new Set();
+				versionsToUse = tags.filter(t => {
+					const parts = t.split('.');
+					const majorMinor = `${parts[0]}.${parts[1]}`;
+					if (seenMajor.has(majorMinor)) return false;
+					seenMajor.add(majorMinor);
+					return true;
+				}).map(t => {
+					const parts = t.split('.');
+					return `${parts[0]}.${parts[1]}`;
+				}).sort((a, b) => {
+					const pa = a.split('.').map(Number);
+					const pb = b.split('.').map(Number);
+					if (pa[0] !== pb[0]) return pa[0] - pb[0];
+					return pa[1] - pb[1];
+				});
+			}
+
+			console.log("Evolution dropdowns will use versions:", versionsToUse);
+
+			// Populate Start dropdown
+			evolutionStartSelect.innerHTML = '';
+			versionsToUse.forEach((v, i) => {
+				const opt = document.createElement('option');
+				opt.value = v;
+				opt.textContent = v;
+				// Default to 6.5 or first available
+				if (v === '6.5' || (i === 0 && !versionsToUse.includes('6.5'))) {
+					opt.selected = true;
+				}
+				evolutionStartSelect.appendChild(opt);
+			});
+
+			// Populate End dropdown (keep "Auto" as first option)
+			evolutionEndSelect.innerHTML = '<option value="auto" selected>Auto (Latest)</option>';
+			versionsToUse.forEach(v => {
+				const opt = document.createElement('option');
+				opt.value = v;
+				opt.textContent = v;
+				evolutionEndSelect.appendChild(opt);
+			});
+
+			console.log("Evolution dropdowns populated with", versionsToUse.length, "major versions");
+		}
+
+		// Initialize tag loading and database
+		document.addEventListener('DOMContentLoaded', async () => {
+			await loadKernelDatabase();
+			updateDatabaseStatus();
+			fetchTags();
+		});
+
+		// --- Database Management ---
+
+		async function loadKernelDatabase() {
+			try {
+				// Changed from kernel-data.json to rva23-coverage-data.json
+				const response = await fetch('rva23-coverage-data.json');
+				if (!response.ok) {
+					throw new Error(`HTTP ${response.status}`);
+				}
+				kernelDatabase = await response.json();
+				const versionCount = Object.keys(kernelDatabase.versions || {}).length;
+
+				console.log('📁 Database loaded:', kernelDatabase._metadata);
+				console.log(`   ${versionCount} versions available`);
+				console.log('   Last updated:', kernelDatabase._metadata.last_updated);
+
+				// Show sample of available versions
+				const versions = Object.keys(kernelDatabase.versions || {}).sort();
+				if (versions.length > 0) {
+					console.log('   Sample versions:', versions.slice(0, 10).join(', '), versions.length > 10 ? '...' : '');
+				}
+			} catch (err) {
+				console.warn('⚠️ Failed to load kernel database:', err);
+				console.log('   All versions will be fetched from kernel.org');
+				kernelDatabase = { versions: {} };
+			}
+		}
+
+		function updateDatabaseStatus() {
+			const statusEl = document.getElementById('dbStatus');
+			if (!statusEl) return;
+
+			if (!kernelDatabase || !kernelDatabase.versions) {
+				statusEl.innerHTML = '<span class="text-amber-600">⚠️ Database not loaded</span>';
+				return;
+			}
+
+			const versionCount = Object.keys(kernelDatabase.versions).length;
+			const lastUpdated = kernelDatabase._metadata?.last_updated || 'Unknown';
+			statusEl.innerHTML = `<span class="text-emerald-600 font-medium">${versionCount} versions</span> loaded (updated: ${lastUpdated})`;
+		}
+
+		function showDatabaseInfo() {
+			if (!kernelDatabase || !kernelDatabase.versions) {
+				alert('Database not loaded. Check console for errors.');
+				return;
+			}
+
+			const versions = Object.keys(kernelDatabase.versions).sort((a, b) => {
+				const pa = a.split('.').map(Number);
+				const pb = b.split('.').map(Number);
+				for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+					const na = pa[i] || 0;
+					const nb = pb[i] || 0;
+					if (na !== nb) return na - nb;
+				}
+				return 0;
+			});
+			const metadata = kernelDatabase._metadata;
+
+			let message = `🗄️ Kernel Analysis Database\n\n`;
+			message += `Source: ${metadata.source || 'Unknown'}\n`;
+			message += `Last Updated: ${metadata.last_updated}\n`;
+			message += `Generator: ${metadata.generator || 'Manual'}\n`;
+			message += `\n📦 Cached Versions: ${versions.length}\n\n`;
+
+			// Show version range summary
+			if (versions.length > 0) {
+				message += `First: v${versions[0]}\n`;
+				message += `Latest: v${versions[versions.length - 1]}\n`;
+
+				if (versions.length <= 20) {
+					message += `\nAll versions:\n`;
+					message += versions.map(v => `  • v${v}`).join('\n');
+				} else {
+					message += `\nFirst 10 versions:\n`;
+					message += versions.slice(0, 10).map(v => `  • v${v}`).join('\n');
+					message += `\n  ... and ${versions.length - 10} more\n`;
+					message += `\nLast 5 versions:\n`;
+					message += versions.slice(-5).map(v => `  • v${v}`).join('\n');
+				}
+			}
+
+			alert(message);
+		}
+
+		function getFromDatabase(version) {
+			if (!kernelDatabase || !kernelDatabase.versions) {
+				console.log(`⚠️ Database not loaded, cannot check for v${version}`);
+				return null;
+			}
+
+			const detailedData = kernelDatabase.versions[version];
+			if (detailedData) {
+				console.log(`📁 Cache HIT: v${version} found in local database`);
+
+				// ADAPTER: Convert new rich format to the flat format expected by UI
+
+				// 1. Mandatory Only (Request: Timeline should only track mandatory)
+				const mandatorySupported = [
+					...(detailedData.RVA23U64?.mandatory?.supported || []),
+					...(detailedData.RVA23S64?.mandatory?.supported || [])
+				];
+
+				// 2. All Supported (For Table: show everything)
+				const optionalSupported = [
+					...(detailedData.RVA23U64?.optional?.supported || []),
+					...(detailedData.RVA23S64?.optional?.supported || [])
+				];
+				const allSupported = [...mandatorySupported, ...optionalSupported];
+
+				// 3. Optional extensions by profile
+				const u64OptionalList = detailedData.RVA23U64?.optional?.supported || [];
+				const s64OptionalList = detailedData.RVA23S64?.optional?.supported || [];
+
+				return {
+					version: version,
+					// Use pre-calculated values from JSON or re-calculate if needed
+					// The UI primarily uses extensions list to re-derive its own stats,
+					// but evolution chart might use these pre-calculated stats.
+					coveragePercent: detailedData.overallMandatoryCoverage,
+					supportedCount: detailedData.totalMandatory - (
+						(detailedData.RVA23U64?.mandatory?.missing?.length || 0) +
+						(detailedData.RVA23S64?.mandatory?.missing?.length || 0)
+					), // Approximate if supportedCount not explicit in root
+					totalMandatory: detailedData.totalMandatory,
+
+					// Arrays of strings
+					supportedExtensions: mandatorySupported, // MANDATORY ONLY (Fixes timeline)
+					allSupportedExtensions: allSupported,    // ALL (Fixes table)
+
+					// Profile specific stats (adapter) - Mandatory
+					u64Coverage: detailedData.RVA23U64?.mandatory?.coveragePercent,
+					u64Supported: detailedData.RVA23U64?.mandatory?.supportedCount,
+					u64Total: detailedData.RVA23U64?.mandatory?.totalCount,
+					u64SupportedList: detailedData.RVA23U64?.mandatory?.supported || [],
+					u64Missing: detailedData.RVA23U64?.mandatory?.missing || [],
+
+					s64Coverage: detailedData.RVA23S64?.mandatory?.coveragePercent,
+					s64Supported: detailedData.RVA23S64?.mandatory?.supportedCount,
+					s64Total: detailedData.RVA23S64?.mandatory?.totalCount,
+					s64SupportedList: detailedData.RVA23S64?.mandatory?.supported || [],
+					s64Missing: detailedData.RVA23S64?.mandatory?.missing || [],
+
+					// Optional extensions data
+					optionalSupportedCount: optionalSupported.length,
+					optionalSupportedList: optionalSupported,
+					u64OptionalSupported: u64OptionalList.length,
+					u64OptionalList: u64OptionalList,
+					s64OptionalSupported: s64OptionalList.length,
+					s64OptionalList: s64OptionalList
+				};
+			}
+
+			console.log(`🌐 Cache MISS: v${version} not in database, will fetch from kernel.org`);
+			return null;
+		}
+
+		function exportDatabaseEntry(versionData) {
+			// Helper function to export a new version's data for adding to kernel-data.json
+			const entry = JSON.stringify({
+				[versionData.version]: versionData
+			}, null, 2);
+			console.log('=== Copy this to kernel-data.json ===');
+			console.log(entry);
+			console.log('=== End of entry ===');
+			return entry;
+		}
+
+		// --- Fetching Logic ---
+
+		function log(msg, type = 'info', isHTML = false) {
+			const logDiv = document.getElementById('statusLog');
+			const entry = document.createElement('div');
+			entry.className = `py-1 border-b border-stone-800 ${type === 'error' ? 'text-red-400' : 'text-stone-300'}`;
+
+			const timePrefix = `[${new Date().toLocaleTimeString()}] `;
+
+			if (isHTML) {
+				entry.innerHTML = timePrefix + msg;
+			} else {
+				entry.textContent = timePrefix + msg;
+			}
+
+			logDiv.appendChild(entry);
+			document.getElementById('statusArea').classList.remove('hidden');
+			logDiv.scrollTop = logDiv.scrollHeight;
+		}
+
+		async function analyzeKernel() {
+			const version = document.getElementById('kernelVersion').value.trim();
+			if (!version) {
+				alert("Please enter a kernel version.");
+				return;
+			}
+
+			// Reset
+			document.getElementById('analyzeBtn').disabled = true;
+			document.getElementById('analyzeBtn').innerHTML = 'Analyzing...';
+			document.getElementById('statusLog').innerHTML = '';
+			fetchedExtensions.clear();
+			fetchedProperties.clear();
+
+			log(`Starting analysis for Linux Kernel v${version}...`);
+
+			// Check database first
+			const dbResult = getFromDatabase(version);
+			if (dbResult) {
+				log(`🗄️  Found v${version} in local database!`);
+				log(`⚡ Using pre-computed data (instant load, no network required)`);
+				log(`   Database last updated: ${kernelDatabase._metadata.last_updated}`);
+				log(`   Database contains ${Object.keys(kernelDatabase.versions).length} versions`);
+
+				// Convert database result to display format
+				analysisResults = rva23Data.map(item => {
+					// Use allSupportedExtensions if available (new DB), otherwise fallback (old DB)
+					// This ensures the table shows optional support if we have the data
+					const sourceList = dbResult.allSupportedExtensions || dbResult.supportedExtensions;
+					const supported = sourceList.includes(item.name);
+					return {
+						...item,
+						supported: supported,
+						foundIn: supported ? "📁 Local Database" : "-"
+					};
+				});
+
+				log(`✓ Analysis complete (loaded from database in < 1ms)`);
+				renderDashboard(version);
+				document.getElementById('analyzeBtn').disabled = false;
+				document.getElementById('analyzeBtn').innerHTML = `<span>Analyze Version</span> <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>`;
+				return;
+			}
+
+			// Not in database, fetch from kernel.org
+			log(`⚠️  Version v${version} not found in local database`);
+			log(`🌐 Fetching from kernel.org (this may take 5-10 seconds)...`);
+			log(`💡 Tip: Run generate-kernel-database.py to add this version to the database`);
+
+			const useProxy = document.getElementById('useProxy').checked;
+			const debugMode = document.getElementById('debugMode').checked;
+			const baseUrl = `https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/plain/Documentation/devicetree/bindings/riscv`;
+
+			// Try multiple CORS proxies in case one fails
+			// Format: [url_prefix, needs_json_unwrap]
+			const proxies = [
+				{ url: "https://corsproxy.io/?", unwrapJSON: false },
+				{ url: "https://api.allorigins.win/get?url=", unwrapJSON: true },
+				{ url: "https://api.codetabs.com/v1/proxy?quest=", unwrapJSON: false }
+			];
+
+			// Files to fetch
+			const files = ['extensions.yaml', 'cpus.yaml'];
+
+			try {
+				for (const file of files) {
+					const rawUrl = `${baseUrl}/${file}?h=v${version}`;
+
+					log(`Fetching ${file}...`);
+					log(`Direct URL: <a href="${rawUrl}" target="_blank" class="text-blue-400 hover:underline">${rawUrl}</a>`, 'info', true);
+
+					let success = false;
+					let lastError = null;
+
+					// Try with proxy (try multiple proxies)
+					if (useProxy) {
+						for (let i = 0; i < proxies.length && !success; i++) {
+							const proxy = proxies[i];
+							const targetUrl = proxy.url + encodeURIComponent(rawUrl);
+
+							if (i > 0) {
+								log(`Retrying with alternative proxy (${i + 1}/${proxies.length})...`);
+							}
+
+							try {
+								const response = await fetch(targetUrl);
+								if (!response.ok) {
+									throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+								}
+
+								let text;
+
+								// Handle JSON-wrapped responses (allorigins.win)
+								if (proxy.unwrapJSON) {
+									const json = await response.json();
+									if (json.contents) {
+										text = json.contents;
+									} else {
+										throw new Error('JSON response missing contents field');
+									}
+								} else {
+									text = await response.text();
+								}
+
+								// Debug mode: show response preview
+								if (debugMode) {
+									log(`Response preview (first 500 chars): ${text.substring(0, 500)}...`, 'info');
+								}
+
+								// Check if we got HTML instead of YAML (proxy error)
+								if (text.trim().toLowerCase().startsWith('<!doctype') || text.trim().toLowerCase().startsWith('<html')) {
+									if (debugMode) {
+										log(`Detected HTML response. First 200 chars: ${text.substring(0, 200)}`, 'error');
+									}
+									throw new Error('Received HTML instead of YAML');
+								}
+
+								// Check for minimum YAML-like content
+								if (!text.includes('$schema') && !text.includes('properties') && text.length < 100) {
+									throw new Error('Response does not appear to be valid YAML');
+								}
+
+								log(`Successfully fetched ${file} (${text.length} bytes). Parsing YAML...`);
+
+								// Parse YAML
+								const doc = jsyaml.load(text);
+								parseKernelYaml(doc, file);
+								log(`✓ Parsed ${file} successfully.`);
+								success = true;
+
+							} catch (err) {
+								lastError = err;
+								console.error(`Proxy ${i + 1} failed:`, err.message);
+								log(`  Proxy ${i + 1} error: ${err.message}`, 'info');
+							}
+						}
+					} else {
+						// Try direct fetch (will likely fail due to CORS)
+						log(`Attempting direct fetch (no proxy)...`);
+						try {
+							const response = await fetch(rawUrl);
+							if (!response.ok) {
+								throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+							}
+							const text = await response.text();
+							log(`Successfully fetched ${file} (${text.length} bytes). Parsing YAML...`);
+
+							const doc = jsyaml.load(text);
+							parseKernelYaml(doc, file);
+							log(`✓ Parsed ${file} successfully.`);
+							success = true;
+						} catch (err) {
+							lastError = err;
+							log(`Direct fetch failed: ${err.message}. Enable proxy option to bypass CORS restrictions.`, 'error');
+						}
+					}
+
+					// If all proxies failed and proxy was enabled, try direct as last resort
+					if (!success && useProxy) {
+						log(`All proxies failed. Attempting direct fetch as last resort...`);
+						try {
+							const response = await fetch(rawUrl);
+							if (!response.ok) {
+								throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+							}
+							const text = await response.text();
+							log(`Successfully fetched ${file} directly (${text.length} bytes). Parsing YAML...`);
+
+							const doc = jsyaml.load(text);
+							parseKernelYaml(doc, file);
+							log(`✓ Parsed ${file} successfully (direct fetch worked!).`);
+							success = true;
+						} catch (err) {
+							log(`Direct fetch also failed: ${err.message}`, 'error');
+						}
+					}
+
+					if (!success) {
+						log(`❌ Failed to fetch ${file}: ${lastError?.message || 'Unknown error'}`, 'error');
+						log(`Tip: The version v${version} might not exist or the file might not be available. Try 6.6, 6.12, or 6.18.`, 'error');
+					}
+				}
+
+				// Process Results
+				processResults();
+				renderDashboard(version);
+
+				// Suggest exporting to database
+				log(`💡 To add v${version} to local database, check browser console for export data`);
+				const exportData = generateDatabaseEntry(analysisResults, version);
+				console.log('\n=== ADD THIS TO kernel-data.json ===');
+				console.log(`"${version}": ${JSON.stringify(exportData, null, 2)},`);
+				console.log('=== END ===\n');
+
+			} catch (e) {
+				log(`Critical Error: ${e.message}`, 'error');
+			} finally {
+				document.getElementById('analyzeBtn').disabled = false;
+				document.getElementById('analyzeBtn').innerHTML = `<span>Analyze Version</span> <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>`;
+			}
+		}
+
+		function generateDatabaseEntry(results, version) {
+			// Generate database entry from analysis results
+			const mandatory = results.filter(r => r.status === 'Mandatory');
+			const supportedCount = mandatory.filter(r => r.supported).length;
+			const totalMandatory = mandatory.length;
+			const coveragePercent = Math.round((supportedCount / totalMandatory) * 100);
+
+			const missingExtensions = mandatory.filter(r => !r.supported).map(r => r.name);
+			const supportedExtensions = mandatory.filter(r => r.supported).map(r => r.name);
+
+			const u64Mandatory = results.filter(r => r.category === 'RVA23U64' && r.status === 'Mandatory');
+			const u64Supported = u64Mandatory.filter(r => r.supported).length;
+			const u64Coverage = Math.round((u64Supported / u64Mandatory.length) * 100);
+			const u64Missing = u64Mandatory.filter(r => !r.supported).map(r => r.name);
+			const u64SupportedList = u64Mandatory.filter(r => r.supported).map(r => r.name);
+
+			const s64Mandatory = results.filter(r => r.category === 'RVA23S64' && r.status === 'Mandatory');
+			const s64Supported = s64Mandatory.filter(r => r.supported).length;
+			const s64Coverage = Math.round((s64Supported / s64Mandatory.length) * 100);
+			const s64Missing = s64Mandatory.filter(r => !r.supported).map(r => r.name);
+			const s64SupportedList = s64Mandatory.filter(r => r.supported).map(r => r.name);
+
+			return {
+				version: version,
+				coveragePercent: coveragePercent,
+				supportedCount: supportedCount,
+				totalMandatory: totalMandatory,
+				missingExtensions: missingExtensions,
+				supportedExtensions: supportedExtensions,
+				u64Coverage: u64Coverage,
+				s64Coverage: s64Coverage,
+				u64Supported: u64Supported,
+				u64Total: u64Mandatory.length,
+				u64Missing: u64Missing,
+				u64SupportedList: u64SupportedList,
+				s64Supported: s64Supported,
+				s64Total: s64Mandatory.length,
+				s64Missing: s64Missing,
+				s64SupportedList: s64SupportedList
+			};
+		}
+
+		function parseKernelYaml(doc, filename) {
+			// 1. Search for 'const' values which usually define extension strings
+			// Recursive search function
+			function searchConsts(obj) {
+				if (!obj) return;
+
+				if (typeof obj === 'object') {
+					// Check if this object is a 'const' definition
+					if (obj.const && typeof obj.const === 'string') {
+						fetchedExtensions.add(obj.const.toLowerCase());
+					}
+
+					// Check for 'enum' definitions (common for mmu-type in cpus.yaml)
+					if (obj.enum && Array.isArray(obj.enum)) {
+						obj.enum.forEach(val => {
+							if (typeof val === 'string') fetchedExtensions.add(val.toLowerCase());
+						});
+					}
+
+					// Check for property keys that might correspond to special checks (like block sizes)
+					// In cpus.yaml or extensions.yaml, properties like 'riscv,cbom-block-size' might be defined
+					if (filename === 'extensions.yaml' || filename === 'cpus.yaml') {
+						if (obj.properties) {
+							Object.keys(obj.properties).forEach(key => fetchedProperties.add(key));
+						}
+					}
+
+					// Recurse
+					Object.values(obj).forEach(val => searchConsts(val));
+				} else if (Array.isArray(obj)) {
+					obj.forEach(item => searchConsts(item));
+				}
+			}
+
+			// 2. Specific handling for extensions.yaml structure
+			// Usually definitions are under 'properties' -> 'riscv,isa-extensions'
+			if (doc.properties && doc.properties['riscv,isa-extensions']) {
+				log(`Found riscv,isa-extensions definition in ${filename}.`);
+			}
+
+			searchConsts(doc);
+		}
+
+		function processResults() {
+			analysisResults = rva23Data.map(item => {
+				let supported = false;
+				let foundIn = "-";
+
+				// Check standard keywords
+				for (const kw of item.keywords) {
+					if (fetchedExtensions.has(kw.toLowerCase())) {
+						supported = true;
+						foundIn = `extensions/cpus yaml ("${kw}")`;
+						break;
+					}
+				}
+
+				// Special Checks
+				if (!supported && item.special_check === "block_size") {
+					// Zic64b check: look for block size properties
+					if (fetchedProperties.has('riscv,cbom-block-size') ||
+						fetchedProperties.has('riscv,cboz-block-size')) {
+						supported = true;
+						foundIn = "Implicit (block-size props)";
+					}
+				}
+
+				return { ...item, supported, foundIn };
+			});
+		}
+
+		function renderDashboard(version) {
+			document.getElementById('resultsDashboard').classList.remove('hidden');
+			document.getElementById('targetVersionDisplay').textContent = `v${version}`;
+
+			const mandatory = analysisResults.filter(r => r.status === 'Mandatory');
+			const supportedCount = mandatory.filter(r => r.supported).length;
+			const totalMandatory = mandatory.length;
+			const coverage = Math.round((supportedCount / totalMandatory) * 100);
+
+			document.getElementById('coverageDisplay').textContent = `${coverage}%`;
+			document.getElementById('coverageCount').textContent = `${supportedCount}/${totalMandatory}`;
+
+			const missing = mandatory.filter(r => !r.supported);
+			document.getElementById('missingCountDisplay').textContent = missing.length;
+
+			// Update missing extensions section with version info
+			document.getElementById('missingVersionBadge').textContent = `(in Linux Kernel v${version})`;
+			document.getElementById('missingVersionText').textContent = `Linux Kernel v${version}'s`;
+
+			renderTable();
+			renderMissingList(missing);
+		}
+
+		function renderTable() {
+			const filter = document.getElementById('filterProfile').value;
+			const tbody = document.getElementById('resultsBody');
+			tbody.innerHTML = '';
+
+			const filtered = analysisResults.filter(r => filter === 'all' || r.category === filter);
+
+			filtered.forEach(row => {
+				const tr = document.createElement('tr');
+				tr.className = 'hover:bg-stone-50';
+
+				const statusColor = row.status === 'Mandatory' ? 'bg-amber-100 text-amber-800' : 'bg-stone-100 text-stone-600';
+				const supportColor = row.supported ? 'text-emerald-600 font-semibold' : 'text-stone-400';
+				const icon = row.supported ? '✓' : '—';
+
+				tr.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-stone-900">${row.name}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-stone-500">${row.category}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusColor}">${row.status}</span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm ${supportColor}">
+                        <span class="mr-1">${icon}</span> ${row.supported ? 'Supported' : 'Not Found'}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-stone-400 text-xs">${row.foundIn}</td>
+                `;
+				tbody.appendChild(tr);
+			});
+		}
+
+		function renderMissingList(missing) {
+			const list = document.getElementById('missingList');
+			list.innerHTML = '';
+
+			if (missing.length === 0) {
+				list.innerHTML = '<li class="col-span-3 text-center text-emerald-600 font-medium py-4">All Mandatory Extensions Supported! 🎉</li>';
+				return;
+			}
+
+			missing.forEach(m => {
+				const li = document.createElement('li');
+				li.className = "flex items-center gap-2";
+				li.innerHTML = `<span class="w-1.5 h-1.5 bg-amber-500 rounded-full"></span><span class="font-semibold">${m.name}</span> <span class="text-xs opacity-75">(${m.category})</span>`;
+				list.appendChild(li);
+			});
+		}
+
+		// --- Evolution Analysis Functions ---
+
+		let evolutionChart = null;
+		let optionalChart = null;
+
+		async function analyzeEvolution() {
+			const startVersion = document.getElementById('evolutionStart').value;
+			const endVersionInput = document.getElementById('evolutionEnd').value;
+			const useProxy = document.getElementById('useProxy').checked;
+
+			// Disable button
+			const btn = document.getElementById('evolutionBtn');
+			btn.disabled = true;
+			btn.innerHTML = '<span>Analyzing...</span>';
+
+			// Show progress bar
+			document.getElementById('evolutionProgress').classList.remove('hidden');
+			document.getElementById('evolutionProgressBar').style.width = '0%';
+			document.getElementById('evolutionProgressPercent').textContent = '0%';
+
+			// Show status log
+			document.getElementById('statusLog').innerHTML = '';
+			document.getElementById('statusArea').classList.remove('hidden');
+			log('Starting evolution analysis...');
+
+			try {
+				// Determine version range
+				let versions = [];
+				const startParts = startVersion.split('.').map(Number);
+
+				if (endVersionInput === 'auto') {
+					// Get available versions from the evolution end dropdown (excluding 'auto')
+					const evolutionEndSelect = document.getElementById('evolutionEnd');
+					const availableVersions = Array.from(evolutionEndSelect.options)
+						.map(opt => opt.value)
+						.filter(v => v !== 'auto' && v && !v.includes('Loading'));
+
+					// Filter versions >= startVersion
+					versions = availableVersions.filter(v => {
+						const parts = v.split('.').map(Number);
+						if (parts[0] > startParts[0]) return true;
+						if (parts[0] === startParts[0] && parts[1] >= startParts[1]) return true;
+						return false;
+					}).sort((a, b) => {
+						const pa = a.split('.').map(Number);
+						const pb = b.split('.').map(Number);
+						if (pa[0] !== pb[0]) return pa[0] - pb[0];
+						return pa[1] - pb[1];
+					});
+
+					// If no versions found, generate a reasonable range
+					if (versions.length === 0) {
+						log('No versions found in dropdown, generating range from start to 6.15...');
+						for (let minor = startParts[1]; minor <= 15; minor++) {
+							versions.push(`${startParts[0]}.${minor}`);
+						}
+					}
+				} else {
+					// Generate range from start to end
+					const endParts = endVersionInput.split('.').map(Number);
+
+					if (startParts[0] === endParts[0]) {
+						// Same major version
+						for (let minor = startParts[1]; minor <= endParts[1]; minor++) {
+							versions.push(`${startParts[0]}.${minor}`);
+						}
+					} else {
+						log('Cross-major version ranges not yet supported, using single major.', 'error');
+						versions.push(startVersion);
+					}
+				}
+
+				log(`Will analyze ${versions.length} versions: ${versions.join(', ')}`);
+
+				// Analyze each version
+				const evolutionData = [];
+
+				for (let i = 0; i < versions.length; i++) {
+					const version = versions[i];
+					const progress = Math.round(((i + 1) / versions.length) * 100);
+
+					document.getElementById('evolutionProgressText').textContent = `Analyzing v${version}...`;
+					document.getElementById('evolutionProgressBar').style.width = `${progress}%`;
+					document.getElementById('evolutionProgressPercent').textContent = `${progress}%`;
+
+					log(`[${i + 1}/${versions.length}] Analyzing v${version}...`);
+
+					try {
+						// Check database first
+						let result = getFromDatabase(version);
+
+						if (result) {
+							log(`  ✓ Using local database for v${version}`);
+						} else {
+							log(`  Fetching v${version} from kernel.org...`);
+							result = await analyzeSingleVersion(version, useProxy);
+							// Log the result for potential database addition
+							console.log(`Data for v${version}:`, result);
+						}
+
+						evolutionData.push(result);
+
+						// Calculate newly added vs previous version
+						let logMsg = `✓ v${version}: ${result.coveragePercent}% coverage (${result.supportedCount}/${result.totalMandatory} extensions)`;
+
+						if (i > 0 && evolutionData[i - 1].coveragePercent !== null) {
+							const prevResult = evolutionData[i - 1];
+							const newlyAdded = result.supportedExtensions.filter(
+								ext => !prevResult.supportedExtensions.includes(ext)
+							);
+
+							if (newlyAdded.length > 0) {
+								logMsg += ` — NEW: ${newlyAdded.join(', ')}`;
+							}
+						}
+
+						log(logMsg);
+					} catch (err) {
+						log(`✗ v${version}: ${err.message}`, 'error');
+						// Add placeholder data for failed versions
+						evolutionData.push({
+							version: version,
+							coveragePercent: null,
+							supportedCount: 0,
+							totalMandatory: 0,
+							missingExtensions: [],
+							supportedExtensions: [],
+							u64Coverage: null,
+							s64Coverage: null,
+							u64Supported: 0,
+							u64Total: 0,
+							u64Missing: [],
+							u64SupportedList: [],
+							s64Supported: 0,
+							s64Total: 0,
+							s64Missing: [],
+							s64SupportedList: [],
+							error: err.message
+						});
+					}
+				}
+
+				log('Evolution analysis complete!');
+
+				// Render charts
+				renderEvolutionChart(evolutionData);
+				renderOptionalChart(evolutionData);
+				renderEvolutionStats(evolutionData);
+				renderOptionalStats(evolutionData);
+
+			} catch (err) {
+				log(`Critical error in evolution analysis: ${err.message}`, 'error');
+				console.error(err);
+			} finally {
+				btn.disabled = false;
+				btn.innerHTML = '<span>Analyze Evolution</span><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>';
+				document.getElementById('evolutionProgress').classList.add('hidden');
+			}
+		}
+
+		async function analyzeSingleVersion(version, useProxy) {
+			const baseUrl = `https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/plain/Documentation/devicetree/bindings/riscv`;
+			const files = ['extensions.yaml', 'cpus.yaml'];
+
+			// Temporary storage for this version
+			const tempExtensions = new Set();
+			const tempProperties = new Set();
+
+			const proxies = [
+				{ url: "https://corsproxy.io/?", unwrapJSON: false },
+				{ url: "https://api.allorigins.win/get?url=", unwrapJSON: true },
+				{ url: "https://api.codetabs.com/v1/proxy?quest=", unwrapJSON: false }
+			];
+
+			// Fetch both files
+			for (const file of files) {
+				const rawUrl = `${baseUrl}/${file}?h=v${version}`;
+				let success = false;
+
+				if (useProxy) {
+					for (const proxy of proxies) {
+						const targetUrl = proxy.url + encodeURIComponent(rawUrl);
+
+						try {
+							const response = await fetch(targetUrl);
+							if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+							let text;
+							if (proxy.unwrapJSON) {
+								const json = await response.json();
+								text = json.contents || '';
+							} else {
+								text = await response.text();
+							}
+
+							// Basic validation
+							if (text.trim().toLowerCase().startsWith('<!doctype') || text.trim().toLowerCase().startsWith('<html')) {
+								throw new Error('Got HTML');
+							}
+
+							// Parse YAML
+							const doc = jsyaml.load(text);
+							parseKernelYamlToSet(doc, tempExtensions, tempProperties);
+							success = true;
+							break;
+						} catch (err) {
+							// Try next proxy
+							continue;
+						}
+					}
+				}
+
+				// Try direct if proxy failed or disabled
+				if (!success) {
+					try {
+						const response = await fetch(rawUrl);
+						if (!response.ok) throw new Error(`HTTP ${response.status}`);
+						const text = await response.text();
+						const doc = jsyaml.load(text);
+						parseKernelYamlToSet(doc, tempExtensions, tempProperties);
+						success = true;
+					} catch (err) {
+						// File might not exist in this version
+					}
+				}
+			}
+
+			// Calculate coverage for this version
+			const results = rva23Data.map(item => {
+				let supported = false;
+
+				for (const kw of item.keywords) {
+					if (tempExtensions.has(kw.toLowerCase())) {
+						supported = true;
+						break;
+					}
+				}
+
+				if (!supported && item.special_check === "block_size") {
+					if (tempProperties.has('riscv,cbom-block-size') || tempProperties.has('riscv,cboz-block-size')) {
+						supported = true;
+					}
+				}
+
+				return { ...item, supported };
+			});
+
+			const mandatory = results.filter(r => r.status === 'Mandatory');
+			const supportedCount = mandatory.filter(r => r.supported).length;
+			const totalMandatory = mandatory.length;
+			const coveragePercent = Math.round((supportedCount / totalMandatory) * 100);
+
+			// Get lists of missing and supported extensions
+			const missingExtensions = mandatory.filter(r => !r.supported).map(r => r.name);
+			const supportedExtensions = mandatory.filter(r => r.supported).map(r => r.name);
+
+			// Calculate by profile (Mandatory)
+			const u64Mandatory = results.filter(r => r.category === 'RVA23U64' && r.status === 'Mandatory');
+			const u64Supported = u64Mandatory.filter(r => r.supported).length;
+			const u64Coverage = Math.round((u64Supported / u64Mandatory.length) * 100);
+			const u64Missing = u64Mandatory.filter(r => !r.supported).map(r => r.name);
+			const u64SupportedList = u64Mandatory.filter(r => r.supported).map(r => r.name);
+
+			const s64Mandatory = results.filter(r => r.category === 'RVA23S64' && r.status === 'Mandatory');
+			const s64Supported = s64Mandatory.filter(r => r.supported).length;
+			const s64Coverage = Math.round((s64Supported / s64Mandatory.length) * 100);
+			const s64Missing = s64Mandatory.filter(r => !r.supported).map(r => r.name);
+			const s64SupportedList = s64Mandatory.filter(r => r.supported).map(r => r.name);
+
+			// Calculate Optional Extensions
+			const optional = results.filter(r => r.status === 'Optional');
+			const optionalSupported = optional.filter(r => r.supported);
+			const optionalSupportedCount = optionalSupported.length;
+			const optionalSupportedList = optionalSupported.map(r => r.name);
+
+			const u64Optional = results.filter(r => r.category === 'RVA23U64' && r.status === 'Optional');
+			const u64OptionalSupported = u64Optional.filter(r => r.supported).length;
+			const u64OptionalList = u64Optional.filter(r => r.supported).map(r => r.name);
+
+			const s64Optional = results.filter(r => r.category === 'RVA23S64' && r.status === 'Optional');
+			const s64OptionalSupported = s64Optional.filter(r => r.supported).length;
+			const s64OptionalList = s64Optional.filter(r => r.supported).map(r => r.name);
+
+			return {
+				version: version,
+				coveragePercent: coveragePercent,
+				supportedCount: supportedCount,
+				totalMandatory: totalMandatory,
+				missingExtensions: missingExtensions,
+				supportedExtensions: supportedExtensions,
+				u64Coverage: u64Coverage,
+				s64Coverage: s64Coverage,
+				u64Supported: u64Supported,
+				u64Total: u64Mandatory.length,
+				u64Missing: u64Missing,
+				u64SupportedList: u64SupportedList,
+				s64Supported: s64Supported,
+				s64Total: s64Mandatory.length,
+				s64Missing: s64Missing,
+				s64SupportedList: s64SupportedList,
+				// Optional extensions data
+				optionalSupportedCount: optionalSupportedCount,
+				optionalSupportedList: optionalSupportedList,
+				u64OptionalSupported: u64OptionalSupported,
+				u64OptionalList: u64OptionalList,
+				s64OptionalSupported: s64OptionalSupported,
+				s64OptionalList: s64OptionalList
+			};
+		}
+
+		function parseKernelYamlToSet(doc, extensionsSet, propertiesSet) {
+			function searchConsts(obj) {
+				if (!obj) return;
+
+				if (typeof obj === 'object') {
+					if (obj.const && typeof obj.const === 'string') {
+						extensionsSet.add(obj.const.toLowerCase());
+					}
+					if (obj.enum && Array.isArray(obj.enum)) {
+						obj.enum.forEach(val => {
+							if (typeof val === 'string') extensionsSet.add(val.toLowerCase());
+						});
+					}
+					if (obj.properties) {
+						Object.keys(obj.properties).forEach(key => propertiesSet.add(key));
+					}
+					Object.values(obj).forEach(val => searchConsts(val));
+				} else if (Array.isArray(obj)) {
+					obj.forEach(item => searchConsts(item));
+				}
+			}
+
+			searchConsts(doc);
+		}
+
+		function renderEvolutionChart(data) {
+			// Filter out failed versions
+			const validData = data.filter(d => d.coveragePercent !== null);
+
+			if (validData.length === 0) {
+				log('No valid data to chart', 'error');
+				return;
+			}
+
+			document.getElementById('evolutionChartContainer').classList.remove('hidden');
+
+			const ctx = document.getElementById('evolutionChart').getContext('2d');
+
+			// Destroy existing chart if any
+			if (evolutionChart) {
+				evolutionChart.destroy();
+			}
+
+			// Generate labels with version + extensions (multi-line)
+			const labels = validData.map((d, idx) => {
+				const lines = [`v${d.version}`];
+
+				if (idx === 0) {
+					// First version: show ALL supported extensions (baseline)
+					lines.push(`(${d.supportedCount} supported):`);
+					d.supportedExtensions.forEach(ext => {
+						lines.push(ext);
+					});
+				} else {
+					// Subsequent versions: show newly added extensions
+					const prevData = validData[idx - 1];
+					const newlyAdded = d.supportedExtensions.filter(
+						ext => !prevData.supportedExtensions.includes(ext)
+					);
+
+					if (newlyAdded.length > 0) {
+						// Show ALL new extensions, each on its own line
+						newlyAdded.forEach(ext => {
+							lines.push(`+${ext}`);
+						});
+					} else {
+						lines.push('(no new)');
+					}
+				}
+
+				return lines;
+			});
+
+			evolutionChart = new Chart(ctx, {
+				type: 'line',
+				data: {
+					labels: labels,
+					datasets: [
+						{
+							label: 'Overall Mandatory Coverage',
+							data: validData.map(d => d.coveragePercent),
+							borderColor: 'rgb(99, 102, 241)',
+							backgroundColor: 'rgba(99, 102, 241, 0.1)',
+							borderWidth: 3,
+							tension: 0.3,
+							fill: true,
+							pointRadius: 5,
+							pointHoverRadius: 7
+						},
+						{
+							label: 'RVA23U64 Mandatory',
+							data: validData.map(d => d.u64Coverage),
+							borderColor: 'rgb(168, 85, 247)',
+							backgroundColor: 'rgba(168, 85, 247, 0.1)',
+							borderWidth: 2,
+							tension: 0.3,
+							fill: false,
+							pointRadius: 4,
+							pointHoverRadius: 6,
+							borderDash: [5, 5]
+						},
+						{
+							label: 'RVA23S64 Mandatory',
+							data: validData.map(d => d.s64Coverage),
+							borderColor: 'rgb(245, 158, 11)',
+							backgroundColor: 'rgba(245, 158, 11, 0.1)',
+							borderWidth: 2,
+							tension: 0.3,
+							fill: false,
+							pointRadius: 4,
+							pointHoverRadius: 6,
+							borderDash: [5, 5]
+						}
+					]
+				},
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					layout: {
+						padding: {
+							left: 10,
+							right: 10,
+							top: 10,
+							bottom: 10
+						}
+					},
+					plugins: {
+						title: {
+							display: true,
+							text: 'RVA23 Mandatory Extension Support Evolution',
+							font: {
+								size: 16,
+								weight: 'bold'
+							},
+							padding: 20
+						},
+						legend: {
+							display: true,
+							position: 'top',
+							labels: {
+								usePointStyle: true,
+								padding: 15
+							}
+						},
+						tooltip: {
+							backgroundColor: 'rgba(15, 23, 42, 0.95)',
+							borderColor: 'rgba(99, 102, 241, 0.5)',
+							borderWidth: 2,
+							padding: 16,
+							titleFont: {
+								size: 14,
+								weight: 'bold'
+							},
+							bodyFont: {
+								size: 11,
+								family: "'Courier New', monospace"
+							},
+							bodySpacing: 4,
+							displayColors: true,
+							boxWidth: 8,
+							boxHeight: 8,
+							titleMarginBottom: 10,
+							footerMarginTop: 8,
+							caretSize: 8,
+							cornerRadius: 8,
+							callbacks: {
+								title: function (tooltipItems) {
+									return `Kernel ${tooltipItems[0].label}`;
+								},
+								afterTitle: function (tooltipItems) {
+									const dataIndex = tooltipItems[0].dataIndex;
+									const d = validData[dataIndex];
+									return `Overall Coverage: ${d.coveragePercent}% (${d.supportedCount}/${d.totalMandatory})`;
+								},
+								label: function (context) {
+									const dataIndex = context.dataIndex;
+									const d = validData[dataIndex];
+
+									if (context.datasetIndex === 0) {
+										// Overall line - show basic info
+										return `Overall Mandatory: ${d.coveragePercent}%`;
+									} else if (context.datasetIndex === 1) {
+										return `RVA23U64: ${d.u64Coverage}% (${d.u64Supported}/${d.u64Total})`;
+									} else {
+										return `RVA23S64: ${d.s64Coverage}% (${d.s64Supported}/${d.s64Total})`;
+									}
+								},
+								afterLabel: function (context) {
+									const dataIndex = context.dataIndex;
+									const d = validData[dataIndex];
+									const prevData = dataIndex > 0 ? validData[dataIndex - 1] : null;
+
+									let lines = [];
+
+									if (context.datasetIndex === 0) {
+										// Overall line - show detailed info
+										if (prevData) {
+											const newlyAdded = d.supportedExtensions.filter(
+												ext => !prevData.supportedExtensions.includes(ext)
+											);
+
+											if (newlyAdded.length > 0) {
+												lines.push('');
+												lines.push(`✨ Newly Added (${newlyAdded.length}):`);
+												newlyAdded.forEach(ext => {
+													lines.push(`  + ${ext}`);
+												});
+											} else {
+												lines.push('');
+												lines.push('✨ No new extensions vs previous');
+											}
+										}
+
+										// Show missing extensions (ALL of them)
+										if (d.missingExtensions.length > 0) {
+											lines.push('');
+											lines.push(`⚠️  Missing Mandatory (${d.missingExtensions.length}):`);
+											d.missingExtensions.forEach(ext => {
+												lines.push(`  - ${ext}`);
+											});
+										} else {
+											lines.push('');
+											lines.push('✅ All mandatory extensions supported!');
+										}
+									} else if (context.datasetIndex === 1) {
+										// U64 Profile line
+										if (prevData) {
+											const newlyAdded = d.u64SupportedList.filter(
+												ext => !prevData.u64SupportedList.includes(ext)
+											);
+
+											if (newlyAdded.length > 0) {
+												lines.push('');
+												lines.push(`✨ New U64 Extensions (${newlyAdded.length}):`);
+												newlyAdded.forEach(ext => {
+													lines.push(`  + ${ext}`);
+												});
+											}
+										}
+
+										if (d.u64Missing.length > 0) {
+											lines.push('');
+											lines.push(`⚠️  Missing U64 (${d.u64Missing.length}):`);
+											d.u64Missing.forEach(ext => {
+												lines.push(`  - ${ext}`);
+											});
+										}
+									} else if (context.datasetIndex === 2) {
+										// S64 Profile line
+										if (prevData) {
+											const newlyAdded = d.s64SupportedList.filter(
+												ext => !prevData.s64SupportedList.includes(ext)
+											);
+
+											if (newlyAdded.length > 0) {
+												lines.push('');
+												lines.push(`✨ New S64 Extensions (${newlyAdded.length}):`);
+												newlyAdded.forEach(ext => {
+													lines.push(`  + ${ext}`);
+												});
+											}
+										}
+
+										if (d.s64Missing.length > 0) {
+											lines.push('');
+											lines.push(`⚠️  Missing S64 (${d.s64Missing.length}):`);
+											d.s64Missing.forEach(ext => {
+												lines.push(`  - ${ext}`);
+											});
+										}
+									}
+
+									return lines;
+								}
+							}
+						}
+					},
+					scales: {
+						y: {
+							beginAtZero: true,
+							max: 100,
+							ticks: {
+								callback: function (value) {
+									return value + '%';
+								}
+							},
+							title: {
+								display: true,
+								text: 'Coverage (%)',
+								font: {
+									weight: 'bold'
+								}
+							}
+						},
+						x: {
+							title: {
+								display: true,
+								text: 'Kernel Version (+ New Extensions)',
+								font: {
+									weight: 'bold'
+								}
+							},
+							ticks: {
+								maxRotation: 0,
+								minRotation: 0,
+								autoSkip: false,
+								font: {
+									size: 9
+								}
+							}
+						}
+					}
+				}
+			});
+		}
+
+		function renderEvolutionStats(data) {
+			const validData = data.filter(d => d.coveragePercent !== null);
+
+			if (validData.length === 0) return;
+
+			document.getElementById('evolutionStats').classList.remove('hidden');
+
+			const first = validData[0];
+			const last = validData[validData.length - 1];
+
+			const improvement = last.coveragePercent - first.coveragePercent;
+			const improvementSign = improvement >= 0 ? '+' : '';
+
+			document.getElementById('coverageImprovement').textContent = `${improvementSign}${improvement}%`;
+			document.getElementById('latestCoverage').textContent = `${last.coveragePercent}%`;
+			document.getElementById('versionsAnalyzed').textContent = validData.length;
+		}
+
+		function renderOptionalChart(data) {
+			// Filter out failed versions
+			const validData = data.filter(d => d.coveragePercent !== null && d.optionalSupportedCount !== undefined);
+
+			if (validData.length === 0) {
+				log('No valid optional extension data to chart', 'error');
+				return;
+			}
+
+			document.getElementById('optionalChartContainer').classList.remove('hidden');
+
+			const ctx = document.getElementById('optionalChart').getContext('2d');
+
+			// Destroy existing chart if any
+			if (optionalChart) {
+				optionalChart.destroy();
+			}
+
+			// Generate labels with version + new optional extensions
+			const labels = validData.map((d, idx) => {
+				const lines = [`v${d.version}`];
+
+				if (idx === 0) {
+					// First version: show ALL supported optional extensions
+					if (d.optionalSupportedCount > 0) {
+						lines.push(`(${d.optionalSupportedCount} optional):`);
+						d.optionalSupportedList.forEach(ext => {
+							lines.push(ext);
+						});
+					} else {
+						lines.push('(none)');
+					}
+				} else {
+					// Subsequent versions: show newly added optional extensions
+					const prevData = validData[idx - 1];
+					const newlyAdded = d.optionalSupportedList.filter(
+						ext => !prevData.optionalSupportedList.includes(ext)
+					);
+
+					if (newlyAdded.length > 0) {
+						newlyAdded.forEach(ext => {
+							lines.push(`+${ext}`);
+						});
+					} else {
+						lines.push('(no new)');
+					}
+				}
+
+				return lines;
+			});
+
+			optionalChart = new Chart(ctx, {
+				type: 'line',
+				data: {
+					labels: labels,
+					datasets: [
+						{
+							label: 'Total Optional Extensions',
+							data: validData.map(d => d.optionalSupportedCount),
+							borderColor: 'rgb(16, 185, 129)',
+							backgroundColor: 'rgba(16, 185, 129, 0.1)',
+							borderWidth: 3,
+							tension: 0.3,
+							fill: true,
+							pointRadius: 5,
+							pointHoverRadius: 7
+						},
+						{
+							label: 'RVA23U64 Optional',
+							data: validData.map(d => d.u64OptionalSupported || 0),
+							borderColor: 'rgb(59, 130, 246)',
+							backgroundColor: 'rgba(59, 130, 246, 0.1)',
+							borderWidth: 2,
+							tension: 0.3,
+							fill: false,
+							pointRadius: 4,
+							pointHoverRadius: 6,
+							borderDash: [5, 5]
+						},
+						{
+							label: 'RVA23S64 Optional',
+							data: validData.map(d => d.s64OptionalSupported || 0),
+							borderColor: 'rgb(249, 115, 22)',
+							backgroundColor: 'rgba(249, 115, 22, 0.1)',
+							borderWidth: 2,
+							tension: 0.3,
+							fill: false,
+							pointRadius: 4,
+							pointHoverRadius: 6,
+							borderDash: [5, 5]
+						}
+					]
+				},
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					layout: {
+						padding: {
+							left: 10,
+							right: 10,
+							top: 10,
+							bottom: 10
+						}
+					},
+					plugins: {
+						title: {
+							display: true,
+							text: 'RVA23 Optional Extension Support Evolution',
+							font: {
+								size: 16,
+								weight: 'bold'
+							},
+							padding: 20
+						},
+						legend: {
+							display: true,
+							position: 'top',
+							labels: {
+								usePointStyle: true,
+								padding: 15
+							}
+						},
+						tooltip: {
+							backgroundColor: 'rgba(15, 23, 42, 0.95)',
+							borderColor: 'rgba(16, 185, 129, 0.5)',
+							borderWidth: 2,
+							padding: 16,
+							titleFont: {
+								size: 14,
+								weight: 'bold'
+							},
+							bodyFont: {
+								size: 11,
+								family: "'Courier New', monospace"
+							},
+							bodySpacing: 4,
+							displayColors: true,
+							boxWidth: 8,
+							boxHeight: 8,
+							titleMarginBottom: 10,
+							footerMarginTop: 8,
+							caretSize: 8,
+							cornerRadius: 8,
+							callbacks: {
+								title: function (tooltipItems) {
+									return `Kernel ${tooltipItems[0].label}`;
+								},
+								afterTitle: function (tooltipItems) {
+									const dataIndex = tooltipItems[0].dataIndex;
+									const d = validData[dataIndex];
+									return `Total Optional: ${d.optionalSupportedCount} extensions`;
+								},
+								label: function (context) {
+									const dataIndex = context.dataIndex;
+									const d = validData[dataIndex];
+
+									if (context.datasetIndex === 0) {
+										return `Total Optional: ${d.optionalSupportedCount}`;
+									} else if (context.datasetIndex === 1) {
+										return `RVA23U64: ${d.u64OptionalSupported || 0} optional`;
+									} else {
+										return `RVA23S64: ${d.s64OptionalSupported || 0} optional`;
+									}
+								},
+								afterLabel: function (context) {
+									const dataIndex = context.dataIndex;
+									const d = validData[dataIndex];
+									const prevData = dataIndex > 0 ? validData[dataIndex - 1] : null;
+
+									let lines = [];
+
+									if (context.datasetIndex === 0) {
+										// Overall line - show detailed info
+										if (prevData) {
+											const newlyAdded = d.optionalSupportedList.filter(
+												ext => !prevData.optionalSupportedList.includes(ext)
+											);
+
+											if (newlyAdded.length > 0) {
+												lines.push('');
+												lines.push(`✨ Newly Added (${newlyAdded.length}):`);
+												newlyAdded.forEach(ext => {
+													lines.push(`  + ${ext}`);
+												});
+											} else {
+												lines.push('');
+												lines.push('✨ No new optional extensions');
+											}
+										}
+
+										// Show all supported optional extensions
+										if (d.optionalSupportedList.length > 0) {
+											lines.push('');
+											lines.push(`✅ All Supported (${d.optionalSupportedList.length}):`);
+											d.optionalSupportedList.forEach(ext => {
+												lines.push(`  • ${ext}`);
+											});
+										}
+									} else if (context.datasetIndex === 1) {
+										// U64 Optional
+										if (prevData) {
+											const newlyAdded = d.u64OptionalList.filter(
+												ext => !prevData.u64OptionalList.includes(ext)
+											);
+
+											if (newlyAdded.length > 0) {
+												lines.push('');
+												lines.push(`✨ New U64 Optional (${newlyAdded.length}):`);
+												newlyAdded.forEach(ext => {
+													lines.push(`  + ${ext}`);
+												});
+											}
+										}
+
+										if (d.u64OptionalList && d.u64OptionalList.length > 0) {
+											lines.push('');
+											lines.push(`✅ U64 Optional (${d.u64OptionalList.length}):`);
+											d.u64OptionalList.forEach(ext => {
+												lines.push(`  • ${ext}`);
+											});
+										}
+									} else if (context.datasetIndex === 2) {
+										// S64 Optional
+										if (prevData) {
+											const newlyAdded = d.s64OptionalList.filter(
+												ext => !prevData.s64OptionalList.includes(ext)
+											);
+
+											if (newlyAdded.length > 0) {
+												lines.push('');
+												lines.push(`✨ New S64 Optional (${newlyAdded.length}):`);
+												newlyAdded.forEach(ext => {
+													lines.push(`  + ${ext}`);
+												});
+											}
+										}
+
+										if (d.s64OptionalList && d.s64OptionalList.length > 0) {
+											lines.push('');
+											lines.push(`✅ S64 Optional (${d.s64OptionalList.length}):`);
+											d.s64OptionalList.forEach(ext => {
+												lines.push(`  • ${ext}`);
+											});
+										}
+									}
+
+									return lines;
+								}
+							}
+						}
+					},
+					scales: {
+						y: {
+							beginAtZero: true,
+							ticks: {
+								stepSize: 1,
+								callback: function (value) {
+									return Math.floor(value);
+								}
+							},
+							title: {
+								display: true,
+								text: 'Number of Optional Extensions',
+								font: {
+									weight: 'bold'
+								}
+							}
+						},
+						x: {
+							title: {
+								display: true,
+								text: 'Kernel Version (+ New Optional Extensions)',
+								font: {
+									weight: 'bold'
+								}
+							},
+							ticks: {
+								maxRotation: 0,
+								minRotation: 0,
+								autoSkip: false,
+								font: {
+									size: 9
+								}
+							}
+						}
+					}
+				}
+			});
+		}
+
+		function renderOptionalStats(data) {
+			const validData = data.filter(d => d.coveragePercent !== null && d.optionalSupportedCount !== undefined);
+
+			if (validData.length === 0) return;
+
+			document.getElementById('optionalStats').classList.remove('hidden');
+
+			const first = validData[0];
+			const last = validData[validData.length - 1];
+
+			const growth = last.optionalSupportedCount - first.optionalSupportedCount;
+			const growthSign = growth >= 0 ? '+' : '';
+
+			document.getElementById('latestOptionalCount').textContent = last.optionalSupportedCount;
+			document.getElementById('optionalGrowth').textContent = `${growthSign}${growth}`;
+		}
+	</script>
+</body>
+
+</html>

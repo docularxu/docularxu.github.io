@@ -1,0 +1,451 @@
+{
+  "profiles": {
+    "RVA23U64": {
+      "description": "RISC-V Application Profile - User Mode 64-bit",
+      "mandatory": [
+        {
+          "name": "M",
+          "status": "Mandatory",
+          "history": "present in RVA22U64"
+        },
+        {
+          "name": "A",
+          "status": "Mandatory",
+          "history": "present in RVA22U64"
+        },
+        {
+          "name": "F",
+          "status": "Mandatory",
+          "history": "present in RVA22U64"
+        },
+        {
+          "name": "D",
+          "status": "Mandatory",
+          "history": "present in RVA22U64"
+        },
+        {
+          "name": "C",
+          "status": "Mandatory",
+          "history": "present in RVA22U64"
+        },
+        {
+          "name": "B",
+          "status": "Mandatory",
+          "history": "present in RVA22U64"
+        },
+        {
+          "name": "Zicsr",
+          "status": "Mandatory",
+          "history": "present in RVA22U64"
+        },
+        {
+          "name": "Zicntr",
+          "status": "Mandatory",
+          "history": "present in RVA22U64"
+        },
+        {
+          "name": "Zihpm",
+          "status": "Mandatory",
+          "history": "present in RVA22U64"
+        },
+        {
+          "name": "Ziccif",
+          "status": "Mandatory",
+          "history": "present in RVA22U64"
+        },
+        {
+          "name": "Ziccrse",
+          "status": "Mandatory",
+          "history": "present in RVA22U64"
+        },
+        {
+          "name": "Ziccamoa",
+          "status": "Mandatory",
+          "history": "present in RVA22U64"
+        },
+        {
+          "name": "Zicclsm",
+          "status": "Mandatory",
+          "history": "present in RVA22U64"
+        },
+        {
+          "name": "Za64rs",
+          "status": "Mandatory",
+          "history": "present in RVA22U64"
+        },
+        {
+          "name": "Zihintpause",
+          "status": "Mandatory",
+          "history": "present in RVA22U64"
+        },
+        {
+          "name": "Zic64b",
+          "status": "Mandatory",
+          "history": "present in RVA22U64",
+          "note": "Linux does not parse a 'zic64b' string; Device Tree provides the mandated 64-byte cache blocks via riscv,cbom-block-size, riscv,cbop-block-size, and riscv,cboz-block-size properties."
+        },
+        {
+          "name": "Zicbom",
+          "status": "Mandatory",
+          "history": "present in RVA22U64"
+        },
+        {
+          "name": "Zicbop",
+          "status": "Mandatory",
+          "history": "present in RVA22U64"
+        },
+        {
+          "name": "Zicboz",
+          "status": "Mandatory",
+          "history": "present in RVA22U64"
+        },
+        {
+          "name": "Zfhmin",
+          "status": "Mandatory",
+          "history": "present in RVA22U64"
+        },
+        {
+          "name": "Zkt",
+          "status": "Mandatory",
+          "history": "present in RVA22U64"
+        },
+        {
+          "name": "V",
+          "status": "Mandatory",
+          "history": "new in RVA23U64"
+        },
+        {
+          "name": "Zvfhmin",
+          "status": "Mandatory",
+          "history": "new in RVA23U64"
+        },
+        {
+          "name": "Zvbb",
+          "status": "Mandatory",
+          "history": "new in RVA23U64"
+        },
+        {
+          "name": "Zvkt",
+          "status": "Mandatory",
+          "history": "new in RVA23U64"
+        },
+        {
+          "name": "Zihintntl",
+          "status": "Mandatory",
+          "history": "new in RVA23U64"
+        },
+        {
+          "name": "Zicond",
+          "status": "Mandatory",
+          "history": "new in RVA23U64"
+        },
+        {
+          "name": "Zimop",
+          "status": "Mandatory",
+          "history": "new in RVA23U64"
+        },
+        {
+          "name": "Zcmop",
+          "status": "Mandatory",
+          "history": "new in RVA23U64"
+        },
+        {
+          "name": "Zcb",
+          "status": "Mandatory",
+          "history": "new in RVA23U64"
+        },
+        {
+          "name": "Zfa",
+          "status": "Mandatory",
+          "history": "new in RVA23U64"
+        },
+        {
+          "name": "Zawrs",
+          "status": "Mandatory",
+          "history": "new in RVA23U64"
+        },
+        {
+          "name": "Supm",
+          "status": "Mandatory",
+          "history": "new in RVA23U64"
+        }
+      ],
+      "optional": [
+        {
+          "name": "Zvkng",
+          "status": "Optional (Localized)",
+          "history": "new in RVA23U64"
+        },
+        {
+          "name": "Zvksg",
+          "status": "Optional (Localized)",
+          "history": "new in RVA23U64"
+        },
+        {
+          "name": "Zabha",
+          "status": "Optional (Development)",
+          "history": "new in RVA23U64"
+        },
+        {
+          "name": "Zacas",
+          "status": "Optional (Development)",
+          "history": "new in RVA23U64"
+        },
+        {
+          "name": "Ziccamoc",
+          "status": "Optional (Development)",
+          "history": "new in RVA23U64"
+        },
+        {
+          "name": "Zvbc",
+          "status": "Optional (Development)",
+          "history": "new in RVA23U64"
+        },
+        {
+          "name": "Zama16b",
+          "status": "Optional (Development)",
+          "history": "new in RVA23U64"
+        },
+        {
+          "name": "Zfh",
+          "status": "Optional (Expansion)",
+          "history": "present in RVA22U64"
+        },
+        {
+          "name": "Zbc",
+          "status": "Optional (Expansion)",
+          "history": "new in RVA23U64"
+        },
+        {
+          "name": "Zicfilp",
+          "status": "Optional (Expansion)",
+          "history": "new in RVA23U64"
+        },
+        {
+          "name": "Zicfiss",
+          "status": "Optional (Expansion)",
+          "history": "new in RVA23U64"
+        },
+        {
+          "name": "Zvfh",
+          "status": "Optional (Expansion)",
+          "history": "new in RVA23U64"
+        },
+        {
+          "name": "Zfbfmin",
+          "status": "Optional (Expansion)",
+          "history": "new in RVA23U64"
+        },
+        {
+          "name": "Zvfbfmin",
+          "status": "Optional (Expansion)",
+          "history": "new in RVA23U64"
+        },
+        {
+          "name": "Zvfbfwma",
+          "status": "Optional (Expansion)",
+          "history": "new in RVA23U64"
+        }
+      ]
+    },
+    "RVA23S64": {
+      "description": "RISC-V Application Profile - Supervisor Mode 64-bit",
+      "note": "RVA23S64 includes all RVA23U64 mandatory extensions plus the following",
+      "mandatory": [
+        {
+          "name": "Zifencei",
+          "status": "Mandatory",
+          "history": "present in RVA22S64"
+        },
+        {
+          "name": "Ss1p13",
+          "status": "Mandatory",
+          "history": "new in RVA23S64"
+        },
+        {
+          "name": "Svbare",
+          "status": "Mandatory",
+          "history": "present in RVA22S64"
+        },
+        {
+          "name": "Sv39",
+          "status": "Mandatory",
+          "history": "present in RVA22S64"
+        },
+        {
+          "name": "Svade",
+          "status": "Mandatory",
+          "history": "present in RVA22S64"
+        },
+        {
+          "name": "Ssccptr",
+          "status": "Mandatory",
+          "history": "present in RVA22S64"
+        },
+        {
+          "name": "Sstvecd",
+          "status": "Mandatory",
+          "history": "present in RVA22S64"
+        },
+        {
+          "name": "Sstvala",
+          "status": "Mandatory",
+          "history": "present in RVA22S64"
+        },
+        {
+          "name": "Sscounterenw",
+          "status": "Mandatory",
+          "history": "present in RVA22S64"
+        },
+        {
+          "name": "Svpbmt",
+          "status": "Mandatory",
+          "history": "present in RVA22S64"
+        },
+        {
+          "name": "Svinval",
+          "status": "Mandatory",
+          "history": "present in RVA22S64"
+        },
+        {
+          "name": "Svnapot",
+          "status": "Mandatory",
+          "history": "new in RVA23S64"
+        },
+        {
+          "name": "Sstc",
+          "status": "Mandatory",
+          "history": "new in RVA23S64"
+        },
+        {
+          "name": "Sscofpmf",
+          "status": "Mandatory",
+          "history": "new in RVA23S64"
+        },
+        {
+          "name": "Ssnpm",
+          "status": "Mandatory",
+          "history": "new in RVA23S64"
+        },
+        {
+          "name": "Ssu64xl",
+          "status": "Mandatory",
+          "history": "new in RVA23S64"
+        },
+        {
+          "name": "Sha",
+          "status": "Mandatory",
+          "history": "new in RVA23S64"
+        }
+      ],
+      "mandatory_hypervisor": [
+        {
+          "name": "H",
+          "category": "RVA23S64 (Sha)",
+          "status": "Mandatory",
+          "history": "new in RVA23S64",
+          "note": "Required when Sha (Hypervisor support) is present"
+        },
+        {
+          "name": "Ssstateen",
+          "category": "RVA23S64 (Sha)",
+          "status": "Mandatory",
+          "history": "new in RVA23S64",
+          "note": "Required when Sha (Hypervisor support) is present"
+        },
+        {
+          "name": "Shcounterenw",
+          "category": "RVA23S64 (Sha)",
+          "status": "Mandatory",
+          "history": "new in RVA23S64",
+          "note": "Required when Sha (Hypervisor support) is present"
+        },
+        {
+          "name": "Shvstvala",
+          "category": "RVA23S64 (Sha)",
+          "status": "Mandatory",
+          "history": "new in RVA23S64",
+          "note": "Required when Sha (Hypervisor support) is present"
+        },
+        {
+          "name": "Shtvala",
+          "category": "RVA23S64 (Sha)",
+          "status": "Mandatory",
+          "history": "new in RVA23S64",
+          "note": "Required when Sha (Hypervisor support) is present"
+        },
+        {
+          "name": "Shvstvecd",
+          "category": "RVA23S64 (Sha)",
+          "status": "Mandatory",
+          "history": "new in RVA23S64",
+          "note": "Required when Sha (Hypervisor support) is present"
+        },
+        {
+          "name": "Shvsatpa",
+          "category": "RVA23S64 (Sha)",
+          "status": "Mandatory",
+          "history": "new in RVA23S64",
+          "note": "Required when Sha (Hypervisor support) is present"
+        },
+        {
+          "name": "Shgatpa",
+          "category": "RVA23S64 (Sha)",
+          "status": "Mandatory",
+          "history": "new in RVA23S64",
+          "note": "Required when Sha (Hypervisor support) is present"
+        }
+      ],
+      "optional": [
+        {
+          "name": "Sv48",
+          "status": "Optional (Expansion)",
+          "history": "present in RVA22S64"
+        },
+        {
+          "name": "Sv57",
+          "status": "Optional (Expansion)",
+          "history": "present in RVA22S64"
+        },
+        {
+          "name": "Zkr",
+          "status": "Optional (Expansion)",
+          "history": "present in RVA22S64"
+        },
+        {
+          "name": "Svadu",
+          "status": "Optional (Expansion)",
+          "history": "new in RVA23S64"
+        },
+        {
+          "name": "Sdtrig",
+          "status": "Optional (Expansion)",
+          "history": "new in RVA23S64"
+        },
+        {
+          "name": "Ssstrict",
+          "status": "Optional (Expansion)",
+          "history": "new in RVA23S64"
+        },
+        {
+          "name": "Svvptc",
+          "status": "Optional (Expansion)",
+          "history": "new in RVA23S64"
+        },
+        {
+          "name": "Sspm",
+          "status": "Optional (Expansion)",
+          "history": "new in RVA23S64"
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "source": "RVA23 Profile Ratified Specification",
+    "generated_from": "rva23/linux-kernel-coverage.html",
+    "notes": {
+      "rva23s64_includes_u64": "RVA23S64 profile includes all mandatory extensions from RVA23U64 plus supervisor-specific extensions",
+      "hypervisor_extensions": "Extensions marked as RVA23S64 (Sha) are mandatory only when hypervisor support (Sha) is present"
+    }
+  }
+}
