@@ -33,6 +33,18 @@
 		.custom-scrollbar::-webkit-scrollbar-thumb:hover {
 			background: #a8a29e;
 		}
+
+		/* Sticky column styling */
+		table td.sticky {
+			position: sticky;
+			left: 0;
+			background: white;
+			z-index: 1;
+		}
+
+		table tr:hover td.sticky {
+			background: #fafaf9;
+		}
 	</style>
 </head>
 
@@ -51,108 +63,6 @@
 	</nav>
 
 	<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
-
-		<!-- Intro / Controls -->
-		<div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
-			<div class="max-w-3xl">
-				<h1 class="text-2xl font-bold text-stone-900 mb-2">Linux Kernel Version Analyzer</h1>
-				<p class="text-stone-600 mb-6">
-					Check which <strong>RVA23 Profile</strong> extensions are supported in a
-					specific Linux Kernel stable release.
-					This tool fetches <code>extensions.yaml</code> and <code>cpus.yaml</code>
-					directly from the official kernel git repository.
-				</p>
-
-				<div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
-					<div class="col-span-2">
-						<label for="kernelVersion"
-							class="block text-sm font-medium text-stone-700 mb-1">Kernel
-							Version (Tag)</label>
-						<div class="flex shadow-sm rounded-md">
-							<span
-								class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-stone-300 bg-stone-50 text-stone-500 text-sm">v</span>
-							<select id="kernelVersion"
-								class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border-stone-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border">
-								<option value="6.6" selected>6.6 (Default)</option>
-								<option disabled>Loading tags...</option>
-							</select>
-						</div>
-						<p class="mt-1 text-xs text-stone-400">Select a stable version tag (&gt;
-							v6.4). <span id="tagLoadStatus" class="text-indigo-600"></span>
-						</p>
-					</div>
-					<div>
-						<button onclick="analyzeKernel()" id="analyzeBtn"
-							class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition-colors flex items-center justify-center gap-2">
-							<span>Analyze Version</span>
-							<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4"
-								fill="none" viewBox="0 0 24 24" stroke="currentColor">
-								<path stroke-linecap="round" stroke-linejoin="round"
-									stroke-width="2"
-									d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-							</svg>
-						</button>
-					</div>
-				</div>
-
-				<!-- Advanced Options -->
-				<div class="mt-4 pt-4 border-t border-stone-100">
-					<details class="text-sm text-stone-500">
-						<summary class="cursor-pointer hover:text-stone-700 font-medium">
-							Advanced / Proxy Settings</summary>
-						<div class="mt-3 space-y-3 pl-2 border-l-2 border-stone-200">
-							<div>
-								<label class="flex items-center gap-2">
-									<input type="checkbox" id="useProxy" checked
-										class="rounded border-stone-300 text-indigo-600 focus:ring-indigo-500">
-									<span>Use CORS Proxy (Required for browser-based
-										fetching from git.kernel.org)</span>
-								</label>
-								<p class="text-xs text-stone-400 mt-1 ml-6">Tries
-									multiple proxies to bypass browser CORS
-									restrictions. Will fallback to direct fetch if
-									needed.</p>
-							</div>
-							<div>
-								<label class="flex items-center gap-2">
-									<input type="checkbox" id="debugMode"
-										class="rounded border-stone-300 text-indigo-600 focus:ring-indigo-500">
-									<span>Debug Mode (Show response previews)</span>
-								</label>
-								<p class="text-xs text-stone-400 mt-1 ml-6">Shows first
-									500 chars of responses to help diagnose issues.
-								</p>
-							</div>
-							<div class="pt-3 border-t border-stone-200">
-								<div class="flex items-center justify-between">
-									<div>
-										<h4
-											class="font-medium text-stone-700 mb-1">
-											📁 Local Database</h4>
-										<p class="text-xs text-stone-500"
-											id="dbStatus">Loading database
-											status...</p>
-									</div>
-									<button onclick="showDatabaseInfo()"
-										class="text-xs bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-3 py-1.5 rounded border border-indigo-200 transition-colors">
-										View Database
-									</button>
-								</div>
-								<p class="text-xs text-stone-400 mt-2">💡 Versions in
-									the database load instantly without fetching
-									from kernel.org</p>
-							</div>
-						</div>
-					</details>
-				</div>
-			</div>
-		</div>
-
-		<!-- Status Log -->
-		<div id="statusArea"
-			class="hidden bg-stone-900 text-stone-300 p-4 rounded-md font-mono text-xs overflow-x-auto">
-			<div id="statusLog"></div>
-		</div>
 
 		<!-- Evolution Chart Section -->
 		<div id="evolutionSection"
@@ -279,31 +189,157 @@
 			</div>
 		</div>
 
+		<!-- Intro / Controls -->
+		<div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+			<div class="max-w-5xl">
+				<h1 class="text-2xl font-bold text-stone-900 mb-2">Linux Kernel Version Comparison</h1>
+				<p class="text-stone-600 mb-6">
+					Compare <strong>RVA23 Profile</strong> extension support across three Linux Kernel stable releases.
+					This tool fetches <code>extensions.yaml</code> and <code>cpus.yaml</code>
+					directly from the official kernel git repository.
+				</p>
+
+				<div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+					<div>
+						<label for="kernelVersion1"
+							class="block text-sm font-medium text-stone-700 mb-1">Version 1</label>
+						<div class="flex shadow-sm rounded-md">
+							<span
+								class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-stone-300 bg-stone-50 text-stone-500 text-sm">v</span>
+							<select id="kernelVersion1"
+								class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border-stone-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border">
+								<option value="6.6" selected>6.6</option>
+								<option disabled>Loading tags...</option>
+							</select>
+						</div>
+					</div>
+					<div>
+						<label for="kernelVersion2"
+							class="block text-sm font-medium text-stone-700 mb-1">Version 2</label>
+						<div class="flex shadow-sm rounded-md">
+							<span
+								class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-stone-300 bg-stone-50 text-stone-500 text-sm">v</span>
+							<select id="kernelVersion2"
+								class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border-stone-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border">
+								<option value="6.12" selected>6.12</option>
+								<option disabled>Loading tags...</option>
+							</select>
+						</div>
+					</div>
+					<div>
+						<label for="kernelVersion3"
+							class="block text-sm font-medium text-stone-700 mb-1">Version 3</label>
+						<div class="flex shadow-sm rounded-md">
+							<span
+								class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-stone-300 bg-stone-50 text-stone-500 text-sm">v</span>
+							<select id="kernelVersion3"
+								class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border-stone-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border">
+								<option value="6.18" selected>6.18</option>
+								<option disabled>Loading tags...</option>
+							</select>
+						</div>
+					</div>
+					<div>
+						<button onclick="analyzeKernel()" id="analyzeBtn"
+							class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition-colors flex items-center justify-center gap-2">
+							<span>Compare Versions</span>
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4"
+								fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round"
+									stroke-width="2"
+									d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+							</svg>
+						</button>
+					</div>
+				</div>
+				<p class="mt-2 text-xs text-stone-400">Default: v6.6 & v6.12 (LTS), v6.18 (Latest). 
+					<span id="tagLoadStatus" class="text-indigo-600"></span>
+				</p>
+
+				<!-- Advanced Options -->
+				<div class="mt-4 pt-4 border-t border-stone-100">
+					<details class="text-sm text-stone-500">
+						<summary class="cursor-pointer hover:text-stone-700 font-medium">
+							Advanced / Proxy Settings</summary>
+						<div class="mt-3 space-y-3 pl-2 border-l-2 border-stone-200">
+							<div>
+								<label class="flex items-center gap-2">
+									<input type="checkbox" id="useProxy" checked
+										class="rounded border-stone-300 text-indigo-600 focus:ring-indigo-500">
+									<span>Use CORS Proxy (Required for browser-based
+										fetching from git.kernel.org)</span>
+								</label>
+								<p class="text-xs text-stone-400 mt-1 ml-6">Tries
+									multiple proxies to bypass browser CORS
+									restrictions. Will fallback to direct fetch if
+									needed.</p>
+							</div>
+							<div>
+								<label class="flex items-center gap-2">
+									<input type="checkbox" id="debugMode"
+										class="rounded border-stone-300 text-indigo-600 focus:ring-indigo-500">
+									<span>Debug Mode (Show response previews)</span>
+								</label>
+								<p class="text-xs text-stone-400 mt-1 ml-6">Shows first
+									500 chars of responses to help diagnose issues.
+								</p>
+							</div>
+							<div class="pt-3 border-t border-stone-200">
+								<div class="flex items-center justify-between">
+									<div>
+										<h4
+											class="font-medium text-stone-700 mb-1">
+											📁 Local Database</h4>
+										<p class="text-xs text-stone-500"
+											id="dbStatus">Loading database
+											status...</p>
+									</div>
+									<button onclick="showDatabaseInfo()"
+										class="text-xs bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-3 py-1.5 rounded border border-indigo-200 transition-colors">
+										View Database
+									</button>
+								</div>
+								<p class="text-xs text-stone-400 mt-2">💡 Versions in
+									the database load instantly without fetching
+									from kernel.org</p>
+							</div>
+						</div>
+					</details>
+				</div>
+			</div>
+		</div>
+
+		<!-- Status Log -->
+		<div id="statusArea"
+			class="hidden bg-stone-900 text-stone-300 p-4 rounded-md font-mono text-xs overflow-x-auto">
+			<div id="statusLog"></div>
+		</div>
+
 		<!-- Dashboard -->
 		<div id="resultsDashboard" class="hidden space-y-6">
 
-			<!-- Summary Stats -->
+			<!-- Summary Stats - Comparison View -->
 			<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 				<div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
-					<h3 class="text-sm font-medium text-stone-500 uppercase">Analysis Target</h3>
-					<div class="mt-2 text-2xl font-bold text-indigo-600" id="targetVersionDisplay">
-						--</div>
-					<div class="text-xs text-stone-400 mt-1">Based on upstream bindings</div>
+					<h3 class="text-sm font-medium text-stone-500 uppercase mb-3">Version 1</h3>
+					<div class="text-xl font-bold text-indigo-600 mb-1" id="version1Display">v6.6</div>
+					<div class="text-3xl font-bold text-stone-800 mb-1" id="coverage1Display">0%</div>
+					<div class="text-xs text-stone-400"><span id="count1Display">0/0</span> mandatory</div>
+					<div class="text-xs text-amber-600 mt-2">Missing: <span id="missing1Display">0</span></div>
 				</div>
 				<div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
-					<h3 class="text-sm font-medium text-stone-500 uppercase">Mandatory RVA23
-						Coverage</h3>
-					<div class="mt-2 text-2xl font-bold text-stone-800" id="coverageDisplay">0%
-					</div>
-					<div class="text-xs text-stone-400 mt-1"><span id="coverageCount">0</span>
-						extensions found</div>
+					<h3 class="text-sm font-medium text-stone-500 uppercase mb-3">Version 2</h3>
+					<div class="text-xl font-bold text-indigo-600 mb-1" id="version2Display">v6.12</div>
+					<div class="text-3xl font-bold text-stone-800 mb-1" id="coverage2Display">0%</div>
+					<div class="text-xs text-stone-400"><span id="count2Display">0/0</span> mandatory</div>
+					<div class="text-xs text-amber-600 mt-2">Missing: <span id="missing2Display">0</span></div>
 				</div>
 				<div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
-					<h3 class="text-sm font-medium text-stone-500 uppercase">Missing Mandatories
-					</h3>
-					<div class="mt-2 text-2xl font-bold text-amber-600" id="missingCountDisplay">0
-					</div>
-					<div class="text-xs text-stone-400 mt-1">Extensions not found in yaml</div>
+					<h3 class="text-sm font-medium text-stone-500 uppercase mb-3">Version 3</h3>
+					<div class="text-xl font-bold text-indigo-600 mb-1" id="version3Display">v6.18</div>
+					<div class="text-3xl font-bold text-stone-800 mb-1" id="coverage3Display">0%</div>
+					<div class="text-xs text-stone-400"><span id="count3Display">0/0</span> mandatory</div>
+					<div class="text-xs text-amber-600 mt-2">Missing: <span id="missing3Display">0</span></div>
 				</div>
 			</div>
 
@@ -311,14 +347,26 @@
 			<div class="bg-white rounded-lg shadow-sm border border-stone-200 overflow-hidden">
 				<div
 					class="px-6 py-4 border-b border-stone-200 bg-stone-50 flex justify-between items-center">
-					<h3 class="font-bold text-stone-800">RVA23 Profile Compliance Table</h3>
-					<div class="flex gap-2 text-sm">
-						<select id="filterProfile" onchange="renderTable()"
-							class="border-stone-300 rounded-md text-sm p-1">
-							<option value="all">All Profiles</option>
-							<option value="RVA23U64">User (U64)</option>
-							<option value="RVA23S64">Supervisor (S64)</option>
-						</select>
+					<h3 class="font-bold text-stone-800">RVA23 Profile Compliance Comparison</h3>
+					<div class="flex gap-3 text-sm items-center">
+						<div class="flex items-center gap-2">
+							<label class="text-xs font-medium text-stone-600">Profile:</label>
+							<select id="filterProfile" onchange="renderTable()"
+								class="border-stone-300 rounded-md text-sm p-1.5">
+								<option value="all">All Profiles</option>
+								<option value="RVA23U64">User (U64)</option>
+								<option value="RVA23S64">Supervisor (S64)</option>
+							</select>
+						</div>
+						<div class="flex items-center gap-2">
+							<label class="text-xs font-medium text-stone-600">Status:</label>
+							<select id="filterStatus" onchange="renderTable()"
+								class="border-stone-300 rounded-md text-sm p-1.5">
+								<option value="all">All</option>
+								<option value="Mandatory" selected>Mandatory</option>
+								<option value="Optional">Optional</option>
+							</select>
+						</div>
 					</div>
 				</div>
 				<div class="overflow-x-auto custom-scrollbar">
@@ -326,20 +374,23 @@
 						<thead class="bg-stone-50">
 							<tr>
 								<th
-									class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">
+									class="px-4 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider sticky left-0 bg-stone-50 z-10">
 									Extension</th>
 								<th
-									class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">
+									class="px-4 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">
 									Profile</th>
 								<th
-									class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">
+									class="px-4 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">
 									Status</th>
 								<th
-									class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">
-									Kernel Support</th>
+									class="px-4 py-3 text-center text-xs font-medium text-stone-500 uppercase tracking-wider bg-indigo-50" id="version1Header">
+									v6.6</th>
 								<th
-									class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">
-									Found In</th>
+									class="px-4 py-3 text-center text-xs font-medium text-stone-500 uppercase tracking-wider bg-blue-50" id="version2Header">
+									v6.12</th>
+								<th
+									class="px-4 py-3 text-center text-xs font-medium text-stone-500 uppercase tracking-wider bg-purple-50" id="version3Header">
+									v6.18</th>
 							</tr>
 						</thead>
 						<tbody id="resultsBody" class="bg-white divide-y divide-stone-200">
@@ -347,23 +398,51 @@
 						</tbody>
 					</table>
 				</div>
+				<div class="px-6 py-3 bg-stone-50 border-t border-stone-200">
+					<p class="text-xs text-stone-500" id="tableFooter">
+						Showing <span class="font-medium" id="displayedCount">0</span> extensions
+					</p>
+				</div>
 			</div>
 
-			<!-- Missing List -->
+			<!-- Missing List - Comparison View -->
 			<div class="bg-amber-50 border border-amber-200 rounded-lg p-6">
-				<h3 class="text-lg font-bold text-amber-800 mb-2">Missing Mandatory Extensions 
-					<span id="missingVersionBadge" class="text-sm font-normal text-amber-600"></span>
-				</h3>
+				<h3 class="text-lg font-bold text-amber-800 mb-2">Missing Mandatory Extensions by Version</h3>
 				<p class="text-sm text-amber-700 mb-4">The following extensions are required by RVA23
-					but were not explicitly found in <strong id="missingVersionText">this kernel version's</strong> 
+					but were not explicitly found in each kernel version's 
 					<code>extensions.yaml</code> or <code>cpus.yaml</code> bindings. 
 					These extensions may be implemented but not yet documented in the device tree bindings, 
 					or they may not be supported in this kernel release.
 				</p>
-				<ul id="missingList"
-					class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 text-sm text-amber-900">
-					<!-- JS Generated -->
-				</ul>
+				<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+					<div class="bg-white p-4 rounded-lg border border-amber-200">
+						<h4 class="font-semibold text-amber-800 mb-2 flex items-center justify-between">
+							<span id="missing1Title">v6.6</span>
+							<span class="text-xs bg-amber-100 px-2 py-1 rounded" id="missing1Count">0</span>
+						</h4>
+						<ul id="missingList1" class="space-y-1 text-sm text-amber-900">
+							<!-- JS Generated -->
+						</ul>
+					</div>
+					<div class="bg-white p-4 rounded-lg border border-amber-200">
+						<h4 class="font-semibold text-amber-800 mb-2 flex items-center justify-between">
+							<span id="missing2Title">v6.12</span>
+							<span class="text-xs bg-amber-100 px-2 py-1 rounded" id="missing2Count">0</span>
+						</h4>
+						<ul id="missingList2" class="space-y-1 text-sm text-amber-900">
+							<!-- JS Generated -->
+						</ul>
+					</div>
+					<div class="bg-white p-4 rounded-lg border border-amber-200">
+						<h4 class="font-semibold text-amber-800 mb-2 flex items-center justify-between">
+							<span id="missing3Title">v6.18</span>
+							<span class="text-xs bg-amber-100 px-2 py-1 rounded" id="missing3Count">0</span>
+						</h4>
+						<ul id="missingList3" class="space-y-1 text-sm text-amber-900">
+							<!-- JS Generated -->
+						</ul>
+					</div>
+				</div>
 			</div>
 		</div>
 
@@ -442,7 +521,12 @@
 		];
 
 		// Global State
-		let analysisResults = [];
+		let analysisResults = {
+			version1: [],
+			version2: [],
+			version3: []
+		};
+		let comparisonVersions = ['6.6', '6.12', '6.18'];
 		let fetchedExtensions = new Set();
 		let fetchedProperties = new Set(); // For block sizes etc
 		let kernelDatabase = null; // Local database of pre-computed results
@@ -450,21 +534,25 @@
 		// --- Tag Fetching Logic ---
 
 		async function fetchTags() {
-			const select = document.getElementById('kernelVersion');
+			const select1 = document.getElementById('kernelVersion1');
+			const select2 = document.getElementById('kernelVersion2');
+			const select3 = document.getElementById('kernelVersion3');
 			const evolutionStartSelect = document.getElementById('evolutionStart');
 			const evolutionEndSelect = document.getElementById('evolutionEnd');
 			const statusEl = document.getElementById('tagLoadStatus');
 			const useProxy = document.getElementById('useProxy').checked;
 
 			// Update UI to show loading
-			select.innerHTML = '<option disabled selected>Loading tags from kernel.org...</option>';
+			select1.innerHTML = '<option disabled selected>Loading tags from kernel.org...</option>';
+			select2.innerHTML = '<option disabled selected>Loading tags from kernel.org...</option>';
+			select3.innerHTML = '<option disabled selected>Loading tags from kernel.org...</option>';
 			if (statusEl) statusEl.textContent = 'Loading...';
 
 			// Only try if proxy is enabled
 			if (!useProxy) {
 				console.log("Proxy disabled, using fallback versions.");
 				const fallbackVersions = ['6.6', '6.12', '6.18'];
-				select.innerHTML = fallbackVersions.map((v, i) => `<option value="${v}"${i === 0 ? ' selected' : ''}>${v}</option>`).join('');
+				populateComparisonDropdowns(fallbackVersions);
 				populateEvolutionDropdowns(fallbackVersions);
 				if (statusEl) statusEl.textContent = '(Proxy disabled - using fallback versions)';
 				return;
@@ -527,46 +615,82 @@
 				});
 
 				// Populate Select
-				select.innerHTML = '';
-
 				if (validTags.length === 0) {
 					console.warn("No valid tags found, using fallback");
-					select.innerHTML = '<option value="6.6">6.6 (no tags found)</option>';
-					populateEvolutionDropdowns(['6.6']);
+					const fallbackVersions = ['6.6', '6.12', '6.18'];
+					populateComparisonDropdowns(fallbackVersions);
+					populateEvolutionDropdowns(fallbackVersions);
 					if (statusEl) statusEl.textContent = '⚠️ No tags found - check console';
 					return;
 				}
 
-				console.log("Populating dropdown with", validTags.length, "tags");
+				console.log("Populating dropdowns with", validTags.length, "tags");
 
-				validTags.forEach(t => {
-					const opt = document.createElement('option');
-					opt.value = t;
-					opt.textContent = t;
-					// Default to 6.6 if available, otherwise first in list
-					if (t === '6.6') opt.selected = true;
-					select.appendChild(opt);
-				});
-
-				// Ensure selection
-				if (!validTags.includes('6.6') && validTags.length > 0) {
-					select.value = validTags[0];
-				}
+				// Populate comparison dropdowns
+				populateComparisonDropdowns(validTags);
 
 				// Populate evolution dropdowns with the same tags
 				populateEvolutionDropdowns(validTags);
 
-				console.log("Dropdown populated successfully");
+				console.log("Dropdowns populated successfully");
 				if (statusEl) statusEl.textContent = `✓ Loaded ${validTags.length} tags`;
 
 			} catch (e) {
 				console.error("Tag fetch error:", e);
 				// Fallback to common versions
 				const fallbackVersions = ['6.6', '6.12', '6.18'];
-				select.innerHTML = fallbackVersions.map((v, i) => `<option value="${v}"${i === 0 ? ' selected' : ''}>${v}</option>`).join('');
+				populateComparisonDropdowns(fallbackVersions);
 				populateEvolutionDropdowns(fallbackVersions);
 				if (statusEl) statusEl.innerHTML = `⚠️ Fetch failed: ${e.message} - <a href="#" onclick="alert('Check browser console (F12) for details'); return false;" class="underline">see console</a>`;
 			}
+		}
+
+		function populateComparisonDropdowns(tags) {
+			const select1 = document.getElementById('kernelVersion1');
+			const select2 = document.getElementById('kernelVersion2');
+			const select3 = document.getElementById('kernelVersion3');
+
+			// Clear all dropdowns
+			select1.innerHTML = '';
+			select2.innerHTML = '';
+			select3.innerHTML = '';
+
+			// Populate all three dropdowns with the same tags
+			tags.forEach(t => {
+				// Version 1 (default to 6.6)
+				const opt1 = document.createElement('option');
+				opt1.value = t;
+				opt1.textContent = t;
+				if (t === '6.6') opt1.selected = true;
+				select1.appendChild(opt1);
+
+				// Version 2 (default to 6.12)
+				const opt2 = document.createElement('option');
+				opt2.value = t;
+				opt2.textContent = t;
+				if (t === '6.12') opt2.selected = true;
+				select2.appendChild(opt2);
+
+				// Version 3 (default to 6.18 or latest)
+				const opt3 = document.createElement('option');
+				opt3.value = t;
+				opt3.textContent = t;
+				if (t === '6.18') opt3.selected = true;
+				select3.appendChild(opt3);
+			});
+
+			// Ensure selections
+			if (!tags.includes('6.6') && tags.length > 0) {
+				select1.value = tags[0];
+			}
+			if (!tags.includes('6.12') && tags.length > 1) {
+				select2.value = tags[Math.min(1, tags.length - 1)];
+			}
+			if (!tags.includes('6.18') && tags.length > 2) {
+				select3.value = tags[tags.length - 1]; // Default to latest
+			}
+
+			console.log("Comparison dropdowns populated with defaults:", select1.value, select2.value, select3.value);
 		}
 
 		function populateEvolutionDropdowns(tags) {
@@ -830,204 +954,176 @@
 		}
 
 		async function analyzeKernel() {
-			const version = document.getElementById('kernelVersion').value.trim();
-			if (!version) {
-				alert("Please enter a kernel version.");
+			const version1 = document.getElementById('kernelVersion1').value.trim();
+			const version2 = document.getElementById('kernelVersion2').value.trim();
+			const version3 = document.getElementById('kernelVersion3').value.trim();
+			
+			if (!version1 || !version2 || !version3) {
+				alert("Please select all three kernel versions.");
 				return;
 			}
 
+			comparisonVersions = [version1, version2, version3];
+
 			// Reset
 			document.getElementById('analyzeBtn').disabled = true;
-			document.getElementById('analyzeBtn').innerHTML = 'Analyzing...';
+			document.getElementById('analyzeBtn').innerHTML = 'Comparing...';
 			document.getElementById('statusLog').innerHTML = '';
-			fetchedExtensions.clear();
-			fetchedProperties.clear();
 
-			log(`Starting analysis for Linux Kernel v${version}...`);
+			log(`Starting comparison analysis for v${version1}, v${version2}, and v${version3}...`);
+
+			try {
+				// Analyze each version
+				const results1 = await analyzeVersion(version1, 1);
+				const results2 = await analyzeVersion(version2, 2);
+				const results3 = await analyzeVersion(version3, 3);
+
+				analysisResults.version1 = results1;
+				analysisResults.version2 = results2;
+				analysisResults.version3 = results3;
+
+				log(`✓ Comparison analysis complete!`);
+				renderDashboard();
+
+			} catch (e) {
+				log(`Critical Error: ${e.message}`, 'error');
+			} finally {
+				document.getElementById('analyzeBtn').disabled = false;
+				document.getElementById('analyzeBtn').innerHTML = `<span>Compare Versions</span> <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>`;
+			}
+		}
+
+		async function analyzeVersion(version, versionNum) {
+			log(`[v${version}] Starting analysis...`);
 
 			// Check database first
 			const dbResult = getFromDatabase(version);
 			if (dbResult) {
-				log(`🗄️  Found v${version} in local database!`);
-				log(`⚡ Using pre-computed data (instant load, no network required)`);
-				log(`   Database last updated: ${kernelDatabase._metadata.last_updated}`);
-				log(`   Database contains ${Object.keys(kernelDatabase.versions).length} versions`);
-
+				log(`[v${version}] 🗄️  Found in local database!`);
+				
 				// Convert database result to display format
-				analysisResults = rva23Data.map(item => {
-					// Use allSupportedExtensions if available (new DB), otherwise fallback (old DB)
-					// This ensures the table shows optional support if we have the data
+				const results = rva23Data.map(item => {
 					const sourceList = dbResult.allSupportedExtensions || dbResult.supportedExtensions;
 					const supported = sourceList.includes(item.name);
 					return {
 						...item,
 						supported: supported,
-						foundIn: supported ? "📁 Local Database" : "-"
+						foundIn: supported ? "📁 Database" : "-"
 					};
 				});
 
-				log(`✓ Analysis complete (loaded from database in < 1ms)`);
-				renderDashboard(version);
-				document.getElementById('analyzeBtn').disabled = false;
-				document.getElementById('analyzeBtn').innerHTML = `<span>Analyze Version</span> <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>`;
-				return;
+				log(`[v${version}] ✓ Complete (from database)`);
+				return results;
 			}
 
 			// Not in database, fetch from kernel.org
-			log(`⚠️  Version v${version} not found in local database`);
-			log(`🌐 Fetching from kernel.org (this may take 5-10 seconds)...`);
-			log(`💡 Tip: Run generate-kernel-database.py to add this version to the database`);
+			log(`[v${version}] 🌐 Fetching from kernel.org...`);
 
 			const useProxy = document.getElementById('useProxy').checked;
 			const debugMode = document.getElementById('debugMode').checked;
 			const baseUrl = `https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/plain/Documentation/devicetree/bindings/riscv`;
 
-			// Try multiple CORS proxies in case one fails
-			// Format: [url_prefix, needs_json_unwrap]
 			const proxies = [
 				{ url: "https://corsproxy.io/?", unwrapJSON: false },
 				{ url: "https://api.allorigins.win/get?url=", unwrapJSON: true },
 				{ url: "https://api.codetabs.com/v1/proxy?quest=", unwrapJSON: false }
 			];
 
-			// Files to fetch
 			const files = ['extensions.yaml', 'cpus.yaml'];
+			const tempExtensions = new Set();
+			const tempProperties = new Set();
 
 			try {
 				for (const file of files) {
 					const rawUrl = `${baseUrl}/${file}?h=v${version}`;
-
-					log(`Fetching ${file}...`);
-					log(`Direct URL: <a href="${rawUrl}" target="_blank" class="text-blue-400 hover:underline">${rawUrl}</a>`, 'info', true);
-
 					let success = false;
 					let lastError = null;
 
-					// Try with proxy (try multiple proxies)
+					// Try with proxy
 					if (useProxy) {
 						for (let i = 0; i < proxies.length && !success; i++) {
 							const proxy = proxies[i];
 							const targetUrl = proxy.url + encodeURIComponent(rawUrl);
 
-							if (i > 0) {
-								log(`Retrying with alternative proxy (${i + 1}/${proxies.length})...`);
-							}
-
 							try {
 								const response = await fetch(targetUrl);
-								if (!response.ok) {
-									throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-								}
+								if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
 								let text;
-
-								// Handle JSON-wrapped responses (allorigins.win)
 								if (proxy.unwrapJSON) {
 									const json = await response.json();
-									if (json.contents) {
-										text = json.contents;
-									} else {
-										throw new Error('JSON response missing contents field');
-									}
+									text = json.contents || '';
 								} else {
 									text = await response.text();
 								}
 
-								// Debug mode: show response preview
-								if (debugMode) {
-									log(`Response preview (first 500 chars): ${text.substring(0, 500)}...`, 'info');
+								if (text.trim().toLowerCase().startsWith('<!doctype') || 
+								    text.trim().toLowerCase().startsWith('<html')) {
+									throw new Error('Got HTML');
 								}
 
-								// Check if we got HTML instead of YAML (proxy error)
-								if (text.trim().toLowerCase().startsWith('<!doctype') || text.trim().toLowerCase().startsWith('<html')) {
-									if (debugMode) {
-										log(`Detected HTML response. First 200 chars: ${text.substring(0, 200)}`, 'error');
-									}
-									throw new Error('Received HTML instead of YAML');
-								}
-
-								// Check for minimum YAML-like content
-								if (!text.includes('$schema') && !text.includes('properties') && text.length < 100) {
-									throw new Error('Response does not appear to be valid YAML');
-								}
-
-								log(`Successfully fetched ${file} (${text.length} bytes). Parsing YAML...`);
-
-								// Parse YAML
 								const doc = jsyaml.load(text);
-								parseKernelYaml(doc, file);
-								log(`✓ Parsed ${file} successfully.`);
+								parseKernelYamlToSet(doc, tempExtensions, tempProperties);
 								success = true;
+								break;
 
 							} catch (err) {
 								lastError = err;
-								console.error(`Proxy ${i + 1} failed:`, err.message);
-								log(`  Proxy ${i + 1} error: ${err.message}`, 'info');
+								continue;
 							}
-						}
-					} else {
-						// Try direct fetch (will likely fail due to CORS)
-						log(`Attempting direct fetch (no proxy)...`);
-						try {
-							const response = await fetch(rawUrl);
-							if (!response.ok) {
-								throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-							}
-							const text = await response.text();
-							log(`Successfully fetched ${file} (${text.length} bytes). Parsing YAML...`);
-
-							const doc = jsyaml.load(text);
-							parseKernelYaml(doc, file);
-							log(`✓ Parsed ${file} successfully.`);
-							success = true;
-						} catch (err) {
-							lastError = err;
-							log(`Direct fetch failed: ${err.message}. Enable proxy option to bypass CORS restrictions.`, 'error');
 						}
 					}
 
-					// If all proxies failed and proxy was enabled, try direct as last resort
-					if (!success && useProxy) {
-						log(`All proxies failed. Attempting direct fetch as last resort...`);
+					// Try direct if proxy failed
+					if (!success) {
 						try {
 							const response = await fetch(rawUrl);
-							if (!response.ok) {
-								throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-							}
+							if (!response.ok) throw new Error(`HTTP ${response.status}`);
 							const text = await response.text();
-							log(`Successfully fetched ${file} directly (${text.length} bytes). Parsing YAML...`);
-
 							const doc = jsyaml.load(text);
-							parseKernelYaml(doc, file);
-							log(`✓ Parsed ${file} successfully (direct fetch worked!).`);
+							parseKernelYamlToSet(doc, tempExtensions, tempProperties);
 							success = true;
 						} catch (err) {
-							log(`Direct fetch also failed: ${err.message}`, 'error');
+							lastError = err;
 						}
 					}
 
 					if (!success) {
-						log(`❌ Failed to fetch ${file}: ${lastError?.message || 'Unknown error'}`, 'error');
-						log(`Tip: The version v${version} might not exist or the file might not be available. Try 6.6, 6.12, or 6.18.`, 'error');
+						log(`[v${version}] ⚠️  Failed to fetch ${file}: ${lastError?.message}`, 'error');
 					}
 				}
 
-				// Process Results
-				processResults();
-				renderDashboard(version);
+				// Process results for this version
+				const results = rva23Data.map(item => {
+					let supported = false;
+					let foundIn = "-";
 
-				// Suggest exporting to database
-				log(`💡 To add v${version} to local database, check browser console for export data`);
-				const exportData = generateDatabaseEntry(analysisResults, version);
-				console.log('\n=== ADD THIS TO kernel-data.json ===');
-				console.log(`"${version}": ${JSON.stringify(exportData, null, 2)},`);
-				console.log('=== END ===\n');
+					for (const kw of item.keywords) {
+						if (tempExtensions.has(kw.toLowerCase())) {
+							supported = true;
+							foundIn = `yaml ("${kw}")`;
+							break;
+						}
+					}
 
-			} catch (e) {
-				log(`Critical Error: ${e.message}`, 'error');
-			} finally {
-				document.getElementById('analyzeBtn').disabled = false;
-				document.getElementById('analyzeBtn').innerHTML = `<span>Analyze Version</span> <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>`;
+					if (!supported && item.special_check === "block_size") {
+						if (tempProperties.has('riscv,cbom-block-size') || 
+						    tempProperties.has('riscv,cboz-block-size')) {
+							supported = true;
+							foundIn = "Implicit (block-size)";
+						}
+					}
+
+					return { ...item, supported, foundIn };
+				});
+
+				log(`[v${version}] ✓ Complete (fetched from kernel.org)`);
+				return results;
+
+			} catch (err) {
+				log(`[v${version}] ❌ Error: ${err.message}`, 'error');
+				// Return empty results on error
+				return rva23Data.map(item => ({ ...item, supported: false, foundIn: "Error" }));
 			}
 		}
 
@@ -1116,100 +1212,163 @@
 			searchConsts(doc);
 		}
 
-		function processResults() {
-			analysisResults = rva23Data.map(item => {
-				let supported = false;
-				let foundIn = "-";
+		function renderDashboard() {
+			document.getElementById('resultsDashboard').classList.remove('hidden');
 
-				// Check standard keywords
-				for (const kw of item.keywords) {
-					if (fetchedExtensions.has(kw.toLowerCase())) {
-						supported = true;
-						foundIn = `extensions/cpus yaml ("${kw}")`;
-						break;
-					}
+			// Update version displays
+			document.getElementById('version1Display').textContent = `v${comparisonVersions[0]}`;
+			document.getElementById('version2Display').textContent = `v${comparisonVersions[1]}`;
+			document.getElementById('version3Display').textContent = `v${comparisonVersions[2]}`;
+
+			// Calculate stats for each version
+			const stats = [
+				calculateVersionStats(analysisResults.version1),
+				calculateVersionStats(analysisResults.version2),
+				calculateVersionStats(analysisResults.version3)
+			];
+
+			// Update summary cards
+			document.getElementById('coverage1Display').textContent = `${stats[0].coverage}%`;
+			document.getElementById('count1Display').textContent = `${stats[0].supportedCount}/${stats[0].totalMandatory}`;
+			document.getElementById('missing1Display').textContent = stats[0].missingCount;
+
+			document.getElementById('coverage2Display').textContent = `${stats[1].coverage}%`;
+			document.getElementById('count2Display').textContent = `${stats[1].supportedCount}/${stats[1].totalMandatory}`;
+			document.getElementById('missing2Display').textContent = stats[1].missingCount;
+
+			document.getElementById('coverage3Display').textContent = `${stats[2].coverage}%`;
+			document.getElementById('count3Display').textContent = `${stats[2].supportedCount}/${stats[2].totalMandatory}`;
+			document.getElementById('missing3Display').textContent = stats[2].missingCount;
+
+			// Highlight the best coverage
+			const maxCoverage = Math.max(stats[0].coverage, stats[1].coverage, stats[2].coverage);
+			const coverageDisplays = ['coverage1Display', 'coverage2Display', 'coverage3Display'];
+			coverageDisplays.forEach((id, idx) => {
+				const el = document.getElementById(id);
+				if (stats[idx].coverage === maxCoverage && maxCoverage > 0) {
+					el.classList.add('text-emerald-600');
+					el.classList.remove('text-stone-800');
+				} else {
+					el.classList.remove('text-emerald-600');
+					el.classList.add('text-stone-800');
 				}
-
-				// Special Checks
-				if (!supported && item.special_check === "block_size") {
-					// Zic64b check: look for block size properties
-					if (fetchedProperties.has('riscv,cbom-block-size') ||
-						fetchedProperties.has('riscv,cboz-block-size')) {
-						supported = true;
-						foundIn = "Implicit (block-size props)";
-					}
-				}
-
-				return { ...item, supported, foundIn };
 			});
+
+			// Update table headers
+			document.getElementById('version1Header').textContent = `v${comparisonVersions[0]}`;
+			document.getElementById('version2Header').textContent = `v${comparisonVersions[1]}`;
+			document.getElementById('version3Header').textContent = `v${comparisonVersions[2]}`;
+
+			renderTable();
+			renderMissingList(stats);
 		}
 
-		function renderDashboard(version) {
-			document.getElementById('resultsDashboard').classList.remove('hidden');
-			document.getElementById('targetVersionDisplay').textContent = `v${version}`;
-
-			const mandatory = analysisResults.filter(r => r.status === 'Mandatory');
+		function calculateVersionStats(results) {
+			const mandatory = results.filter(r => r.status === 'Mandatory');
 			const supportedCount = mandatory.filter(r => r.supported).length;
 			const totalMandatory = mandatory.length;
 			const coverage = Math.round((supportedCount / totalMandatory) * 100);
-
-			document.getElementById('coverageDisplay').textContent = `${coverage}%`;
-			document.getElementById('coverageCount').textContent = `${supportedCount}/${totalMandatory}`;
-
 			const missing = mandatory.filter(r => !r.supported);
-			document.getElementById('missingCountDisplay').textContent = missing.length;
 
-			// Update missing extensions section with version info
-			document.getElementById('missingVersionBadge').textContent = `(in Linux Kernel v${version})`;
-			document.getElementById('missingVersionText').textContent = `Linux Kernel v${version}'s`;
-
-			renderTable();
-			renderMissingList(missing);
+			return {
+				coverage,
+				supportedCount,
+				totalMandatory,
+				missingCount: missing.length,
+				missing
+			};
 		}
 
 		function renderTable() {
-			const filter = document.getElementById('filterProfile').value;
+			const filterProfile = document.getElementById('filterProfile').value;
+			const filterStatus = document.getElementById('filterStatus').value;
 			const tbody = document.getElementById('resultsBody');
 			tbody.innerHTML = '';
 
-			const filtered = analysisResults.filter(r => filter === 'all' || r.category === filter);
+			// Get filtered results from version 1 (they all have same extensions list, just different support)
+			const filtered = analysisResults.version1.filter(r => {
+				const profileMatch = filterProfile === 'all' || r.category === filterProfile;
+				const statusMatch = filterStatus === 'all' || r.status === filterStatus;
+				return profileMatch && statusMatch;
+			});
 
-			filtered.forEach(row => {
+			if (filtered.length === 0) {
+				const tr = document.createElement('tr');
+				tr.innerHTML = `
+					<td colspan="6" class="px-4 py-8 text-center text-stone-500 text-sm">
+						No extensions match the selected filters.
+					</td>
+				`;
+				tbody.appendChild(tr);
+				document.getElementById('displayedCount').textContent = '0';
+				return;
+			}
+
+			// Update displayed count
+			document.getElementById('displayedCount').textContent = filtered.length;
+
+			filtered.forEach((row, idx) => {
 				const tr = document.createElement('tr');
 				tr.className = 'hover:bg-stone-50';
 
 				const statusColor = row.status === 'Mandatory' ? 'bg-amber-100 text-amber-800' : 'bg-stone-100 text-stone-600';
-				const supportColor = row.supported ? 'text-emerald-600 font-semibold' : 'text-stone-400';
-				const icon = row.supported ? '✓' : '—';
+
+				// Get support status for each version
+				const v1 = analysisResults.version1[analysisResults.version1.findIndex(r => r.name === row.name)];
+				const v2 = analysisResults.version2[analysisResults.version2.findIndex(r => r.name === row.name)];
+				const v3 = analysisResults.version3[analysisResults.version3.findIndex(r => r.name === row.name)];
+
+				const getCell = (supported) => {
+					const color = supported ? 'text-emerald-600' : 'text-stone-300';
+					const icon = supported ? '✓' : '✗';
+					const bg = supported ? 'bg-emerald-50' : 'bg-stone-50';
+					return `<td class="px-4 py-3 text-center text-lg ${color} ${bg}">${icon}</td>`;
+				};
 
 				tr.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-stone-900">${row.name}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-stone-500">${row.category}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
+                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-stone-900 sticky left-0 z-10" style="background: inherit;">${row.name}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-xs text-stone-500">${row.category}</td>
+                    <td class="px-4 py-3 whitespace-nowrap">
                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusColor}">${row.status}</span>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm ${supportColor}">
-                        <span class="mr-1">${icon}</span> ${row.supported ? 'Supported' : 'Not Found'}
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-stone-400 text-xs">${row.foundIn}</td>
+                    ${getCell(v1.supported)}
+                    ${getCell(v2.supported)}
+                    ${getCell(v3.supported)}
                 `;
 				tbody.appendChild(tr);
 			});
 		}
 
-		function renderMissingList(missing) {
-			const list = document.getElementById('missingList');
+		function renderMissingList(stats) {
+			// Update titles
+			document.getElementById('missing1Title').textContent = `v${comparisonVersions[0]}`;
+			document.getElementById('missing2Title').textContent = `v${comparisonVersions[1]}`;
+			document.getElementById('missing3Title').textContent = `v${comparisonVersions[2]}`;
+
+			// Update counts
+			document.getElementById('missing1Count').textContent = stats[0].missingCount;
+			document.getElementById('missing2Count').textContent = stats[1].missingCount;
+			document.getElementById('missing3Count').textContent = stats[2].missingCount;
+
+			// Render lists
+			renderMissingListForVersion('missingList1', stats[0].missing);
+			renderMissingListForVersion('missingList2', stats[1].missing);
+			renderMissingListForVersion('missingList3', stats[2].missing);
+		}
+
+		function renderMissingListForVersion(listId, missing) {
+			const list = document.getElementById(listId);
 			list.innerHTML = '';
 
 			if (missing.length === 0) {
-				list.innerHTML = '<li class="col-span-3 text-center text-emerald-600 font-medium py-4">All Mandatory Extensions Supported! 🎉</li>';
+				list.innerHTML = '<li class="text-emerald-600 font-medium text-center py-2">✓ Complete!</li>';
 				return;
 			}
 
 			missing.forEach(m => {
 				const li = document.createElement('li');
 				li.className = "flex items-center gap-2";
-				li.innerHTML = `<span class="w-1.5 h-1.5 bg-amber-500 rounded-full"></span><span class="font-semibold">${m.name}</span> <span class="text-xs opacity-75">(${m.category})</span>`;
+				li.innerHTML = `<span class="w-1.5 h-1.5 bg-amber-500 rounded-full flex-shrink-0"></span><span class="font-medium">${m.name}</span> <span class="text-xs opacity-60">(${m.category})</span>`;
 				list.appendChild(li);
 			});
 		}
