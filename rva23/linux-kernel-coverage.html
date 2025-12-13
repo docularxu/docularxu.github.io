@@ -384,7 +384,7 @@ config RISCV_ISA_SUPM
             { name: "Zicntr", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "Yes" },
             { name: "Zihpm", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "Yes" },
             { name: "Ziccif", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "No" },
-            { name: "Ziccrse", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "No" },
+            { name: "Ziccrse", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "Yes" },
             { name: "Ziccamoa", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "No" },
             { name: "Zicclsm", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "No" },
             { name: "Za64rs", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "No" },
@@ -416,8 +416,8 @@ config RISCV_ISA_SUPM
             { name: "Zama16b", category: "RVA23U64", status: "Optional (Development)", history: "new in RVA23U64", linux: "No" },
             { name: "Zfh", category: "RVA23U64", status: "Optional (Expansion)", history: "present in RVA22U64", linux: "Yes" },
             { name: "Zbc", category: "RVA23U64", status: "Optional (Expansion)", history: "new in RVA23U64", linux: "Yes" },
-            { name: "Zicfilp", category: "RVA23U64", status: "Optional (Expansion)", history: "new in RVA23U64", linux: "Yes" },
-            { name: "Zicfiss", category: "RVA23U64", status: "Optional (Expansion)", history: "new in RVA23U64", linux: "Yes" },
+            { name: "Zicfilp", category: "RVA23U64", status: "Optional (Expansion)", history: "new in RVA23U64", linux: "No" },
+            { name: "Zicfiss", category: "RVA23U64", status: "Optional (Expansion)", history: "new in RVA23U64", linux: "No" },
             { name: "Zvfh", category: "RVA23U64", status: "Optional (Expansion)", history: "new in RVA23U64", linux: "Yes" },
             { name: "Zfbfmin", category: "RVA23U64", status: "Optional (Expansion)", history: "new in RVA23U64", linux: "Yes" },
             { name: "Zvfbfmin", category: "RVA23U64", status: "Optional (Expansion)", history: "new in RVA23U64", linux: "Yes" },
@@ -455,10 +455,10 @@ config RISCV_ISA_SUPM
             { name: "Sv57", category: "RVA23S64", status: "Optional (Expansion)", history: "present in RVA22S64", linux: "Yes (as 'riscv,sv57')" },
             { name: "Zkr", category: "RVA23S64", status: "Optional (Expansion)", history: "present in RVA22S64", linux: "Yes" },
             { name: "Svadu", category: "RVA23S64", status: "Optional (Expansion)", history: "new in RVA23S64", linux: "Yes" },
-            { name: "Sdtrig", category: "RVA23S64", status: "Optional (Expansion)", history: "new in RVA23S64", linux: "Yes" },
+            { name: "Sdtrig", category: "RVA23S64", status: "Optional (Expansion)", history: "new in RVA23S64", linux: "No" },
             { name: "Ssstrict", category: "RVA23S64", status: "Optional (Expansion)", history: "new in RVA23S64", linux: "No" },
             { name: "Svvptc", category: "RVA23S64", status: "Optional (Expansion)", history: "new in RVA23S64", linux: "Yes" },
-            { name: "Sspm", category: "RVA23S64", status: "Optional (Expansion)", history: "new in RVA23S64", linux: "Yes" }
+            { name: "Sspm", category: "RVA23S64", status: "Optional (Expansion)", history: "new in RVA23S64", linux: "No" }
         ];
 
         // QEMU rva23s64 coverage captured from /proc/device-tree/cpus/cpu@0/riscv,isa-extensions
