@@ -59,13 +59,10 @@
 							class="text-indigo-600">.KernelCheck</span></span>
 				</div>
 				<div class="flex items-center gap-3">
-					<button id="logToggleBtn" onclick="toggleLogs()"
-						class="text-stone-500 hover:text-stone-700 text-sm px-3 py-1.5 rounded-md hover:bg-stone-50 transition-colors flex items-center gap-1">
-						<span class="text-xs">show logs</span>
-						<svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-						</svg>
-					</button>
+					<a href="https://docularxu.github.io/" target="_blank" rel="noopener"
+						class="text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-md shadow-sm transition-colors">
+						About the author
+					</a>
 				</div>
 			</div>
 		</div>
@@ -2400,6 +2397,17 @@
 			}
 		}
 	</script>
+
+	<!-- Log Toggle Button (Bottom of page) -->
+	<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 text-center">
+		<button id="logToggleBtn" onclick="toggleLogs()"
+			class="text-stone-500 hover:text-stone-700 text-sm px-4 py-2 rounded-md hover:bg-stone-50 transition-colors flex items-center gap-2 mx-auto">
+			<span class="text-xs">show logs</span>
+			<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+			</svg>
+		</button>
+	</div>
 
 	<!-- Status Log (Hidden by default, can be toggled) -->
 	<div id="statusArea"
