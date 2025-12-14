@@ -223,6 +223,7 @@
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider cursor-pointer hover:text-stone-700" onclick="sortData('history')">History ↕</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider cursor-pointer hover:text-stone-700" onclick="sortData('commit_id')">Commit ID ↕</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider cursor-pointer hover:text-stone-700" onclick="sortData('lore_url')">Lore ↕</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider cursor-pointer hover:text-stone-700" onclick="sortData('merged_in')">Merged In ↕</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider cursor-pointer hover:text-stone-700" onclick="sortData('linux')">Linux v6.18 ↕</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider cursor-pointer hover:text-stone-700 whitespace-nowrap w-64" onclick="sortData('qemu')">QEMU rva23s64 ↕</th>
                             </tr>
@@ -550,6 +551,68 @@ config RISCV_ISA_SUPM
 
         // Merge commit data into extensionsData
         const commitMap = new Map(commitData.map(c => [c.extension.toLowerCase(), c]));
+        
+        // Data derived from rva23-coverage-data.json
+        const firstSeenData = {
+          "Zicbom": "6.5",
+          "Sstc": "6.5",
+          "Zifencei": "6.5",
+          "Zbc": "6.5",
+          "Svbare": "6.5",
+          "Sv39": "6.5",
+          "H": "6.5",
+          "Zicbop": "6.5",
+          "C": "6.5",
+          "Zicboz": "6.5",
+          "F": "6.5",
+          "Svpbmt": "6.5",
+          "Zic64b": "6.5",
+          "V": "6.5",
+          "Zihintpause": "6.5",
+          "A": "6.5",
+          "B": "6.5",
+          "Sv48": "6.5",
+          "D": "6.5",
+          "Sv57": "6.5",
+          "M": "6.5",
+          "Svnapot": "6.5",
+          "Zicsr": "6.5",
+          "Sscofpmf": "6.5",
+          "Zihpm": "6.5",
+          "Svinval": "6.5",
+          "Zicntr": "6.5",
+          "Zicond": "6.7",
+          "Ssstateen": "6.7",
+          "Zvksg": "6.8",
+          "Zfa": "6.8",
+          "Zfh": "6.8",
+          "Zkr": "6.8",
+          "Zvkng": "6.8",
+          "Zacas": "6.8",
+          "Zvbc": "6.8",
+          "Zkt": "6.8",
+          "Zvfhmin": "6.8",
+          "Zihintntl": "6.8",
+          "Zvfh": "6.8",
+          "Zvkt": "6.8",
+          "Zvbb": "6.8",
+          "Zfhmin": "6.8",
+          "Zawrs": "6.11",
+          "Zcb": "6.11",
+          "Zimop": "6.11",
+          "Zcmop": "6.11",
+          "Svvptc": "6.12",
+          "Svade": "6.13",
+          "Supm": "6.13",
+          "Svadu": "6.13",
+          "Zabha": "6.13",
+          "Ziccrse": "6.13",
+          "Ssnpm": "6.13",
+          "Zfbfmin": "6.15",
+          "Zvfbfwma": "6.15",
+          "Zvfbfmin": "6.15"
+        };
+
         extensionsData.forEach(ext => {
             const commitInfo = commitMap.get(ext.name.toLowerCase());
             if (commitInfo) {
@@ -557,6 +620,11 @@ config RISCV_ISA_SUPM
                 ext.github_url = commitInfo.github_url;
                 ext.lore_url = commitInfo.lore_url;
             }
+            
+            // Add first seen version
+            const firstSeen = firstSeenData[ext.name];
+            // Normalize B extension alias note if needed, but here simple mapping is fine
+            ext.merged_in = firstSeen || null;
         });
 
         // QEMU rva23s64 coverage captured from /proc/device-tree/cpus/cpu@0/riscv,isa-extensions
@@ -733,6 +801,9 @@ config RISCV_ISA_SUPM
                     '<td class="px-6 py-4 whitespace-nowrap text-sm text-stone-500">' +
                         (ext.lore_url ? '<a href="' + ext.lore_url + '" target="_blank" class="text-amber-600 hover:underline">lore.lmkl</a>' : '<span class="text-stone-300">- N/A</span>') +
                     '</td>' +
+                    '<td class="px-6 py-4 whitespace-nowrap text-sm text-stone-500">' +
+                        (ext.merged_in ? '<span class="font-mono text-stone-700">v' + ext.merged_in + '</span>' : '<span class="text-stone-300">-</span>') +
+                    '</td>' +
                     '<td class="px-6 py-4 whitespace-nowrap text-sm ' + linuxClass + '">' +
                         '<span class="mr-1">' + linuxIcon + '</span> ' + (ext.linux.replace('Yes', '').replace('(', '').replace(')', '') || 'Yes') +
                         noteMarkup +
@@ -786,7 +857,29 @@ config RISCV_ISA_SUPM
             const col = currentSort.column;
             const asc = currentSort.asc ? 1 : -1;
             
+            // Version comparison helper
+            const compareVersions = (v1, v2) => {
+                if (!v1 && !v2) return 0;
+                if (!v1) return 1; // null/empty goes last
+                if (!v2) return -1;
+                
+                const parts1 = v1.split('.').map(Number);
+                const parts2 = v2.split('.').map(Number);
+                
+                for (let i = 0; i < Math.max(parts1.length, parts2.length); i++) {
+                    const num1 = parts1[i] || 0;
+                    const num2 = parts2[i] || 0;
+                    if (num1 > num2) return 1;
+                    if (num1 < num2) return -1;
+                }
+                return 0;
+            };
+
             filteredData.sort((a, b) => {
+                if (col === 'merged_in') {
+                    return compareVersions(a[col], b[col]) * asc;
+                }
+                
                 const valA = (a[col] || "").toString().toLowerCase();
                 const valB = (b[col] || "").toString().toLowerCase();
                 if (valA < valB) return -1 * asc;
