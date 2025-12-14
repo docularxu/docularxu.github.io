@@ -1,0 +1,554 @@
+[
+  {
+    "extension": "M",
+    "commit_id": "aeb71e42caae2031ec849a858080d81462cacca9",
+    "github_url": "https://github.com/torvalds/linux/commit/aeb71e42caae2031ec849a858080d81462cacca9",
+    "lore_url": "https://lore.kernel.org/r/20230702-eats-scorebook-c951f170d29f@spud",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: m"
+  },
+  {
+    "extension": "A",
+    "commit_id": "aeb71e42caae2031ec849a858080d81462cacca9",
+    "github_url": "https://github.com/torvalds/linux/commit/aeb71e42caae2031ec849a858080d81462cacca9",
+    "lore_url": "https://lore.kernel.org/r/20230702-eats-scorebook-c951f170d29f@spud",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: a"
+  },
+  {
+    "extension": "F",
+    "commit_id": "aeb71e42caae2031ec849a858080d81462cacca9",
+    "github_url": "https://github.com/torvalds/linux/commit/aeb71e42caae2031ec849a858080d81462cacca9",
+    "lore_url": "https://lore.kernel.org/r/20230702-eats-scorebook-c951f170d29f@spud",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: f"
+  },
+  {
+    "extension": "D",
+    "commit_id": "aeb71e42caae2031ec849a858080d81462cacca9",
+    "github_url": "https://github.com/torvalds/linux/commit/aeb71e42caae2031ec849a858080d81462cacca9",
+    "lore_url": "https://lore.kernel.org/r/20230702-eats-scorebook-c951f170d29f@spud",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: d"
+  },
+  {
+    "extension": "C",
+    "commit_id": "aeb71e42caae2031ec849a858080d81462cacca9",
+    "github_url": "https://github.com/torvalds/linux/commit/aeb71e42caae2031ec849a858080d81462cacca9",
+    "lore_url": "https://lore.kernel.org/r/20230702-eats-scorebook-c951f170d29f@spud",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: c"
+  },
+  {
+    "extension": "B",
+    "error": "Not found"
+  },
+  {
+    "extension": "Zicsr",
+    "commit_id": "aeb71e42caae2031ec849a858080d81462cacca9",
+    "github_url": "https://github.com/torvalds/linux/commit/aeb71e42caae2031ec849a858080d81462cacca9",
+    "lore_url": "https://lore.kernel.org/r/20230702-eats-scorebook-c951f170d29f@spud",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: zicsr"
+  },
+  {
+    "extension": "Zicntr",
+    "commit_id": "aeb71e42caae2031ec849a858080d81462cacca9",
+    "github_url": "https://github.com/torvalds/linux/commit/aeb71e42caae2031ec849a858080d81462cacca9",
+    "lore_url": "https://lore.kernel.org/r/20230702-eats-scorebook-c951f170d29f@spud",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: zicntr"
+  },
+  {
+    "extension": "Zihpm",
+    "commit_id": "aeb71e42caae2031ec849a858080d81462cacca9",
+    "github_url": "https://github.com/torvalds/linux/commit/aeb71e42caae2031ec849a858080d81462cacca9",
+    "lore_url": "https://lore.kernel.org/r/20230702-eats-scorebook-c951f170d29f@spud",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: zihpm"
+  },
+  {
+    "extension": "Ziccif",
+    "error": "Not found"
+  },
+  {
+    "extension": "Ziccrse",
+    "commit_id": "447b2afbcde16be43c9459507f48f5c602c121c0",
+    "github_url": "https://github.com/torvalds/linux/commit/447b2afbcde16be43c9459507f48f5c602c121c0",
+    "lore_url": "https://lore.kernel.org/r/20241103145153.105097-13-alexghiti@rivosinc.com",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: ziccrse"
+  },
+  {
+    "extension": "Ziccamoa",
+    "error": "Not found"
+  },
+  {
+    "extension": "Zicclsm",
+    "error": "Not found"
+  },
+  {
+    "extension": "Za64rs",
+    "error": "Not found"
+  },
+  {
+    "extension": "Zihintpause",
+    "commit_id": "aeb71e42caae2031ec849a858080d81462cacca9",
+    "github_url": "https://github.com/torvalds/linux/commit/aeb71e42caae2031ec849a858080d81462cacca9",
+    "lore_url": "https://lore.kernel.org/r/20230702-eats-scorebook-c951f170d29f@spud",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: zihintpause"
+  },
+  {
+    "extension": "Zic64b",
+    "commit_id": "d1afce6709595b39cd159bdc54fe2093808c02fc",
+    "github_url": "https://github.com/torvalds/linux/commit/d1afce6709595b39cd159bdc54fe2093808c02fc",
+    "lore_url": "https://lore.kernel.org/r/20220706231536.2041855-3-heiko@sntech.de",
+    "file_found": "Documentation/devicetree/bindings/riscv/cpus.yaml",
+    "term_found": "riscv,cbom-block-size"
+  },
+  {
+    "extension": "Zicbom",
+    "commit_id": "aeb71e42caae2031ec849a858080d81462cacca9",
+    "github_url": "https://github.com/torvalds/linux/commit/aeb71e42caae2031ec849a858080d81462cacca9",
+    "lore_url": "https://lore.kernel.org/r/20230702-eats-scorebook-c951f170d29f@spud",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: zicbom"
+  },
+  {
+    "extension": "Zicbop",
+    "commit_id": "aeb71e42caae2031ec849a858080d81462cacca9",
+    "github_url": "https://github.com/torvalds/linux/commit/aeb71e42caae2031ec849a858080d81462cacca9",
+    "lore_url": "https://lore.kernel.org/r/20230702-eats-scorebook-c951f170d29f@spud",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: zicbop"
+  },
+  {
+    "extension": "Zicboz",
+    "commit_id": "aeb71e42caae2031ec849a858080d81462cacca9",
+    "github_url": "https://github.com/torvalds/linux/commit/aeb71e42caae2031ec849a858080d81462cacca9",
+    "lore_url": "https://lore.kernel.org/r/20230702-eats-scorebook-c951f170d29f@spud",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: zicboz"
+  },
+  {
+    "extension": "Zfhmin",
+    "commit_id": "c44714c35ff861d69db9c8bb4ae1347373f817f0",
+    "github_url": "https://github.com/torvalds/linux/commit/c44714c35ff861d69db9c8bb4ae1347373f817f0",
+    "lore_url": "https://lore.kernel.org/r/20231114141256.126749-12-cleger@rivosinc.com",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: zfhmin"
+  },
+  {
+    "extension": "Zkt",
+    "commit_id": "9376396251c8a927018d465b4cc396af4b25b8d0",
+    "github_url": "https://github.com/torvalds/linux/commit/9376396251c8a927018d465b4cc396af4b25b8d0",
+    "lore_url": "https://lore.kernel.org/r/20231114141256.126749-6-cleger@rivosinc.com",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: zkt"
+  },
+  {
+    "extension": "V",
+    "commit_id": "aeb71e42caae2031ec849a858080d81462cacca9",
+    "github_url": "https://github.com/torvalds/linux/commit/aeb71e42caae2031ec849a858080d81462cacca9",
+    "lore_url": "https://lore.kernel.org/r/20230702-eats-scorebook-c951f170d29f@spud",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: v"
+  },
+  {
+    "extension": "Zvfhmin",
+    "commit_id": "e11880b4be3a8db558147409b9ed0d1855526910",
+    "github_url": "https://github.com/torvalds/linux/commit/e11880b4be3a8db558147409b9ed0d1855526910",
+    "lore_url": "https://lore.kernel.org/r/20231114141256.126749-18-cleger@rivosinc.com",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: zvfhmin"
+  },
+  {
+    "extension": "Zvbb",
+    "commit_id": "10815531c513f449ce477fb97e3f6e6962c14eaf",
+    "github_url": "https://github.com/torvalds/linux/commit/10815531c513f449ce477fb97e3f6e6962c14eaf",
+    "lore_url": "https://lore.kernel.org/r/20231114141256.126749-9-cleger@rivosinc.com",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: zvbb"
+  },
+  {
+    "extension": "Zvkt",
+    "commit_id": "10815531c513f449ce477fb97e3f6e6962c14eaf",
+    "github_url": "https://github.com/torvalds/linux/commit/10815531c513f449ce477fb97e3f6e6962c14eaf",
+    "lore_url": "https://lore.kernel.org/r/20231114141256.126749-9-cleger@rivosinc.com",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: zvkt"
+  },
+  {
+    "extension": "Zihintntl",
+    "commit_id": "892f10c8d6ca4b3c12d149085243ad8cd75f09b3",
+    "github_url": "https://github.com/torvalds/linux/commit/892f10c8d6ca4b3c12d149085243ad8cd75f09b3",
+    "lore_url": "https://lore.kernel.org/r/20231114141256.126749-15-cleger@rivosinc.com",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: zihintntl"
+  },
+  {
+    "extension": "Zicond",
+    "commit_id": "00c6f39c8247b0a5ddca4586d43aec1af7cbccb6",
+    "github_url": "https://github.com/torvalds/linux/commit/00c6f39c8247b0a5ddca4586d43aec1af7cbccb6",
+    "lore_url": null,
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: zicond"
+  },
+  {
+    "extension": "Zimop",
+    "commit_id": "a57b68bc315ce941406c001a3630f7e26d753f13",
+    "github_url": "https://github.com/torvalds/linux/commit/a57b68bc315ce941406c001a3630f7e26d753f13",
+    "lore_url": "https://lore.kernel.org/r/20240619113529.676940-2-cleger@rivosinc.com",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: zimop"
+  },
+  {
+    "extension": "Zcmop",
+    "commit_id": "700556a73bc704e1c47207322f78a560ff10328e",
+    "github_url": "https://github.com/torvalds/linux/commit/700556a73bc704e1c47207322f78a560ff10328e",
+    "lore_url": "https://lore.kernel.org/r/20240619113529.676940-13-cleger@rivosinc.com",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: zcmop"
+  },
+  {
+    "extension": "Zcb",
+    "commit_id": "e9f9946cad7b038837d58fc8e4abe15dedf39d75",
+    "github_url": "https://github.com/torvalds/linux/commit/e9f9946cad7b038837d58fc8e4abe15dedf39d75",
+    "lore_url": "https://lore.kernel.org/r/20231114141256.126749-21-cleger@rivosinc.com",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: zcb"
+  },
+  {
+    "extension": "Zfa",
+    "commit_id": "9726acfdfa3bbf324b305e0b32fc028c278f6d43",
+    "github_url": "https://github.com/torvalds/linux/commit/9726acfdfa3bbf324b305e0b32fc028c278f6d43",
+    "lore_url": "https://lore.kernel.org/r/20231114141256.126749-21-cleger@rivosinc.com",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: zfa"
+  },
+  {
+    "extension": "Zawrs",
+    "commit_id": "6d5852811600086f0a227a4d646b2a20b4dfe533",
+    "github_url": "https://github.com/torvalds/linux/commit/6d5852811600086f0a227a4d646b2a20b4dfe533",
+    "lore_url": "https://lore.kernel.org/r/20240426100820.14762-10-ajones@ventanamicro.com",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: zawrs"
+  },
+  {
+    "extension": "Supm",
+    "commit_id": "8727163a1ae304b5b4ac5952f593936ab9024d37",
+    "github_url": "https://github.com/torvalds/linux/commit/8727163a1ae304b5b4ac5952f593936ab9024d37",
+    "lore_url": "https://lore.kernel.org/r/20241016202814.4061541-2-samuel.holland@sifive.com",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: smnpm"
+  },
+  {
+    "extension": "Zvkng",
+    "commit_id": "10815531c513f449ce477fb97e3f6e6962c14eaf",
+    "github_url": "https://github.com/torvalds/linux/commit/10815531c513f449ce477fb97e3f6e6962c14eaf",
+    "lore_url": "https://lore.kernel.org/r/20231114141256.126749-9-cleger@rivosinc.com",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: zvkng"
+  },
+  {
+    "extension": "Zvksg",
+    "commit_id": "10815531c513f449ce477fb97e3f6e6962c14eaf",
+    "github_url": "https://github.com/torvalds/linux/commit/10815531c513f449ce477fb97e3f6e6962c14eaf",
+    "lore_url": "https://lore.kernel.org/r/20231114141256.126749-9-cleger@rivosinc.com",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: zvksg"
+  },
+  {
+    "extension": "Zabha",
+    "commit_id": "01b871c50302b4d45802377b5a822003d154ac9a",
+    "github_url": "https://github.com/torvalds/linux/commit/01b871c50302b4d45802377b5a822003d154ac9a",
+    "lore_url": "https://lore.kernel.org/r/20240717060125.139416-2-alexghiti@rivosinc.com",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: zabha"
+  },
+  {
+    "extension": "Zacas",
+    "commit_id": "cd7be4d02f418d5d62bcaf26e5c44ceb4ce00029",
+    "github_url": "https://github.com/torvalds/linux/commit/cd7be4d02f418d5d62bcaf26e5c44ceb4ce00029",
+    "lore_url": "https://lore.kernel.org/r/20231220155723.684081-4-cleger@rivosinc.com",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: zacas"
+  },
+  {
+    "extension": "Ziccamoc",
+    "error": "Not found"
+  },
+  {
+    "extension": "Zvbc",
+    "commit_id": "10815531c513f449ce477fb97e3f6e6962c14eaf",
+    "github_url": "https://github.com/torvalds/linux/commit/10815531c513f449ce477fb97e3f6e6962c14eaf",
+    "lore_url": "https://lore.kernel.org/r/20231114141256.126749-9-cleger@rivosinc.com",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: zvbc"
+  },
+  {
+    "extension": "Zama16b",
+    "error": "Not found"
+  },
+  {
+    "extension": "Zfh",
+    "commit_id": "c44714c35ff861d69db9c8bb4ae1347373f817f0",
+    "github_url": "https://github.com/torvalds/linux/commit/c44714c35ff861d69db9c8bb4ae1347373f817f0",
+    "lore_url": "https://lore.kernel.org/r/20231114141256.126749-12-cleger@rivosinc.com",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: zfh"
+  },
+  {
+    "extension": "Zbc",
+    "commit_id": "aeb71e42caae2031ec849a858080d81462cacca9",
+    "github_url": "https://github.com/torvalds/linux/commit/aeb71e42caae2031ec849a858080d81462cacca9",
+    "lore_url": "https://lore.kernel.org/r/20230702-eats-scorebook-c951f170d29f@spud",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: zbc"
+  },
+  {
+    "extension": "Zicfilp",
+    "error": "Not found"
+  },
+  {
+    "extension": "Zicfiss",
+    "error": "Not found"
+  },
+  {
+    "extension": "Zvfh",
+    "commit_id": "e11880b4be3a8db558147409b9ed0d1855526910",
+    "github_url": "https://github.com/torvalds/linux/commit/e11880b4be3a8db558147409b9ed0d1855526910",
+    "lore_url": "https://lore.kernel.org/r/20231114141256.126749-18-cleger@rivosinc.com",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: zvfh"
+  },
+  {
+    "extension": "Zfbfmin",
+    "commit_id": "35bc1883733c81ff307c9c73bd00191313e651af",
+    "github_url": "https://github.com/torvalds/linux/commit/35bc1883733c81ff307c9c73bd00191313e651af",
+    "lore_url": "https://lore.kernel.org/r/20250213003849.147358-2-inochiama@gmail.com",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: zfbfmin"
+  },
+  {
+    "extension": "Zvfbfmin",
+    "commit_id": "35bc1883733c81ff307c9c73bd00191313e651af",
+    "github_url": "https://github.com/torvalds/linux/commit/35bc1883733c81ff307c9c73bd00191313e651af",
+    "lore_url": "https://lore.kernel.org/r/20250213003849.147358-2-inochiama@gmail.com",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: zvfbfmin"
+  },
+  {
+    "extension": "Zvfbfwma",
+    "commit_id": "35bc1883733c81ff307c9c73bd00191313e651af",
+    "github_url": "https://github.com/torvalds/linux/commit/35bc1883733c81ff307c9c73bd00191313e651af",
+    "lore_url": "https://lore.kernel.org/r/20250213003849.147358-2-inochiama@gmail.com",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: zvfbfwma"
+  },
+  {
+    "extension": "Zifencei",
+    "commit_id": "aeb71e42caae2031ec849a858080d81462cacca9",
+    "github_url": "https://github.com/torvalds/linux/commit/aeb71e42caae2031ec849a858080d81462cacca9",
+    "lore_url": "https://lore.kernel.org/r/20230702-eats-scorebook-c951f170d29f@spud",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: zifencei"
+  },
+  {
+    "extension": "Ss1p13",
+    "error": "Not found"
+  },
+  {
+    "extension": "Svbare",
+    "commit_id": "7ef71c719eb462edaa6078405654d2447c7a5488",
+    "github_url": "https://github.com/torvalds/linux/commit/7ef71c719eb462edaa6078405654d2447c7a5488",
+    "lore_url": null,
+    "file_found": "Documentation/devicetree/bindings/riscv/cpus.yaml",
+    "term_found": "- riscv,none"
+  },
+  {
+    "extension": "Sv39",
+    "commit_id": "4fd669a8c4873b6ad54e77bc45aa37b03edc5587",
+    "github_url": "https://github.com/torvalds/linux/commit/4fd669a8c4873b6ad54e77bc45aa37b03edc5587",
+    "lore_url": null,
+    "file_found": "Documentation/devicetree/bindings/riscv/cpus.yaml",
+    "term_found": "riscv,sv39"
+  },
+  {
+    "extension": "Svade",
+    "commit_id": "b8d481671703c4ba24bb250a99225e0e3d8aedac",
+    "github_url": "https://github.com/torvalds/linux/commit/b8d481671703c4ba24bb250a99225e0e3d8aedac",
+    "lore_url": "https://lore.kernel.org/r/20240726084931.28924-3-yongxuan.wang@sifive.com",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: svade"
+  },
+  {
+    "extension": "Ssccptr",
+    "error": "Not found"
+  },
+  {
+    "extension": "Sstvecd",
+    "error": "Not found"
+  },
+  {
+    "extension": "Sstvala",
+    "error": "Not found"
+  },
+  {
+    "extension": "Sscounterenw",
+    "error": "Not found"
+  },
+  {
+    "extension": "Svpbmt",
+    "commit_id": "aeb71e42caae2031ec849a858080d81462cacca9",
+    "github_url": "https://github.com/torvalds/linux/commit/aeb71e42caae2031ec849a858080d81462cacca9",
+    "lore_url": "https://lore.kernel.org/r/20230702-eats-scorebook-c951f170d29f@spud",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: svpbmt"
+  },
+  {
+    "extension": "Svinval",
+    "commit_id": "aeb71e42caae2031ec849a858080d81462cacca9",
+    "github_url": "https://github.com/torvalds/linux/commit/aeb71e42caae2031ec849a858080d81462cacca9",
+    "lore_url": "https://lore.kernel.org/r/20230702-eats-scorebook-c951f170d29f@spud",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: svinval"
+  },
+  {
+    "extension": "Svnapot",
+    "commit_id": "aeb71e42caae2031ec849a858080d81462cacca9",
+    "github_url": "https://github.com/torvalds/linux/commit/aeb71e42caae2031ec849a858080d81462cacca9",
+    "lore_url": "https://lore.kernel.org/r/20230702-eats-scorebook-c951f170d29f@spud",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: svnapot"
+  },
+  {
+    "extension": "Sstc",
+    "commit_id": "aeb71e42caae2031ec849a858080d81462cacca9",
+    "github_url": "https://github.com/torvalds/linux/commit/aeb71e42caae2031ec849a858080d81462cacca9",
+    "lore_url": "https://lore.kernel.org/r/20230702-eats-scorebook-c951f170d29f@spud",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: sstc"
+  },
+  {
+    "extension": "Sscofpmf",
+    "commit_id": "aeb71e42caae2031ec849a858080d81462cacca9",
+    "github_url": "https://github.com/torvalds/linux/commit/aeb71e42caae2031ec849a858080d81462cacca9",
+    "lore_url": "https://lore.kernel.org/r/20230702-eats-scorebook-c951f170d29f@spud",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: sscofpmf"
+  },
+  {
+    "extension": "Ssnpm",
+    "commit_id": "8727163a1ae304b5b4ac5952f593936ab9024d37",
+    "github_url": "https://github.com/torvalds/linux/commit/8727163a1ae304b5b4ac5952f593936ab9024d37",
+    "lore_url": "https://lore.kernel.org/r/20241016202814.4061541-2-samuel.holland@sifive.com",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: ssnpm"
+  },
+  {
+    "extension": "Ssu64xl",
+    "error": "Not found"
+  },
+  {
+    "extension": "Sha",
+    "commit_id": "aeb71e42caae2031ec849a858080d81462cacca9",
+    "github_url": "https://github.com/torvalds/linux/commit/aeb71e42caae2031ec849a858080d81462cacca9",
+    "lore_url": "https://lore.kernel.org/r/20230702-eats-scorebook-c951f170d29f@spud",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: h"
+  },
+  {
+    "extension": "H",
+    "commit_id": "aeb71e42caae2031ec849a858080d81462cacca9",
+    "github_url": "https://github.com/torvalds/linux/commit/aeb71e42caae2031ec849a858080d81462cacca9",
+    "lore_url": "https://lore.kernel.org/r/20230702-eats-scorebook-c951f170d29f@spud",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: h"
+  },
+  {
+    "extension": "Ssstateen",
+    "commit_id": "a4f5f39849f39f62f5d4e88cbb600f95f927003d",
+    "github_url": "https://github.com/torvalds/linux/commit/a4f5f39849f39f62f5d4e88cbb600f95f927003d",
+    "lore_url": null,
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: smstateen"
+  },
+  {
+    "extension": "Shcounterenw",
+    "error": "Not found"
+  },
+  {
+    "extension": "Shvstvala",
+    "error": "Not found"
+  },
+  {
+    "extension": "Shtvala",
+    "error": "Not found"
+  },
+  {
+    "extension": "Shvstvecd",
+    "error": "Not found"
+  },
+  {
+    "extension": "Shvsatpa",
+    "error": "Not found"
+  },
+  {
+    "extension": "Shgatpa",
+    "error": "Not found"
+  },
+  {
+    "extension": "Sv48",
+    "commit_id": "4fd669a8c4873b6ad54e77bc45aa37b03edc5587",
+    "github_url": "https://github.com/torvalds/linux/commit/4fd669a8c4873b6ad54e77bc45aa37b03edc5587",
+    "lore_url": null,
+    "file_found": "Documentation/devicetree/bindings/riscv/cpus.yaml",
+    "term_found": "riscv,sv48"
+  },
+  {
+    "extension": "Sv57",
+    "commit_id": "d4dda690b44a5e36b4bf108c48177cef40c80d24",
+    "github_url": "https://github.com/torvalds/linux/commit/d4dda690b44a5e36b4bf108c48177cef40c80d24",
+    "lore_url": "https://lore.kernel.org/r/20230424-rival-habitual-478567c516f0@spud",
+    "file_found": "Documentation/devicetree/bindings/riscv/cpus.yaml",
+    "term_found": "riscv,sv57"
+  },
+  {
+    "extension": "Zkr",
+    "commit_id": "9376396251c8a927018d465b4cc396af4b25b8d0",
+    "github_url": "https://github.com/torvalds/linux/commit/9376396251c8a927018d465b4cc396af4b25b8d0",
+    "lore_url": "https://lore.kernel.org/r/20231114141256.126749-6-cleger@rivosinc.com",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: zkr"
+  },
+  {
+    "extension": "Svadu",
+    "commit_id": "b8d481671703c4ba24bb250a99225e0e3d8aedac",
+    "github_url": "https://github.com/torvalds/linux/commit/b8d481671703c4ba24bb250a99225e0e3d8aedac",
+    "lore_url": "https://lore.kernel.org/r/20240726084931.28924-3-yongxuan.wang@sifive.com",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: svadu"
+  },
+  {
+    "extension": "Sdtrig",
+    "error": "Not found"
+  },
+  {
+    "extension": "Ssstrict",
+    "error": "Not found"
+  },
+  {
+    "extension": "Svvptc",
+    "commit_id": "d25599b5933fb5f89d4b4c720564d613a795f502",
+    "github_url": "https://github.com/torvalds/linux/commit/d25599b5933fb5f89d4b4c720564d613a795f502",
+    "lore_url": "https://lore.kernel.org/r/20240717060125.139416-3-alexghiti@rivosinc.com",
+    "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml",
+    "term_found": "const: svvptc"
+  },
+  {
+    "extension": "Sspm",
+    "error": "Not found"
+  }
+]
