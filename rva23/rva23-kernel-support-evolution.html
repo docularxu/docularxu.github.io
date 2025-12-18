@@ -179,7 +179,7 @@
 							</button>
 						</div>
 					</div>
-					<p class="mt-2 text-xs text-stone-400">Default: v6.6 & v6.12 (LTS), v6.18 (Latest). 
+					<p class="mt-2 text-xs text-stone-400">Default: v6.6 & v6.12 (LTS), v6.18 (Latest).
 						<span id="tagLoadStatus" class="text-indigo-600"></span>
 					</p>
 
@@ -241,7 +241,7 @@
 		<div id="evolutionResultsSection" class="hidden space-y-6">
 			<div class="bg-gradient-to-br from-indigo-50 to-purple-50 p-6 rounded-xl shadow-sm border border-indigo-200">
 				<h3 class="text-xl font-bold text-stone-900 mb-4">Evolution Analysis Results</h3>
-				
+
 				<!-- Progress Bar -->
 				<div id="evolutionProgress" class="hidden mb-4">
 					<div class="flex justify-between text-sm text-stone-600 mb-1">
@@ -331,7 +331,7 @@
 				<h3 class="text-xl font-bold text-stone-900">Version Comparison Results</h3>
 			</div>
 			<div class="space-y-6">
-		
+
 		<!-- Dashboard -->
 		<div id="resultsDashboard" class="space-y-6">
 
@@ -426,9 +426,9 @@
 			<div class="bg-amber-50 border border-amber-200 rounded-lg p-6">
 				<h3 class="text-lg font-bold text-amber-800 mb-2">Missing Mandatory Extensions by Version</h3>
 				<p class="text-sm text-amber-700 mb-4">The following extensions are required by RVA23
-					but were not explicitly found in each kernel version's 
-					<code>extensions.yaml</code> or <code>cpus.yaml</code> bindings. 
-					These extensions may be implemented but not yet documented in the device tree bindings, 
+					but were not explicitly found in each kernel version's
+					<code>extensions.yaml</code> or <code>cpus.yaml</code> bindings.
+					These extensions may be implemented but not yet documented in the device tree bindings,
 					or they may not be supported in this kernel release.
 				</p>
 				<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -1001,7 +1001,7 @@
 			const version1 = document.getElementById('kernelVersion1').value.trim();
 			const version2 = document.getElementById('kernelVersion2').value.trim();
 			const version3 = document.getElementById('kernelVersion3').value.trim();
-			
+
 			if (!version1 || !version2 || !version3) {
 				alert("Please select all three kernel versions.");
 				return;
@@ -1044,7 +1044,7 @@
 			const dbResult = getFromDatabase(version);
 			if (dbResult) {
 				log(`[v${version}] 🗄️  Found in local database!`);
-				
+
 				// Convert database result to display format
 				const results = rva23Data.map(item => {
 					const sourceList = dbResult.allSupportedExtensions || dbResult.supportedExtensions;
@@ -1101,7 +1101,7 @@
 									text = await response.text();
 								}
 
-								if (text.trim().toLowerCase().startsWith('<!doctype') || 
+								if (text.trim().toLowerCase().startsWith('<!doctype') ||
 								    text.trim().toLowerCase().startsWith('<html')) {
 									throw new Error('Got HTML');
 								}
@@ -1151,7 +1151,7 @@
 					}
 
 					if (!supported && item.special_check === "block_size") {
-						if (tempProperties.has('riscv,cbom-block-size') || 
+						if (tempProperties.has('riscv,cbom-block-size') ||
 						    tempProperties.has('riscv,cboz-block-size')) {
 							supported = true;
 							foundIn = "Implicit (block-size)";
@@ -1264,9 +1264,9 @@
 			// Scroll to results (only for user-initiated runs)
 			if (shouldScroll) {
 				setTimeout(() => {
-					document.getElementById('comparisonResultsSection').scrollIntoView({ 
-						behavior: 'smooth', 
-						block: 'start' 
+					document.getElementById('comparisonResultsSection').scrollIntoView({
+						behavior: 'smooth',
+						block: 'start'
 					});
 				}, 300);
 			}
@@ -1590,9 +1590,9 @@
 				// Scroll to results (only for user-initiated runs)
 				if (shouldScroll) {
 					setTimeout(() => {
-						document.getElementById('evolutionResultsSection').scrollIntoView({ 
-							behavior: 'smooth', 
-							block: 'start' 
+						document.getElementById('evolutionResultsSection').scrollIntoView({
+							behavior: 'smooth',
+							block: 'start'
 						});
 					}, 300);
 				}
