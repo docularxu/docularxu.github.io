@@ -780,7 +780,21 @@
 		document.addEventListener('DOMContentLoaded', async () => {
 			await loadKernelDatabase();
 			updateDatabaseStatus();
-			fetchTags();
+			await fetchTags();
+
+			// Auto-run both analyses so results are visible by default on page load.
+			// Keep the page position stable (no auto-scroll); users can re-run via the buttons.
+			try {
+				await analyzeKernel({ scroll: false });
+			} catch (e) {
+				console.error('Auto-run compare failed:', e);
+			}
+
+			try {
+				await analyzeEvolution({ scroll: false });
+			} catch (e) {
+				console.error('Auto-run evolution failed:', e);
+			}
 		});
 
 		// --- Database Management ---
@@ -982,7 +996,8 @@
 			logDiv.scrollTop = logDiv.scrollHeight;
 		}
 
-		async function analyzeKernel() {
+		async function analyzeKernel(options = {}) {
+			const shouldScroll = options?.scroll !== false;
 			const version1 = document.getElementById('kernelVersion1').value.trim();
 			const version2 = document.getElementById('kernelVersion2').value.trim();
 			const version3 = document.getElementById('kernelVersion3').value.trim();
@@ -1012,7 +1027,7 @@
 				analysisResults.version3 = results3;
 
 				log(`✓ Comparison analysis complete!`);
-				renderDashboard();
+				renderDashboard({ scroll: shouldScroll });
 
 			} catch (e) {
 				log(`Critical Error: ${e.message}`, 'error');
@@ -1241,17 +1256,20 @@
 			searchConsts(doc);
 		}
 
-		function renderDashboard() {
+		function renderDashboard(options = {}) {
+			const shouldScroll = options?.scroll !== false;
 			// Show comparison results section
 			document.getElementById('comparisonResultsSection').classList.remove('hidden');
 
-			// Scroll to results
-			setTimeout(() => {
-				document.getElementById('comparisonResultsSection').scrollIntoView({ 
-					behavior: 'smooth', 
-					block: 'start' 
-				});
-			}, 300);
+			// Scroll to results (only for user-initiated runs)
+			if (shouldScroll) {
+				setTimeout(() => {
+					document.getElementById('comparisonResultsSection').scrollIntoView({ 
+						behavior: 'smooth', 
+						block: 'start' 
+					});
+				}, 300);
+			}
 
 			// Update version displays
 			document.getElementById('version1Display').textContent = `v${comparisonVersions[0]}`;
@@ -1417,10 +1435,14 @@
 		let optionalChart = null;
 		let logsManuallyHidden = false;
 
-		async function analyzeEvolution() {
+		async function analyzeEvolution(options = {}) {
+			const shouldScroll = options?.scroll !== false;
 			const startVersion = document.getElementById('evolutionStart').value;
 			const endVersionInput = document.getElementById('evolutionEnd').value;
 			const useProxy = document.getElementById('useProxy').checked;
+
+			// Show results container immediately so progress is visible
+			document.getElementById('evolutionResultsSection').classList.remove('hidden');
 
 			// Disable button
 			const btn = document.getElementById('evolutionBtn');
@@ -1565,13 +1587,15 @@
 				renderEvolutionStats(evolutionData);
 				renderOptionalStats(evolutionData);
 
-				// Scroll to results
-				setTimeout(() => {
-					document.getElementById('evolutionResultsSection').scrollIntoView({ 
-						behavior: 'smooth', 
-						block: 'start' 
-					});
-				}, 300);
+				// Scroll to results (only for user-initiated runs)
+				if (shouldScroll) {
+					setTimeout(() => {
+						document.getElementById('evolutionResultsSection').scrollIntoView({ 
+							behavior: 'smooth', 
+							block: 'start' 
+						});
+					}, 300);
+				}
 
 			} catch (err) {
 				log(`Critical error in evolution analysis: ${err.message}`, 'error');
