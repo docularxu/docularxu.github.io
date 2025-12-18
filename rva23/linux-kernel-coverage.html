@@ -84,10 +84,11 @@
         <div class="max-w-[1920px] mx-auto py-12 px-4 sm:px-6 lg:px-8">
             <h1 class="text-3xl font-bold text-stone-900 mb-4">RISC-V RVA23 Profile Analysis</h1>
             <p class="text-lg text-stone-600 max-w-3xl">
-                This interactive tool breaks down the <strong>RVA23 Profile</strong> (User-mode and Supervisor-mode), tracking the status of standard extensions and their inclusion in the <strong>Linux Kernel v6.18 Device Tree</strong>. Use the dashboard to gauge compliance and the explorer to drill down into specific instruction set extensions.
+                This interactive tool breaks down the <strong>RVA23 Profile</strong> (User-mode and Supervisor-mode), tracking the status of standard extensions and their inclusion in the <strong>Linux Kernel v6.18 Device Tree</strong> (checked against <strong>v6.19-rc1</strong>: no RVA23 DT binding deltas). Use the dashboard to gauge compliance and the explorer to drill down into specific instruction set extensions.
             </p>
             <div class="mt-4 text-sm text-stone-500 space-y-1">
                 <p><strong>Note 1:</strong> Linux kernel v6.18 supports if the extension string exists in file <a href="https://github.com/torvalds/linux/blob/v6.18/Documentation/devicetree/bindings/riscv/extensions.yaml" class="text-amber-600 hover:underline" target="_blank">extensions.yaml</a> and <a href="https://github.com/torvalds/linux/blob/v6.18/Documentation/devicetree/bindings/riscv/cpus.yaml" class="text-amber-600 hover:underline" target="_blank">cpus.yaml</a>.</p>
+                <p><strong>Note 1b:</strong> Comparing <a href="https://github.com/torvalds/linux/blob/v6.19-rc1/Documentation/devicetree/bindings/riscv/extensions.yaml" class="text-amber-600 hover:underline" target="_blank">v6.19-rc1 extensions.yaml</a> and <a href="https://github.com/torvalds/linux/blob/v6.19-rc1/Documentation/devicetree/bindings/riscv/cpus.yaml" class="text-amber-600 hover:underline" target="_blank">v6.19-rc1 cpus.yaml</a> shows no additional RVA23-relevant tokens beyond v6.18 in these DT bindings.</p>
                 <p><strong>Note 2:</strong> QEMU rva23s64 is dumped from: <code>qemu-system-riscv64</code> version <span class="font-semibold text-stone-700">10.1.92</span> (<span class="text-stone-600">v10.2.0-rc2-7-g1053bb627c</span>), launched with <code>-machine virt,acpi=off -cpu rva23s64</code>.</p>
             </div>
         </div>
