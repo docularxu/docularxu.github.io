@@ -1,0 +1,76 @@
+scripts/kconfig/conf  --silentoldconfig Kconfig
+  CHK     include/config/kernel.release
+  CHK     include/generated/uapi/linux/version.h
+  CHK     include/generated/utsrelease.h
+  CC      kernel/bounds.s
+In file included from include/linux/kernel.h:11,
+                 from include/asm-generic/bug.h:13,
+                 from ./arch/arm64/include/asm/bug.h:62,
+                 from include/linux/bug.h:4,
+                 from include/linux/page-flags.h:9,
+                 from kernel/bounds.c:9:
+include/linux/log2.h:22:1: warning: ignoring attribute ‘noreturn’ because it conflicts with attribute ‘const’ [-Wattributes]
+   22 | int ____ilog2_NaN(void);
+      | ^~~
+  CHK     include/generated/bounds.h
+  CHK     include/generated/timeconst.h
+  CC      arch/arm64/kernel/asm-offsets.s
+In file included from include/linux/kernel.h:11,
+                 from include/linux/sched.h:17,
+                 from arch/arm64/kernel/asm-offsets.c:21:
+include/linux/log2.h:22:1: warning: ignoring attribute ‘noreturn’ because it conflicts with attribute ‘const’ [-Wattributes]
+   22 | int ____ilog2_NaN(void);
+      | ^~~
+  CHK     include/generated/asm-offsets.h
+  CALL    scripts/checksyscalls.sh
+  HOSTCC  scripts/dtc/dtc.o
+  HOSTCC  scripts/dtc/flattree.o
+  HOSTCC  scripts/dtc/fstree.o
+  HOSTCC  scripts/dtc/data.o
+  HOSTCC  scripts/dtc/livetree.o
+  HOSTCC  scripts/dtc/treesource.o
+  HOSTCC  scripts/dtc/srcpos.o
+  HOSTCC  scripts/dtc/checks.o
+  HOSTCC  scripts/dtc/util.o
+  HOSTCC  scripts/dtc/dtc-lexer.lex.o
+  HOSTCC  scripts/dtc/dtc-parser.tab.o
+  HOSTLD  scripts/dtc/dtc
+  CC      scripts/mod/empty.o
+  HOSTCC  scripts/mod/mk_elfconfig
+  MKELF   scripts/mod/elfconfig.h
+  HOSTCC  scripts/mod/modpost.o
+  CC      scripts/mod/devicetable-offsets.s
+  GEN     scripts/mod/devicetable-offsets.h
+  HOSTCC  scripts/mod/file2alias.o
+  HOSTCC  scripts/mod/sumversion.o
+  HOSTLD  scripts/mod/modpost
+  HOSTCC  scripts/kallsyms
+  HOSTCC  scripts/pnmtologo
+  HOSTCC  scripts/conmakehash
+  HOSTCC  scripts/sortextable
+  DTC     arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dtb
+  DTC     arch/arm64/boot/dts/amd/amd-overdrive.dtb
+  DTC     arch/arm64/boot/dts/apm/apm-mustang.dtb
+  DTC     arch/arm64/boot/dts/apm/apm-merlin.dtb
+  DTC     arch/arm64/boot/dts/arm/foundation-v8.dtb
+  DTC     arch/arm64/boot/dts/arm/juno.dtb
+  DTC     arch/arm64/boot/dts/arm/juno-r1.dtb
+  DTC     arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dtb
+  DTC     arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dtb
+  DTC     arch/arm64/boot/dts/broadcom/ns2-svk.dtb
+  DTC     arch/arm64/boot/dts/cavium/thunder-88xx.dtb
+  DTC     arch/arm64/boot/dts/exynos/exynos7-espresso.dtb
+  DTC     arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dtb
+  DTC     arch/arm64/boot/dts/freescale/fsl-ls2080a-rdb.dtb
+  DTC     arch/arm64/boot/dts/freescale/fsl-ls2080a-simu.dtb
+  DTC     arch/arm64/boot/dts/hisilicon/hi6220-hikey.dtb
+  DTC     arch/arm64/boot/dts/hisilicon/hip05-d02.dtb
+  DTC     arch/arm64/boot/dts/marvell/berlin4ct-dmp.dtb
+  DTC     arch/arm64/boot/dts/marvell/berlin4ct-stb.dtb
+  DTC     arch/arm64/boot/dts/mediatek/mt6795-evb.dtb
+  DTC     arch/arm64/boot/dts/mediatek/mt8173-evb.dtb
+  DTC     arch/arm64/boot/dts/qcom/apq8016-sbc.dtb
+  DTC     arch/arm64/boot/dts/qcom/msm8916-mtp.dtb
+  DTC     arch/arm64/boot/dts/rockchip/rk3368-r88.dtb
+  DTC     arch/arm64/boot/dts/sprd/sc9836-openphone.dtb
+  DTC     arch/arm64/boot/dts/xilinx/zynqmp-ep108.dtb

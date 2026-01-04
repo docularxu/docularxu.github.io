@@ -1,0 +1,43 @@
+From fe4bf680ae6237e52d2215fff59ea83475cdb889 Mon Sep 17 00:00:00 2001
+From: Guodong Xu <guodong@riscstar.com>
+Date: Sun, 4 Jan 2026 09:48:01 +0800
+Subject: [PATCH] scripts/dtc/dtc-lexer.l: fixup: multiple definition of yylloc
+ error
+
+The dtc host tool fails to link with modern GCC versions (GCC 10+) due to
+the change in default behavior to -fno-common. This causes a "multiple
+definition" error for the yylloc global variable, as it is defined in both
+dtc-lexer.lex.c and dtc-parser.tab.c.
+
+Fix this by marking the declaration in dtc-lexer.l as extern, ensuring it
+references the definition provided by the parser.
+
+This issue is commonly seen when building older kernel versions (like 4.19
+or 4.4) on modern distributions.
+
+Fix the error introduced in GCC 10+
+ HOSTLD  scripts/dtc/dtc
+ /usr/bin/ld: scripts/dtc/dtc-parser.tab.o:(.bss+0x8): multiple definition of `yylloc'; scripts/dtc/dtc-lexer.lex.o:(.bss+0x38): first defined here
+
+Signed-off-by: Guodong Xu <guodong@riscstar.com>
+---
+ scripts/dtc/dtc-lexer.l | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/scripts/dtc/dtc-lexer.l b/scripts/dtc/dtc-lexer.l
+index 0ee1caf03dd0..74ae085831ed 100644
+--- a/scripts/dtc/dtc-lexer.l
++++ b/scripts/dtc/dtc-lexer.l
+@@ -38,7 +38,8 @@ LINECOMMENT	"//".*\n
+ #include "srcpos.h"
+ #include "dtc-parser.tab.h"
+ 
+-YYLTYPE yylloc;
++
++extern YYLTYPE yylloc;
+ extern bool treesource_error;
+ 
+ /* CAUTION: this will stop working if we ever use yyless() or yyunput() */
+-- 
+2.43.0
+

@@ -1,0 +1,275 @@
+  HOSTCC  scripts/basic/fixdep
+  CC      kernel/bounds.s
+  CC      arch/arm64/kernel/asm-offsets.s
+  CALL    scripts/checksyscalls.sh
+  LDS     arch/arm64/kernel/vdso/vdso.lds
+  VDSOA   arch/arm64/kernel/vdso/gettimeofday.o
+  VDSOA   arch/arm64/kernel/vdso/note.o
+  VDSOA   arch/arm64/kernel/vdso/sigreturn.o
+  VDSOL   arch/arm64/kernel/vdso/vdso.so.dbg
+  VDSOSYM include/generated/vdso-offsets.h
+  HOSTCC  scripts/dtc/dtc.o
+  HOSTCC  scripts/dtc/flattree.o
+  HOSTCC  scripts/dtc/fstree.o
+  HOSTCC  scripts/dtc/data.o
+  HOSTCC  scripts/dtc/livetree.o
+  HOSTCC  scripts/dtc/treesource.o
+  HOSTCC  scripts/dtc/srcpos.o
+  HOSTCC  scripts/dtc/checks.o
+  HOSTCC  scripts/dtc/util.o
+  LEX     scripts/dtc/dtc-lexer.lex.c
+  YACC    scripts/dtc/dtc-parser.tab.h
+  HOSTCC  scripts/dtc/dtc-lexer.lex.o
+  YACC    scripts/dtc/dtc-parser.tab.c
+  HOSTCC  scripts/dtc/dtc-parser.tab.o
+  HOSTLD  scripts/dtc/dtc
+  HOSTCC  scripts/mod/mk_elfconfig
+  CC      scripts/mod/empty.o
+  MKELF   scripts/mod/elfconfig.h
+  HOSTCC  scripts/mod/modpost.o
+  CC      scripts/mod/devicetable-offsets.s
+  HOSTCC  scripts/mod/file2alias.o
+  HOSTCC  scripts/mod/sumversion.o
+  HOSTLD  scripts/mod/modpost
+  HOSTCC  scripts/bin2c
+  HOSTCC  scripts/kallsyms
+  HOSTCC  scripts/pnmtologo
+  HOSTCC  scripts/conmakehash
+  HOSTCC  scripts/sortextable
+  HOSTCC  scripts/asn1_compiler
+  HOSTCC  scripts/extract-cert
+scripts/extract-cert.c: In function ‘display_openssl_errors’:
+scripts/extract-cert.c:46:9: warning: ‘ERR_get_error_line’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+   46 |         while ((e = ERR_get_error_line(&file, &line))) {
+      |         ^~~~~
+In file included from scripts/extract-cert.c:23:
+/usr/include/openssl/err.h:423:15: note: declared here
+  423 | unsigned long ERR_get_error_line(const char **file, int *line);
+      |               ^~~~~~~~~~~~~~~~~~
+scripts/extract-cert.c: In function ‘drain_openssl_errors’:
+scripts/extract-cert.c:59:9: warning: ‘ERR_get_error_line’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+   59 |         while (ERR_get_error_line(&file, &line)) {}
+      |         ^~~~~
+/usr/include/openssl/err.h:423:15: note: declared here
+  423 | unsigned long ERR_get_error_line(const char **file, int *line);
+      |               ^~~~~~~~~~~~~~~~~~
+scripts/extract-cert.c: In function ‘main’:
+scripts/extract-cert.c:124:17: warning: ‘ENGINE_load_builtin_engines’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+  124 |                 ENGINE_load_builtin_engines();
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from scripts/extract-cert.c:24:
+/usr/include/openssl/engine.h:358:28: note: declared here
+  358 | OSSL_DEPRECATEDIN_3_0 void ENGINE_load_builtin_engines(void);
+      |                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+scripts/extract-cert.c:126:17: warning: ‘ENGINE_by_id’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+  126 |                 e = ENGINE_by_id("pkcs11");
+      |                 ^
+/usr/include/openssl/engine.h:336:31: note: declared here
+  336 | OSSL_DEPRECATEDIN_3_0 ENGINE *ENGINE_by_id(const char *id);
+      |                               ^~~~~~~~~~~~
+scripts/extract-cert.c:128:17: warning: ‘ENGINE_init’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+  128 |                 if (ENGINE_init(e))
+      |                 ^~
+/usr/include/openssl/engine.h:620:27: note: declared here
+  620 | OSSL_DEPRECATEDIN_3_0 int ENGINE_init(ENGINE *e);
+      |                           ^~~~~~~~~~~
+scripts/extract-cert.c:133:25: warning: ‘ENGINE_ctrl_cmd_string’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+  133 |                         ERR(!ENGINE_ctrl_cmd_string(e, "PIN", key_pass, 0), "Set PKCS#11 PIN");
+      |                         ^~~
+/usr/include/openssl/engine.h:479:5: note: declared here
+  479 | int ENGINE_ctrl_cmd_string(ENGINE *e, const char *cmd_name, const char *arg,
+      |     ^~~~~~~~~~~~~~~~~~~~~~
+scripts/extract-cert.c:134:17: warning: ‘ENGINE_ctrl_cmd’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+  134 |                 ENGINE_ctrl_cmd(e, "LOAD_CERT_CTRL", 0, &parms, NULL, 1);
+      |                 ^~~~~~~~~~~~~~~
+/usr/include/openssl/engine.h:450:27: note: declared here
+  450 | OSSL_DEPRECATEDIN_3_0 int ENGINE_ctrl_cmd(ENGINE *e, const char *cmd_name,
+      |                           ^~~~~~~~~~~~~~~
+  DTC     arch/arm64/boot/dts/al/alpine-v2-evp.dtb
+  DTC     arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dtb
+  DTC     arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dtb
+  DTC     arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dtb
+  DTC     arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dtb
+  DTC     arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dtb
+  DTC     arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dtb
+  DTC     arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dtb
+  DTC     arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dtb
+  DTC     arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dtb
+  DTC     arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dtb
+  DTC     arch/arm64/boot/dts/allwinner/sun50i-h5-libretech-all-h3-cc.dtb
+  DTC     arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo2.dtb
+  DTC     arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo-plus2.dtb
+  DTC     arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dtb
+  DTC     arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-prime.dtb
+  DTC     arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus.dtb
+  DTC     arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dtb
+  DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dtb
+  DTC     arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dtb
+  DTC     arch/arm64/boot/dts/amd/amd-overdrive.dtb
+  DTC     arch/arm64/boot/dts/amd/amd-overdrive-rev-b0.dtb
+  DTC     arch/arm64/boot/dts/amd/amd-overdrive-rev-b1.dtb
+  DTC     arch/arm64/boot/dts/amd/husky.dtb
+  DTC     arch/arm64/boot/dts/amlogic/meson-axg-s400.dtb
+  DTC     arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dtb
+  DTC     arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dtb
+  DTC     arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dtb
+  DTC     arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dtb
+  DTC     arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dtb
+  DTC     arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-pro.dtb
+  DTC     arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-meta.dtb
+  DTC     arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-telos.dtb
+  DTC     arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-hub.dtb
+  DTC     arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dtb
+  DTC     arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dtb
+  DTC     arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dtb
+  DTC     arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dtb
+  DTC     arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dtb
+  DTC     arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtb
+  DTC     arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dtb
+  DTC     arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p231.dtb
+  DTC     arch/arm64/boot/dts/amlogic/meson-gxl-s805x-p241.dtb
+  DTC     arch/arm64/boot/dts/amlogic/meson-gxl-s905w-p281.dtb
+  DTC     arch/arm64/boot/dts/amlogic/meson-gxl-s905w-tx3-mini.dtb
+  DTC     arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dtb
+  DTC     arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dtb
+  DTC     arch/arm64/boot/dts/amlogic/meson-gxm-q200.dtb
+  DTC     arch/arm64/boot/dts/amlogic/meson-gxm-q201.dtb
+  DTC     arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dtb
+  DTC     arch/arm64/boot/dts/amlogic/meson-gxm-vega-s96.dtb
+  DTC     arch/arm64/boot/dts/apm/apm-mustang.dtb
+  DTC     arch/arm64/boot/dts/apm/apm-merlin.dtb
+  DTC     arch/arm64/boot/dts/arm/foundation-v8.dtb
+  DTC     arch/arm64/boot/dts/arm/foundation-v8-psci.dtb
+  DTC     arch/arm64/boot/dts/arm/foundation-v8-gicv3.dtb
+  DTC     arch/arm64/boot/dts/arm/foundation-v8-gicv3-psci.dtb
+  DTC     arch/arm64/boot/dts/arm/juno.dtb
+  DTC     arch/arm64/boot/dts/arm/juno-r1.dtb
+  DTC     arch/arm64/boot/dts/arm/juno-r2.dtb
+  DTC     arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dtb
+  DTC     arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dtb
+  DTC     arch/arm64/boot/dts/broadcom/northstar2/ns2-svk.dtb
+  DTC     arch/arm64/boot/dts/broadcom/northstar2/ns2-xmc.dtb
+  DTC     arch/arm64/boot/dts/broadcom/stingray/bcm958742k.dtb
+  DTC     arch/arm64/boot/dts/broadcom/stingray/bcm958742t.dtb
+  DTC     arch/arm64/boot/dts/broadcom/stingray/bcm958802a802x.dtb
+  DTC     arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dtb
+  DTC     arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b-plus.dtb
+  DTC     arch/arm64/boot/dts/cavium/thunder-88xx.dtb
+  DTC     arch/arm64/boot/dts/cavium/thunder2-99xx.dtb
+  DTC     arch/arm64/boot/dts/exynos/exynos5433-tm2.dtb
+  DTC     arch/arm64/boot/dts/exynos/exynos5433-tm2e.dtb
+  DTC     arch/arm64/boot/dts/exynos/exynos7-espresso.dtb
+  DTC     arch/arm64/boot/dts/freescale/fsl-ls1012a-frdm.dtb
+  DTC     arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dtb
+  DTC     arch/arm64/boot/dts/freescale/fsl-ls1012a-rdb.dtb
+  DTC     arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dtb
+  DTC     arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dtb
+  DTC     arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dtb
+  DTC     arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dtb
+  DTC     arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dtb
+  DTC     arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dtb
+  DTC     arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dtb
+  DTC     arch/arm64/boot/dts/freescale/fsl-ls2080a-rdb.dtb
+  DTC     arch/arm64/boot/dts/freescale/fsl-ls2080a-simu.dtb
+  DTC     arch/arm64/boot/dts/freescale/fsl-ls2088a-qds.dtb
+  DTC     arch/arm64/boot/dts/freescale/fsl-ls2088a-rdb.dtb
+  DTC     arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dtb
+  DTC     arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dtb
+  DTC     arch/arm64/boot/dts/hisilicon/hi6220-hikey.dtb
+  DTC     arch/arm64/boot/dts/hisilicon/hip05-d02.dtb
+  DTC     arch/arm64/boot/dts/hisilicon/hip06-d03.dtb
+  DTC     arch/arm64/boot/dts/hisilicon/hip07-d05.dtb
+  DTC     arch/arm64/boot/dts/lg/lg1312-ref.dtb
+  DTC     arch/arm64/boot/dts/lg/lg1313-ref.dtb
+  DTC     arch/arm64/boot/dts/marvell/armada-3720-db.dtb
+  DTC     arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtb
+  DTC     arch/arm64/boot/dts/marvell/armada-7040-db.dtb
+  DTC     arch/arm64/boot/dts/marvell/armada-8040-db.dtb
+  DTC     arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtb
+  DTC     arch/arm64/boot/dts/marvell/armada-8080-db.dtb
+  DTC     arch/arm64/boot/dts/mediatek/mt2712-evb.dtb
+  DTC     arch/arm64/boot/dts/mediatek/mt6755-evb.dtb
+  DTC     arch/arm64/boot/dts/mediatek/mt6795-evb.dtb
+  DTC     arch/arm64/boot/dts/mediatek/mt6797-evb.dtb
+  DTC     arch/arm64/boot/dts/mediatek/mt6797-x20-dev.dtb
+  DTC     arch/arm64/boot/dts/mediatek/mt7622-rfb1.dtb
+  DTC     arch/arm64/boot/dts/mediatek/mt8173-evb.dtb
+  DTC     arch/arm64/boot/dts/nvidia/tegra132-norrin.dtb
+  DTC     arch/arm64/boot/dts/nvidia/tegra210-p2371-0000.dtb
+  DTC     arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dtb
+  DTC     arch/arm64/boot/dts/nvidia/tegra210-p2571.dtb
+  DTC     arch/arm64/boot/dts/nvidia/tegra210-smaug.dtb
+  DTC     arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dtb
+  DTC     arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dtb
+  DTC     arch/arm64/boot/dts/qcom/apq8016-sbc.dtb
+  DTC     arch/arm64/boot/dts/qcom/apq8096-db820c.dtb
+  DTC     arch/arm64/boot/dts/qcom/ipq8074-hk01.dtb
+  DTC     arch/arm64/boot/dts/qcom/msm8916-mtp.dtb
+  DTC     arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dtb
+  DTC     arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dtb
+  DTC     arch/arm64/boot/dts/qcom/msm8996-mtp.dtb
+  DTC     arch/arm64/boot/dts/qcom/sdm845-mtp.dtb
+  DTC     arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dtb
+  DTC     arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dtb
+  DTC     arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-kf.dtb
+  DTC     arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dtb
+  DTC     arch/arm64/boot/dts/renesas/r8a7795-es1-salvator-x.dtb
+  DTC     arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb.dtb
+  DTC     arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb-kf.dtb
+  DTC     arch/arm64/boot/dts/renesas/r8a7796-salvator-x.dtb
+  DTC     arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dtb
+  DTC     arch/arm64/boot/dts/renesas/r8a7796-m3ulcb-kf.dtb
+  DTC     arch/arm64/boot/dts/renesas/r8a7796-salvator-xs.dtb
+  DTC     arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb
+  DTC     arch/arm64/boot/dts/renesas/r8a77965-salvator-xs.dtb
+  DTC     arch/arm64/boot/dts/renesas/r8a77970-eagle.dtb
+  DTC     arch/arm64/boot/dts/renesas/r8a77970-v3msk.dtb
+  DTC     arch/arm64/boot/dts/renesas/r8a77980-condor.dtb
+  DTC     arch/arm64/boot/dts/renesas/r8a77980-v3hsk.dtb
+  DTC     arch/arm64/boot/dts/renesas/r8a77990-ebisu.dtb
+  DTC     arch/arm64/boot/dts/renesas/r8a77995-draak.dtb
+  DTC     arch/arm64/boot/dts/rockchip/rk3328-evb.dtb
+  DTC     arch/arm64/boot/dts/rockchip/rk3328-rock64.dtb
+  DTC     arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dtb
+  DTC     arch/arm64/boot/dts/rockchip/rk3368-evb-act8846.dtb
+  DTC     arch/arm64/boot/dts/rockchip/rk3368-geekbox.dtb
+  DTC     arch/arm64/boot/dts/rockchip/rk3368-lion-haikou.dtb
+  DTC     arch/arm64/boot/dts/rockchip/rk3368-orion-r68-meta.dtb
+  DTC     arch/arm64/boot/dts/rockchip/rk3368-px5-evb.dtb
+  DTC     arch/arm64/boot/dts/rockchip/rk3368-r88.dtb
+  DTC     arch/arm64/boot/dts/rockchip/rk3399-evb.dtb
+  DTC     arch/arm64/boot/dts/rockchip/rk3399-ficus.dtb
+  DTC     arch/arm64/boot/dts/rockchip/rk3399-firefly.dtb
+  DTC     arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dtb
+  DTC     arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dtb
+  DTC     arch/arm64/boot/dts/rockchip/rk3399-puma-haikou.dtb
+  DTC     arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtb
+  DTC     arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dtb
+  DTC     arch/arm64/boot/dts/socionext/uniphier-ld11-global.dtb
+  DTC     arch/arm64/boot/dts/socionext/uniphier-ld11-ref.dtb
+  DTC     arch/arm64/boot/dts/socionext/uniphier-ld20-global.dtb
+  DTC     arch/arm64/boot/dts/socionext/uniphier-ld20-ref.dtb
+  DTC     arch/arm64/boot/dts/socionext/uniphier-pxs3-ref.dtb
+  DTC     arch/arm64/boot/dts/sprd/sc9836-openphone.dtb
+  DTC     arch/arm64/boot/dts/sprd/sp9860g-1h10.dtb
+  DTC     arch/arm64/boot/dts/synaptics/berlin4ct-dmp.dtb
+  DTC     arch/arm64/boot/dts/synaptics/berlin4ct-stb.dtb
+  DTC     arch/arm64/boot/dts/ti/k3-am654-base-board.dtb
+  DTC     arch/arm64/boot/dts/xilinx/avnet-ultra96-rev1.dtb
+  DTC     arch/arm64/boot/dts/xilinx/zynqmp-zc1232-revA.dtb
+  DTC     arch/arm64/boot/dts/xilinx/zynqmp-zc1254-revA.dtb
+  DTC     arch/arm64/boot/dts/xilinx/zynqmp-zc1275-revA.dtb
+  DTC     arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm015-dc1.dtb
+  DTC     arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dtb
+  DTC     arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm017-dc3.dtb
+  DTC     arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm018-dc4.dtb
+  DTC     arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm019-dc5.dtb
+  DTC     arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dtb
+  DTC     arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dtb
+  DTC     arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revB.dtb
+  DTC     arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev1.0.dtb
+  DTC     arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dtb
+  DTC     arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dtb
+  DTC     arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dtb
+  DTC     arch/arm64/boot/dts/zte/zx296718-evb.dtb
+  DTC     arch/arm64/boot/dts/zte/zx296718-pcbox.dtb

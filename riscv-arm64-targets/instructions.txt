@@ -1,0 +1,49 @@
+我在分析linux 内核中正式支持的riscv 和 arm64 开发板的数量。我的分析基于这样的命令组合（以arm64， v4.9 kernel 举例）：
+git checkout v4.9
+make ARCH=arm64 defconfig
+make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-  dtbs 2>&1 | tee ../dtbs-list-arm64/arm64.dtbs.v4.9
+grep -E '(DTC|OVL).*\.dtb$' ../dtbs-list-arm64/arm64.dtbs.v4.9  | wc -l
+
+实际上，你看出来了，我是基于能够使用 make dtbs 编译出来的 dtb 文件的数量来判断的。
+
+这个分析的方法，是受到了这个演讲的启发，https://ossjapan2025.sched.com/event/29Foi 
+
+基础数据，我已经抓取完成。保存在 dtbs-list-arm64 和 dtbs-list-riscv 目录下。
+
+我需要你做出一个网页来展示这些数据结果。网页采用纯英文。你所有的改动需要局限在riscv-arm64-targets/ 目录内。
+我设想的是建这样几个以时间为横轴的chart：
+
+1. 每个kernel版本（及其发布年月）的arm64 dtb数量。y轴是dtb的数量。
+	- 每个时间点的dtb 数量用分段的 bar chart 表示，分别用厂商名称来分段。比如几块是 qualcomm，几块是 Rockchip，几块是 Allwinner，几块是 Broadcom 等等。
+	- 数量多的厂商放到前面，数量少的厂商可以统一标注为其他。
+	-  dtbs-list-arm64 这里能找到基础数据。
+2. 每个kernel版本（及其发布年月）的riscv dtb数量。与arm64 dtb的类似。
+	- 与 arm64 使用同样的分段 bar chart表示。因为 riscv dtb 的数量少，所以可以不按厂商分段。
+	- dtbs-list-riscv 这里能找到基础数据。
+3. 如果把riscv dtb 数量的起始点与 arm64 按照时间线对齐（v6.6 riscv dtb 有21个，
+      类比于 v4.4 arm64 dtb 有26个），那么未来版本的 riscv dtb 的时间发展曲线，会如何？到2028年，2030年，预计会有多少riscv dtb/开发板？
+
+关于linux 版本的选取，我都是选的 LTS 版本。最早开始于 v4.1, LTS-15， 最迟是 v6.18, LTS-26。
+最新的kernel版本是 v6.19-rc3, 我也抓取了，这是唯一一个非LTS版本，只因为它是最新。
+
+关于linux 版本的基础信息，你可以从这个网页抓取：https://en.wikipedia.org/wiki/Linux_kernel_version_history 
+
+同时，这个网页还需要包含我的数据采集方法。并对 Krzysztof Kozlowski 表示感谢。
+
+我目前手动收集的数据如下，供你参考：
+
+Linux Version, arm64 dtb count, riscv dtb count, Original release date, LTS Version, New riscv board vendors
+v4.1,13,0,2015.06, 15
+v4.4, 26, 0, 2016.01, 16
+v4.9, 65, 0, 2016.12, 17
+v4.14, 135, 0, 2017.11, 18
+v4.19, 188, 0, 2018.10, 19
+v5.4, 278, 1, 2019.11, 20, SiFive
+v5.10, 390, 1, 2020.12, 21, + Cannan (nommu)
+v5.15, 531, 3, 2021.10, 22, + Microchip
+v6.1, 746, 7, 2022.12, 23, + StarFive
+v6.6, 932, 21, 2023.10, 24, + Allwinner (D1, 8 boards), Xuantie / T-HEAD (2 board)
+v6.12, 1191, 35, 2024.11, 25, + Sophgo (3 boards)
+v6.18, 1574, 48, 2025.11, 26, + Andes, + SpacemiT (3 boards)
+v6.19-rc3, 1638, 55, 2025.12, N/A, + Anlogic (1 board), + Tenstorrent (1 board)
+

@@ -1,0 +1,693 @@
+const KERNEL_DATA = {
+  "labels": [
+    "v4.1",
+    "v4.4",
+    "v4.9",
+    "v4.14",
+    "v4.19",
+    "v5.4",
+    "v5.10",
+    "v5.15",
+    "v6.1",
+    "v6.6",
+    "v6.12",
+    "v6.18",
+    "v6.19-rc3"
+  ],
+  "dates": [
+    "2015.06",
+    "2016.01",
+    "2016.12",
+    "2017.11",
+    "2018.10",
+    "2019.11",
+    "2020.12",
+    "2021.10",
+    "2022.12",
+    "2023.10",
+    "2024.11",
+    "2025.11",
+    "2025.12"
+  ],
+  "arm64": [
+    {
+      "vendors": {
+        "amd": 1,
+        "apm": 1,
+        "arm": 3,
+        "cavium": 1,
+        "exynos": 1,
+        "freescale": 1,
+        "mediatek": 1,
+        "qcom": 2,
+        "sprd": 1,
+        "xilinx": 1
+      },
+      "total": 13,
+      "date": "2015.06",
+      "new_vendors": [
+        "amd",
+        "apm",
+        "arm",
+        "cavium",
+        "exynos",
+        "freescale",
+        "mediatek",
+        "qcom",
+        "sprd",
+        "xilinx"
+      ]
+    },
+    {
+      "vendors": {
+        "altera": 1,
+        "amd": 1,
+        "apm": 2,
+        "arm": 5,
+        "broadcom": 1,
+        "cavium": 1,
+        "exynos": 1,
+        "freescale": 3,
+        "hisilicon": 2,
+        "marvell": 2,
+        "mediatek": 2,
+        "qcom": 2,
+        "rockchip": 1,
+        "sprd": 1,
+        "xilinx": 1
+      },
+      "total": 26,
+      "date": "2016.01",
+      "new_vendors": [
+        "altera",
+        "broadcom",
+        "hisilicon",
+        "marvell",
+        "rockchip"
+      ]
+    },
+    {
+      "vendors": {
+        "al": 1,
+        "altera": 1,
+        "amd": 4,
+        "amlogic": 6,
+        "apm": 2,
+        "arm": 7,
+        "broadcom": 2,
+        "cavium": 1,
+        "exynos": 1,
+        "freescale": 5,
+        "hisilicon": 3,
+        "lg": 2,
+        "marvell": 5,
+        "mediatek": 3,
+        "nvidia": 5,
+        "qcom": 4,
+        "renesas": 3,
+        "rockchip": 5,
+        "socionext": 2,
+        "sprd": 1,
+        "xilinx": 1,
+        "zte": 1
+      },
+      "total": 65,
+      "date": "2016.12",
+      "new_vendors": [
+        "al",
+        "amlogic",
+        "lg",
+        "nvidia",
+        "renesas",
+        "socionext",
+        "zte"
+      ]
+    },
+    {
+      "vendors": {
+        "al": 1,
+        "allwinner": 11,
+        "altera": 1,
+        "amd": 4,
+        "amlogic": 21,
+        "apm": 2,
+        "arm": 7,
+        "broadcom": 5,
+        "cavium": 2,
+        "exynos": 3,
+        "freescale": 14,
+        "hisilicon": 6,
+        "lg": 2,
+        "marvell": 8,
+        "mediatek": 6,
+        "nvidia": 6,
+        "qcom": 7,
+        "renesas": 7,
+        "rockchip": 12,
+        "socionext": 5,
+        "sprd": 2,
+        "xilinx": 1,
+        "zte": 2
+      },
+      "total": 135,
+      "date": "2017.11",
+      "new_vendors": [
+        "allwinner"
+      ]
+    },
+    {
+      "vendors": {
+        "al": 1,
+        "allwinner": 18,
+        "altera": 1,
+        "amd": 4,
+        "amlogic": 27,
+        "apm": 2,
+        "arm": 9,
+        "broadcom": 7,
+        "cavium": 2,
+        "exynos": 3,
+        "freescale": 14,
+        "hisilicon": 6,
+        "lg": 2,
+        "marvell": 6,
+        "mediatek": 7,
+        "nvidia": 7,
+        "qcom": 8,
+        "renesas": 19,
+        "rockchip": 17,
+        "socionext": 5,
+        "sprd": 2,
+        "synaptics": 2,
+        "ti": 1,
+        "xilinx": 16,
+        "zte": 2
+      },
+      "total": 188,
+      "date": "2018.10",
+      "new_vendors": [
+        "synaptics",
+        "ti"
+      ]
+    },
+    {
+      "vendors": {
+        "al": 1,
+        "allwinner": 29,
+        "altera": 1,
+        "amd": 4,
+        "amlogic": 37,
+        "apm": 2,
+        "arm": 10,
+        "broadcom": 9,
+        "cavium": 2,
+        "exynos": 3,
+        "freescale": 32,
+        "hisilicon": 7,
+        "intel": 1,
+        "lg": 2,
+        "marvell": 10,
+        "mediatek": 9,
+        "nvidia": 9,
+        "qcom": 23,
+        "renesas": 25,
+        "rockchip": 33,
+        "socionext": 5,
+        "sprd": 2,
+        "synaptics": 2,
+        "ti": 2,
+        "xilinx": 16,
+        "zte": 2
+      },
+      "total": 278,
+      "date": "2019.11",
+      "new_vendors": [
+        "intel"
+      ]
+    },
+    {
+      "vendors": {
+        "actions": 2,
+        "allwinner": 37,
+        "altera": 2,
+        "amazon": 2,
+        "amd": 4,
+        "amlogic": 49,
+        "apm": 2,
+        "arm": 10,
+        "broadcom": 10,
+        "cavium": 2,
+        "exynos": 3,
+        "freescale": 51,
+        "hisilicon": 7,
+        "intel": 2,
+        "lg": 2,
+        "marvell": 16,
+        "mediatek": 14,
+        "nvidia": 10,
+        "qcom": 44,
+        "renesas": 43,
+        "rockchip": 45,
+        "socionext": 6,
+        "sprd": 3,
+        "synaptics": 2,
+        "ti": 3,
+        "toshiba": 1,
+        "xilinx": 16,
+        "zte": 2
+      },
+      "total": 390,
+      "date": "2020.12",
+      "new_vendors": [
+        "actions",
+        "amazon",
+        "toshiba"
+      ]
+    },
+    {
+      "vendors": {
+        "actions": 2,
+        "allwinner": 39,
+        "altera": 2,
+        "amazon": 2,
+        "amd": 4,
+        "amlogic": 55,
+        "apm": 2,
+        "apple": 1,
+        "arm": 10,
+        "broadcom": 14,
+        "cavium": 2,
+        "exynos": 3,
+        "freescale": 70,
+        "hisilicon": 7,
+        "intel": 4,
+        "lg": 2,
+        "marvell": 23,
+        "mediatek": 34,
+        "nvidia": 13,
+        "qcom": 96,
+        "renesas": 57,
+        "rockchip": 53,
+        "socionext": 6,
+        "sprd": 3,
+        "synaptics": 2,
+        "ti": 7,
+        "toshiba": 1,
+        "xilinx": 17
+      },
+      "total": 531,
+      "date": "2021.10",
+      "new_vendors": [
+        "apple"
+      ]
+    },
+    {
+      "vendors": {
+        "actions": 2,
+        "allwinner": 42,
+        "altera": 3,
+        "amazon": 2,
+        "amd": 2,
+        "amlogic": 68,
+        "apm": 2,
+        "apple": 5,
+        "arm": 15,
+        "broadcom": 25,
+        "cavium": 2,
+        "exynos": 6,
+        "freescale": 117,
+        "hisilicon": 7,
+        "intel": 5,
+        "lg": 2,
+        "marvell": 26,
+        "mediatek": 48,
+        "nuvoton": 1,
+        "nvidia": 14,
+        "qcom": 160,
+        "renesas": 67,
+        "rockchip": 73,
+        "socionext": 8,
+        "sprd": 3,
+        "synaptics": 2,
+        "tesla": 1,
+        "ti": 13,
+        "toshiba": 2,
+        "xilinx": 22
+      },
+      "total": 745,
+      "date": "2022.12",
+      "new_vendors": [
+        "nuvoton",
+        "tesla"
+      ]
+    },
+    {
+      "vendors": {
+        "actions": 2,
+        "allwinner": 43,
+        "altera": 3,
+        "amazon": 2,
+        "amd": 2,
+        "amlogic": 78,
+        "apm": 2,
+        "apple": 14,
+        "arm": 15,
+        "broadcom": 25,
+        "cavium": 2,
+        "exynos": 6,
+        "freescale": 150,
+        "hisilicon": 7,
+        "intel": 6,
+        "lg": 2,
+        "marvell": 27,
+        "mediatek": 55,
+        "microchip": 5,
+        "nuvoton": 3,
+        "nvidia": 17,
+        "qcom": 220,
+        "realtek": 9,
+        "renesas": 69,
+        "rockchip": 106,
+        "socionext": 8,
+        "sprd": 4,
+        "st": 1,
+        "synaptics": 2,
+        "tesla": 1,
+        "ti": 38,
+        "toshiba": 2,
+        "xilinx": 20
+      },
+      "total": 946,
+      "date": "2023.10",
+      "new_vendors": [
+        "microchip",
+        "realtek",
+        "st"
+      ]
+    },
+    {
+      "vendors": {
+        "actions": 2,
+        "airoha": 1,
+        "allwinner": 54,
+        "altera": 3,
+        "amazon": 2,
+        "amd": 2,
+        "amlogic": 93,
+        "apm": 2,
+        "apple": 14,
+        "arm": 15,
+        "broadcom": 26,
+        "cavium": 2,
+        "exynos": 8,
+        "freescale": 202,
+        "hisilicon": 7,
+        "intel": 6,
+        "lg": 2,
+        "marvell": 32,
+        "mediatek": 87,
+        "microchip": 5,
+        "nuvoton": 3,
+        "nvidia": 17,
+        "qcom": 270,
+        "realtek": 9,
+        "renesas": 78,
+        "rockchip": 155,
+        "socionext": 8,
+        "sprd": 5,
+        "st": 1,
+        "synaptics": 2,
+        "tesla": 1,
+        "ti": 77,
+        "toshiba": 2,
+        "xilinx": 22
+      },
+      "total": 1215,
+      "date": "2024.11",
+      "new_vendors": [
+        "airoha"
+      ]
+    },
+    {
+      "vendors": {
+        "actions": 2,
+        "airoha": 1,
+        "allwinner": 61,
+        "altera": 3,
+        "amazon": 2,
+        "amd": 2,
+        "amlogic": 98,
+        "apm": 2,
+        "apple": 92,
+        "arm": 17,
+        "axiado": 1,
+        "blaize": 1,
+        "broadcom": 31,
+        "cavium": 2,
+        "cix": 1,
+        "exynos": 20,
+        "freescale": 271,
+        "hisilicon": 7,
+        "intel": 7,
+        "lg": 2,
+        "marvell": 33,
+        "mediatek": 106,
+        "microchip": 5,
+        "nuvoton": 3,
+        "nvidia": 19,
+        "qcom": 308,
+        "realtek": 9,
+        "renesas": 96,
+        "rockchip": 206,
+        "socionext": 8,
+        "sophgo": 1,
+        "sprd": 5,
+        "st": 4,
+        "synaptics": 2,
+        "tesla": 1,
+        "ti": 105,
+        "toshiba": 2,
+        "xilinx": 28
+      },
+      "total": 1564,
+      "date": "2025.11",
+      "new_vendors": [
+        "axiado",
+        "blaize",
+        "cix",
+        "sophgo"
+      ]
+    },
+    {
+      "vendors": {
+        "actions": 2,
+        "airoha": 1,
+        "allwinner": 61,
+        "altera": 3,
+        "amazon": 2,
+        "amd": 2,
+        "amlogic": 99,
+        "apm": 2,
+        "apple": 92,
+        "arm": 17,
+        "axiado": 1,
+        "blaize": 1,
+        "broadcom": 31,
+        "bst": 1,
+        "cavium": 2,
+        "cix": 1,
+        "exynos": 20,
+        "freescale": 286,
+        "hisilicon": 7,
+        "intel": 9,
+        "lg": 2,
+        "marvell": 33,
+        "mediatek": 115,
+        "microchip": 5,
+        "nuvoton": 3,
+        "nvidia": 20,
+        "qcom": 315,
+        "realtek": 9,
+        "renesas": 100,
+        "rockchip": 213,
+        "socionext": 8,
+        "sophgo": 1,
+        "sprd": 5,
+        "st": 4,
+        "synaptics": 2,
+        "tesla": 1,
+        "ti": 113,
+        "toshiba": 2,
+        "xilinx": 28
+      },
+      "total": 1619,
+      "date": "2025.12",
+      "new_vendors": [
+        "bst"
+      ]
+    }
+  ],
+  "riscv": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    {
+      "vendors": {
+        "sifive": 1
+      },
+      "total": 1,
+      "date": "2019.11",
+      "new_vendors": [
+        "sifive"
+      ]
+    },
+    {
+      "vendors": {
+        "sifive": 1
+      },
+      "total": 1,
+      "date": "2020.12",
+      "new_vendors": []
+    },
+    {
+      "vendors": {
+        "microchip": 1,
+        "sifive": 2
+      },
+      "total": 3,
+      "date": "2021.10",
+      "new_vendors": [
+        "microchip"
+      ]
+    },
+    {
+      "vendors": {
+        "microchip": 4,
+        "sifive": 2,
+        "starfive": 1
+      },
+      "total": 7,
+      "date": "2022.12",
+      "new_vendors": [
+        "starfive"
+      ]
+    },
+    {
+      "vendors": {
+        "allwinner": 8,
+        "microchip": 5,
+        "sifive": 2,
+        "starfive": 4,
+        "thead": 2
+      },
+      "total": 21,
+      "date": "2023.10",
+      "new_vendors": [
+        "allwinner",
+        "thead"
+      ]
+    },
+    {
+      "vendors": {
+        "allwinner": 10,
+        "canaan": 6,
+        "microchip": 6,
+        "sifive": 2,
+        "sophgo": 3,
+        "starfive": 6,
+        "thead": 2
+      },
+      "total": 35,
+      "date": "2024.11",
+      "new_vendors": [
+        "canaan",
+        "sophgo"
+      ]
+    },
+    {
+      "vendors": {
+        "allwinner": 10,
+        "andes": 1,
+        "canaan": 6,
+        "microchip": 8,
+        "sifive": 2,
+        "sophgo": 7,
+        "spacemit": 3,
+        "starfive": 9,
+        "thead": 2
+      },
+      "total": 48,
+      "date": "2025.11",
+      "new_vendors": [
+        "andes",
+        "spacemit"
+      ]
+    },
+    {
+      "vendors": {
+        "allwinner": 10,
+        "andes": 1,
+        "anlogic": 1,
+        "canaan": 6,
+        "microchip": 8,
+        "sifive": 2,
+        "sophgo": 7,
+        "spacemit": 5,
+        "starfive": 12,
+        "tenstorrent": 1,
+        "thead": 2
+      },
+      "total": 55,
+      "date": "2025.12",
+      "new_vendors": [
+        "anlogic",
+        "tenstorrent"
+      ]
+    }
+  ],
+  "vendors_list": [
+    "actions",
+    "airoha",
+    "al",
+    "allwinner",
+    "altera",
+    "amazon",
+    "amd",
+    "amlogic",
+    "apm",
+    "apple",
+    "arm",
+    "axiado",
+    "blaize",
+    "broadcom",
+    "bst",
+    "cavium",
+    "cix",
+    "exynos",
+    "freescale",
+    "hisilicon",
+    "intel",
+    "lg",
+    "marvell",
+    "mediatek",
+    "microchip",
+    "nuvoton",
+    "nvidia",
+    "qcom",
+    "realtek",
+    "renesas",
+    "rockchip",
+    "socionext",
+    "sophgo",
+    "sprd",
+    "st",
+    "synaptics",
+    "tesla",
+    "ti",
+    "toshiba",
+    "xilinx",
+    "zte"
+  ]
+};
