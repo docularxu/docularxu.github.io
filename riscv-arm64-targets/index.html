@@ -45,6 +45,21 @@
 			<h2>Future Projection: RISC-V vs ARM64 Trajectory</h2>
 			<div class="chart-container">
 				<canvas id="projectionChart"></canvas>
+				<div class="chart-annotation">
+					<h4>Comparison Analysis</h4>
+					<ul>
+						<li><strong>Alignment Point (~20-25 boards):</strong>
+							<br>ARM64 (v4.4, Jan '16): 26 DTBs
+							<br>RISC-V (v6.6, Oct '23): 21 DTBs
+						</li>
+						<li><strong>Growth Slope (1 Year Later):</strong>
+							<br><strong>ARM64:</strong> Surged to 65 (v4.9), then expedited
+							growth (135 in v4.14).
+							<br><strong>RISC-V:</strong> Grew to 35 (v6.12). Steady growth,
+							but significantly flatter slope.
+						</li>
+					</ul>
+				</div>
 			</div>
 			<div class="info-box">
 				<strong>Analysis:</strong> By aligning the growth curves at a similar adoption point
@@ -393,11 +408,65 @@
 
 		// Prepare Datasets with {x: number, y: number} structure for Linear Axis
 
-		const riscvDatasetData = yearlyRiscv.map(p => ({
-			x: p.time,
-			y: p.count,
-			label: p.dateStr // simplified label
-		}));
+
+		// Custom Plugin for Alignment Line
+		const alignmentLinePlugin = {
+			id: 'alignmentLine',
+			afterDatasetsDraw(chart) {
+				const { ctx, chartArea: { bottom } } = chart;
+				if (!chart.getDatasetMeta(0).data.length) return;
+
+				const startPoint = chart.getDatasetMeta(0).data.find((p, i) => {
+					// 2023.10 is approx 2023.833
+					return Math.abs(chart.data.datasets[0].data[i].x - (2023 + 10 / 12)) < 0.01;
+				});
+
+				if (startPoint) {
+					ctx.save();
+					ctx.beginPath();
+					ctx.setLineDash([6, 6]);
+					ctx.strokeStyle = '#6b7280'; // gray-500
+					ctx.lineWidth = 2;
+					ctx.moveTo(startPoint.x, startPoint.y);
+					ctx.lineTo(startPoint.x, bottom);
+					ctx.stroke();
+
+					// Draw Label
+					ctx.fillStyle = '#4b5563'; // gray-600
+					ctx.font = 'bold 12px Inter, sans-serif';
+					ctx.textAlign = 'center';
+					ctx.textBaseline = 'bottom';
+					ctx.fillText('Alignment Point', startPoint.x, startPoint.y - 8);
+					ctx.restore();
+				}
+			}
+		};
+
+		const pointStyles = [];
+		const pointRadii = [];
+		const pointColors = [];
+		const pointBorderColors = [];
+
+		const riscvDatasetData = yearlyRiscv.map(p => {
+			// Highlight October 2023 (v6.6) - The alignment point
+			if (p.dateStr === '2023.10') {
+				pointStyles.push('star');
+				pointRadii.push(15);
+				pointColors.push('#f59e0b'); // amber-500
+				pointBorderColors.push('#b45309'); // amber-700
+			} else {
+				pointStyles.push('circle');
+				pointRadii.push(4);
+				pointColors.push('#ea580c');
+				pointBorderColors.push('#ea580c');
+			}
+
+			return {
+				x: p.time,
+				y: p.count,
+				label: p.dateStr
+			};
+		});
 
 		const armProjectedData = yearlyArm.map(p => {
 			const projTime = p.time + timeShift;
@@ -418,6 +487,10 @@
 						data: riscvDatasetData,
 						borderColor: '#ea580c', // orange-600
 						backgroundColor: '#ea580c',
+						pointStyle: pointStyles,
+						pointRadius: pointRadii,
+						pointBackgroundColor: pointColors,
+						pointBorderColor: pointBorderColors,
 						tension: 0.1
 					},
 					{
@@ -477,7 +550,8 @@
 						}
 					}
 				}
-			}
+			},
+			plugins: [alignmentLinePlugin]
 		});
 	</script>
 </body>
