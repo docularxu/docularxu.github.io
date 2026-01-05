@@ -2,965 +2,1360 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guodong Xu | Personal Introduction</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            color: #1a1a1a;
-            margin: 0;
-            padding: 0;
-            transition: background-color .2s ease, color .2s ease;
-        }
-
-        header {
-            color: white;
-            text-align: center;
-            padding: 3em 1em 4em 1em;
-            background: linear-gradient(135deg, #0ea5a0 0%, #50b3a2 50%, #0aa4b8 100%);
-            position: relative;
-        }
-
-        .hero {
-            max-width: 980px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            gap: 24px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .avatar {
-            width: 128px;
-            height: 128px;
-            border-radius: 50%;
-            border: 2px solid rgba(255,255,255,0.6);
-            box-shadow: 0 12px 24px rgba(0,0,0,0.18);
-            overflow: hidden;
-        }
-
-        .avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: 45% 32%;
-            transform: scale(1.3);
-            transform-origin: 45% 28%;
-        }
-
-        @media (max-width: 600px) {
-            .avatar {
-                width: 110px;
-                height: 110px;
-            }
-        }
-
-        .subtitle {
-            margin-top: 6px;
-            opacity: 0.95;
-        }
-
-        .toggle {
-            position: absolute;
-            top: 14px;
-            right: 14px;
-            background: rgba(255,255,255,0.15);
-            border: 1px solid rgba(255,255,255,0.5);
-            color: #fff;
-            padding: 6px 10px;
-            border-radius: 16px;
-            cursor: pointer;
-        }
-
-        main {
-            max-width: 980px;
-            margin: -32px auto 2.5em auto;
-            padding: 24px;
-            background-color: white;
-            border-radius: 14px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
-        }
-
-        h2 {
-            border-bottom: 2px solid #50b3a2;
-            padding-bottom: 10px;
-        }
-
-        p {
-            line-height: 1.5;
-            margin-bottom: 20px;
-        }
-
-        ul {
-            padding-left: 20px;
-            margin-top: 0;
-            margin-bottom: 20px;
-        }
-
-        a {
-            color: #0a7b6c;
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        .chips {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-
-        .chip {
-            background: #eef7f6;
-            color: #0a7b6c;
-            border: 1px solid #cfe9e6;
-            padding: 6px 10px;
-            border-radius: 999px;
-            font-size: 14px;
-        }
-
-        .timeline {
-            position: relative;
-            margin: 10px 0 24px 0;
-            padding-left: 0;
-        }
-
-        .timeline::before {
-            content: "";
-            position: absolute;
-            left: 16px;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background: #cfe9e6;
-        }
-
-        .timeline-item {
-            position: relative;
-            margin-bottom: 18px;
-            padding-left: 36px; /* ensure text clears the bullet */
-        }
-
-        .timeline-item::marker { content: ""; }
-
-        .timeline-bullet {
-            position: absolute;
-            left: 10px; /* align with the vertical line */
-            top: 4px;
-            width: 10px;
-            height: 10px;
-            background: #0a7b6c;
-            border-radius: 50%;
-            border: 2px solid #fff;
-            box-shadow: 0 0 0 2px #cfe9e6;
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 2em;
-            color: #555;
-        }
-
-        /* Dark Mode */
-        .dark body, body.dark {
-            background-color: #0e1716;
-            color: #d9e6e4;
-        }
-
-        body.dark main {
-            background-color: #10201e;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
-        }
-
-        body.dark a { color: #7ae0d2; }
-        body.dark .chip { background: #12302c; color: #b4efe6; border-color: #275e57; }
-        body.dark .timeline::before { background: #275e57; }
-        body.dark .timeline-bullet { background: #7ae0d2; box-shadow: 0 0 0 2px #275e57; }
-
-        /* Recent works */
-        .works-list li { margin-bottom: 8px; }
-        .note { color: #666; font-size: 0.95em; }
-        body.dark .note { color: #a9c6c2; }
-
-        /* Two-column layout for Recent Works */
-        .works-two-column {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            margin-bottom: 20px;
-        }
-
-        .works-column h3 {
-            margin-top: 0;
-        }
-
-        @media (max-width: 768px) {
-            .works-two-column {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-        }
-
-        /* Conference Timeline Chart */
-        .conference-timeline-chart {
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #dbeafe 100%);
-            padding: 40px 30px;
-            border-radius: 12px;
-            margin: 30px 0;
-            position: relative;
-        }
-
-        .chart-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 40px;
-        }
-
-        .chart-title {
-            font-size: 32px;
-            font-weight: bold;
-            color: #2c2416;
-            line-height: 1.3;
-            margin: 0;
-        }
-
-        .chart-meta {
-            text-align: right;
-        }
-
-        .chart-date {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 20px;
-        }
-
-        .chart-period {
-            font-size: 24px;
-            font-weight: bold;
-            color: #2c2416;
-            margin-bottom: 10px;
-        }
-
-        .chart-note {
-            font-size: 13px;
-            color: #666;
-            margin-top: 8px;
-        }
-
-        .chart-year-divider {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 30px;
-            padding-bottom: 10px;
-            border-bottom: 3px solid #7a9b5a;
-        }
-
-        .year-label {
-            font-size: 24px;
-            font-weight: bold;
-            color: #2c2416;
-            background: #c4d6a4;
-            padding: 5px 20px;
-            border-radius: 4px;
-        }
-
-        .events-container {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            justify-content: space-between;
-        }
-
-        .event-item {
-            flex: 1;
-            min-width: 200px;
-            max-width: 280px;
-        }
-
-        .event-date {
-            font-size: 16px;
-            font-weight: 600;
-            color: #2c2416;
-            margin-bottom: 12px;
-        }
-
-        .event-title {
-            font-size: 16px;
-            font-weight: bold;
-            color: #2c2416;
-            margin-bottom: 10px;
-            line-height: 1.4;
-        }
-
-        .event-title a {
-            color: #1a5f9f;
-            text-decoration: none;
-        }
-
-        .event-title a:hover {
-            text-decoration: underline;
-        }
-
-        .event-details {
-            font-size: 14px;
-            line-height: 1.6;
-            color: #4a4239;
-        }
-
-        body.dark .conference-timeline-chart {
-            background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%);
-        }
-
-        body.dark .chart-title,
-        body.dark .chart-period,
-        body.dark .year-label,
-        body.dark .event-date,
-        body.dark .event-title {
-            color: #e8dcc8;
-        }
-
-        body.dark .chart-date,
-        body.dark .chart-note {
-            color: #b8a890;
-        }
-
-        body.dark .event-details {
-            color: #c4b8a0;
-        }
-
-        body.dark .year-label {
-            background: #4a5238;
-        }
-
-        body.dark .chart-year-divider {
-            border-bottom-color: #5a6e42;
-        }
-
-        body.dark .event-title a {
-            color: #7ab8e8;
-        }
-
-        /* Blog card styles */
-        .blog-card {
-            border: 2px solid #003262;
-            border-radius: 12px;
-            padding: 20px;
-            box-sizing: border-box;
-            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-            transition: transform 0.2s, box-shadow 0.2s;
-            cursor: pointer;
-        }
-
-        .blog-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(0, 50, 98, 0.15);
-        }
-
-        body.dark .blog-card {
-            border-color: #4a9eff;
-            background: linear-gradient(135deg, #1a2838 0%, #10201e 100%);
-        }
-
-        body.dark .blog-card:hover {
-            box-shadow: 0 8px 16px rgba(74, 158, 255, 0.25);
-        }
-
-        .blog-card-header {
-            font-size: 11px;
-            color: #003262;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 4px;
-        }
-
-        body.dark .blog-card-header {
-            color: #7ab8e8;
-        }
-
-        .blog-card-title {
-            font-size: 16px;
-            font-weight: bold;
-            color: #003262;
-            line-height: 1.4;
-            margin-bottom: 10px;
-        }
-
-        body.dark .blog-card-title {
-            color: #b4d8ff;
-        }
-
-        .blog-card-desc {
-            font-size: 13px;
-            color: #555;
-            line-height: 1.5;
-            margin-bottom: 12px;
-        }
-
-        body.dark .blog-card-desc {
-            color: #c4d6e5;
-        }
-
-        .blog-card-badge {
-            font-size: 11px;
-            color: #0a7b6c;
-            background: #eef7f6;
-            padding: 8px 12px;
-            border-radius: 6px;
-            border: 1px solid #cfe9e6;
-        }
-
-        body.dark .blog-card-badge {
-            color: #7ae0d2;
-            background: #12302c;
-            border-color: #275e57;
-        }
-
-        .blog-card-date {
-            font-size: 10px;
-            color: #666;
-        }
-
-        body.dark .blog-card-date {
-            color: #a9c6c2;
-        }
-
-        .blog-card-lead {
-            display: flex;
-            align-items: flex-start;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-    </style>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Guodong Xu | Personal Introduction</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f4f4f4;
+			color: #1a1a1a;
+			margin: 0;
+			padding: 0;
+			transition: background-color .2s ease, color .2s ease;
+		}
+
+		header {
+			color: white;
+			text-align: center;
+			padding: 3em 1em 25px 1em;
+			background: linear-gradient(135deg, #0ea5a0 0%, #50b3a2 50%, #0aa4b8 100%);
+			position: relative;
+		}
+
+		.hero {
+			max-width: 980px;
+			margin: 0 auto;
+			display: flex;
+			align-items: center;
+			gap: 24px;
+			justify-content: center;
+			flex-wrap: wrap;
+		}
+
+		.avatar {
+			width: 128px;
+			height: 128px;
+			border-radius: 50%;
+			border: 2px solid rgba(255, 255, 255, 0.6);
+			box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
+			overflow: hidden;
+		}
+
+		.avatar img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			object-position: 45% 32%;
+			transform: scale(1.3);
+			transform-origin: 45% 28%;
+		}
+
+		@media (max-width: 600px) {
+			.avatar {
+				width: 110px;
+				height: 110px;
+			}
+		}
+
+		.subtitle {
+			margin-top: 6px;
+			opacity: 0.95;
+		}
+
+		.toggle {
+			position: absolute;
+			top: 14px;
+			right: 14px;
+			background: rgba(255, 255, 255, 0.15);
+			border: 1px solid rgba(255, 255, 255, 0.5);
+			color: #fff;
+			padding: 6px 10px;
+			border-radius: 16px;
+			cursor: pointer;
+		}
+
+		main {
+			max-width: 980px;
+			margin: -15px auto 2.5em auto;
+			padding: 24px;
+			background-color: white;
+			border-radius: 14px;
+			box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+		}
+
+		h2 {
+			border-bottom: 2px solid #50b3a2;
+			padding-bottom: 10px;
+		}
+
+		p {
+			line-height: 1.5;
+			margin-bottom: 20px;
+		}
+
+		ul {
+			padding-left: 20px;
+			margin-top: 0;
+			margin-bottom: 20px;
+		}
+
+		a {
+			color: #0a7b6c;
+			text-decoration: none;
+		}
+
+		a:hover {
+			text-decoration: underline;
+		}
+
+		.chips {
+			display: flex;
+			gap: 10px;
+			flex-wrap: wrap;
+			margin-bottom: 20px;
+		}
+
+		.chip {
+			background: #eef7f6;
+			color: #0a7b6c;
+			border: 1px solid #cfe9e6;
+			padding: 6px 10px;
+			border-radius: 999px;
+			font-size: 14px;
+		}
+
+		.timeline {
+			position: relative;
+			margin: 10px 0 24px 0;
+			padding-left: 0;
+		}
+
+		.timeline::before {
+			content: "";
+			position: absolute;
+			left: 16px;
+			top: 0;
+			bottom: 0;
+			width: 2px;
+			background: #cfe9e6;
+		}
+
+		.timeline-item {
+			position: relative;
+			margin-bottom: 18px;
+			padding-left: 36px;
+			/* ensure text clears the bullet */
+		}
+
+		.timeline-item::marker {
+			content: "";
+		}
+
+		.timeline-bullet {
+			position: absolute;
+			left: 10px;
+			/* align with the vertical line */
+			top: 4px;
+			width: 10px;
+			height: 10px;
+			background: #0a7b6c;
+			border-radius: 50%;
+			border: 2px solid #fff;
+			box-shadow: 0 0 0 2px #cfe9e6;
+		}
+
+		footer {
+			text-align: center;
+			margin-top: 2em;
+			color: #555;
+		}
+
+		/* Dark Mode */
+		.dark body,
+		body.dark {
+			background-color: #0e1716;
+			color: #d9e6e4;
+		}
+
+		body.dark main {
+			background-color: #10201e;
+			box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+		}
+
+		body.dark a {
+			color: #7ae0d2;
+		}
+
+		body.dark .chip {
+			background: #12302c;
+			color: #b4efe6;
+			border-color: #275e57;
+		}
+
+		body.dark .timeline::before {
+			background: #275e57;
+		}
+
+		body.dark .timeline-bullet {
+			background: #7ae0d2;
+			box-shadow: 0 0 0 2px #275e57;
+		}
+
+		/* Recent works */
+		.works-list li {
+			margin-bottom: 8px;
+		}
+
+		.note {
+			color: #666;
+			font-size: 0.95em;
+		}
+
+		body.dark .note {
+			color: #a9c6c2;
+		}
+
+		/* Two-column layout for Recent Works */
+		.works-two-column {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 40px;
+			margin-bottom: 20px;
+		}
+
+		.works-column h3 {
+			margin-top: 0;
+		}
+
+		@media (max-width: 768px) {
+			.works-two-column {
+				grid-template-columns: 1fr;
+				gap: 20px;
+			}
+		}
+
+		/* Conference Timeline Chart */
+		.conference-timeline-chart {
+			background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #dbeafe 100%);
+			padding: 40px 30px;
+			border-radius: 12px;
+			margin: 30px 0;
+			position: relative;
+		}
+
+		.chart-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: flex-start;
+			margin-bottom: 40px;
+		}
+
+		.chart-title {
+			font-size: 32px;
+			font-weight: bold;
+			color: #2c2416;
+			line-height: 1.3;
+			margin: 0;
+		}
+
+		.chart-meta {
+			text-align: right;
+		}
+
+		.chart-date {
+			font-size: 14px;
+			color: #666;
+			margin-bottom: 20px;
+		}
+
+		.chart-period {
+			font-size: 24px;
+			font-weight: bold;
+			color: #2c2416;
+			margin-bottom: 10px;
+		}
+
+		.chart-note {
+			font-size: 13px;
+			color: #666;
+			margin-top: 8px;
+		}
+
+		.chart-year-divider {
+			display: flex;
+			justify-content: space-between;
+			margin-bottom: 30px;
+			padding-bottom: 10px;
+			border-bottom: 3px solid #7a9b5a;
+		}
+
+		.year-label {
+			font-size: 24px;
+			font-weight: bold;
+			color: #2c2416;
+			background: #c4d6a4;
+			padding: 5px 20px;
+			border-radius: 4px;
+		}
+
+		.events-container {
+			display: flex;
+			gap: 20px;
+			flex-wrap: wrap;
+			justify-content: space-between;
+		}
+
+		.event-item {
+			flex: 1;
+			min-width: 200px;
+			max-width: 280px;
+		}
+
+		.event-date {
+			font-size: 16px;
+			font-weight: 600;
+			color: #2c2416;
+			margin-bottom: 12px;
+		}
+
+		.event-title {
+			font-size: 16px;
+			font-weight: bold;
+			color: #2c2416;
+			margin-bottom: 10px;
+			line-height: 1.4;
+		}
+
+		.event-title a {
+			color: #1a5f9f;
+			text-decoration: none;
+		}
+
+		.event-title a:hover {
+			text-decoration: underline;
+		}
+
+		.event-details {
+			font-size: 14px;
+			line-height: 1.6;
+			color: #4a4239;
+		}
+
+		body.dark .conference-timeline-chart {
+			background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%);
+		}
+
+		body.dark .chart-title,
+		body.dark .chart-period,
+		body.dark .year-label,
+		body.dark .event-date,
+		body.dark .event-title {
+			color: #e8dcc8;
+		}
+
+		body.dark .chart-date,
+		body.dark .chart-note {
+			color: #b8a890;
+		}
+
+		body.dark .event-details {
+			color: #c4b8a0;
+		}
+
+		body.dark .year-label {
+			background: #4a5238;
+		}
+
+		body.dark .chart-year-divider {
+			border-bottom-color: #5a6e42;
+		}
+
+		body.dark .event-title a {
+			color: #7ab8e8;
+		}
+
+		/* Blog card styles */
+		.blog-card {
+			border: 2px solid #003262;
+			border-radius: 12px;
+			padding: 20px;
+			box-sizing: border-box;
+			background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+			transition: transform 0.2s, box-shadow 0.2s;
+			cursor: pointer;
+		}
+
+		.blog-card:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 8px 16px rgba(0, 50, 98, 0.15);
+		}
+
+		body.dark .blog-card {
+			border-color: #4a9eff;
+			background: linear-gradient(135deg, #1a2838 0%, #10201e 100%);
+		}
+
+		body.dark .blog-card:hover {
+			box-shadow: 0 8px 16px rgba(74, 158, 255, 0.25);
+		}
+
+		.blog-card-header {
+			font-size: 11px;
+			color: #003262;
+			font-weight: 600;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+			margin-bottom: 4px;
+		}
+
+		body.dark .blog-card-header {
+			color: #7ab8e8;
+		}
+
+		.blog-card-title {
+			font-size: 16px;
+			font-weight: bold;
+			color: #003262;
+			line-height: 1.4;
+			margin-bottom: 10px;
+		}
+
+		body.dark .blog-card-title {
+			color: #b4d8ff;
+		}
+
+		.blog-card-desc {
+			font-size: 13px;
+			color: #555;
+			line-height: 1.5;
+			margin-bottom: 12px;
+		}
+
+		body.dark .blog-card-desc {
+			color: #c4d6e5;
+		}
+
+		.blog-card-badge {
+			font-size: 11px;
+			color: #0a7b6c;
+			background: #eef7f6;
+			padding: 8px 12px;
+			border-radius: 6px;
+			border: 1px solid #cfe9e6;
+		}
+
+		body.dark .blog-card-badge {
+			color: #7ae0d2;
+			background: #12302c;
+			border-color: #275e57;
+		}
+
+		.blog-card-date {
+			font-size: 10px;
+			color: #666;
+		}
+
+		body.dark .blog-card-date {
+			color: #a9c6c2;
+		}
+
+		.blog-card-lead {
+			display: flex;
+			gap: 15px;
+			margin-bottom: 15px;
+		}
+
+		/* Navigation Bar */
+		.top-nav {
+			/* Previously absolute top, now flow content below hero */
+			position: relative;
+			width: 100%;
+			margin-top: 25px;
+			/* Space between name/subtitle and nav */
+			z-index: 100;
+		}
+
+		.top-nav ul {
+			list-style-type: none;
+			margin: 0;
+			padding: 0;
+			display: flex;
+			justify-content: center;
+			gap: 30px;
+			align-items: center;
+		}
+
+		.top-nav li {
+			position: relative;
+		}
+
+		.top-nav a {
+			color: rgba(255, 255, 255, 0.9);
+			text-decoration: none;
+			font-size: 16px;
+			font-weight: 500;
+			padding: 8px 12px;
+			border-radius: 4px;
+			transition: background-color 0.2s, color 0.2s;
+		}
+
+		.top-nav a:hover {
+			background-color: rgba(255, 255, 255, 0.15);
+			color: #fff;
+			text-decoration: none;
+		}
+
+		/* Dropdown Menu */
+		.dropdown-content {
+			display: none;
+			position: absolute;
+			top: 100%;
+			left: 50%;
+			transform: translateX(-50%);
+			background-color: #ffffff;
+			min-width: 260px;
+			box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+			border-radius: 8px;
+			z-index: 101;
+			padding: 8px 0;
+			margin-top: 8px;
+		}
+
+		/* Arrow tip for dropdown */
+		.dropdown-content::before {
+			content: "";
+			position: absolute;
+			bottom: 100%;
+			left: 50%;
+			margin-left: -8px;
+			border-width: 8px;
+			border-style: solid;
+			border-color: transparent transparent #ffffff transparent;
+		}
+
+		.dropdown:hover .dropdown-content {
+			display: block;
+		}
+
+		.dropdown-content a {
+			color: #333;
+			padding: 12px 16px;
+			text-decoration: none;
+			display: block;
+			font-size: 14px;
+			text-align: left;
+			border-radius: 0;
+		}
+
+		.dropdown-content a:hover {
+			background-color: #f1f8f7;
+			color: #0a7b6c;
+		}
+
+		/* Responsive Nav */
+		@media (max-width: 768px) {
+			.top-nav ul {
+				flex-direction: column;
+				gap: 10px;
+				background: rgba(0, 0, 0, 0.1);
+				padding: 10px;
+			}
+
+			.dropdown-content {
+				position: static;
+				transform: none;
+				width: 100%;
+				background-color: rgba(255, 255, 255, 0.1);
+				box-shadow: none;
+				margin-top: 5px;
+			}
+
+			.dropdown-content::before {
+				display: none;
+				/* Hide arrow on mobile */
+			}
+
+			.dropdown-content a {
+				color: rgba(255, 255, 255, 0.9);
+				padding: 10px 20px;
+				border-radius: 4px;
+			}
+
+			.dropdown-content a:hover {
+				background-color: rgba(255, 255, 255, 0.2);
+				color: #fff;
+			}
+
+			/* Hide detailed list on mobile by default to save space, or keep simpler */
+			/* For now, just ensuring it looks usable */
+		}
+	</style>
 </head>
 
 <body>
 
-    <header>
-        <button class="toggle" id="themeToggle" aria-label="Toggle dark mode">🌓</button>
-        <div class="hero">
-            <div class="avatar" aria-hidden="true">
-                <img src="bud17-profiles-59_33171631562_o.jpg" alt="Guodong Xu">
-            </div>
-            <div>
-                <h1>Guodong Xu</h1>
-                <div class="subtitle">Linux Kernel & Platform Software • Tech–Biz Hybrid • Open Source</div>
-            </div>
-        </div>
-    </header>
+	<header>
+		<button class="toggle" id="themeToggle" aria-label="Toggle dark mode" style="z-index: 102;">🌓</button>
+		<div class="hero">
+			<div class="avatar" aria-hidden="true">
+				<img src="bud17-profiles-59_33171631562_o.jpg" alt="Guodong Xu">
+			</div>
+			<div>
+				<h1>Guodong Xu</h1>
+				<div class="subtitle">Linux Kernel & Platform Software • Tech–Biz Hybrid • Open Source
+				</div>
+			</div>
+		</div>
 
-    <main>
-        <h2>About Me</h2>
-        <p>Greetings! I'm <strong>Guodong Xu</strong> (徐国栋), also known online as <strong>docular</strong> / <strong>docularxu</strong>. I am a Linux kernel and platform software specialist, open-source enthusiast, with 20+ years of experience spanning embedded systems, BSP/device bring‑up, server software, performance/power optimization, and upstreaming to mainline communities.</p>
-        <p>I combine deep technical expertise with business execution: leading cross‑border teams, aligning with customer needs, and delivering open‑source based solutions. I've been invited to speak at openEuler, RISC‑V ecosystem conferences, and other industry forums.</p>
+		<nav class="top-nav">
+			<ul>
+				<li><a href="#">Home</a></li>
+				<li class="dropdown">
+					<a href="javascript:void(0)" class="dropbtn" aria-haspopup="true">RISC-V
+						Analytics ▾</a>
+					<div class="dropdown-content">
+						<a href="riscv-arm64-targets/index.html">Growth of Supported Boards
+							(DTBs)</a>
+						<a href="rva23/rva23-kernel-support-evolution.html">RVA23 Kernel Support
+							Evolution</a>
+						<a href="rva23/linux-kernel-coverage.html">RVA23 Kernel Status
+							Tracking</a>
+					</div>
+				</li>
+				<li><a href="#blog">Blog</a></li>
+				<li><a href="#about">About</a></li>
+				<li><a href="#contact">Contact</a></li>
+			</ul>
+		</nav>
+	</header>
 
-        <h2>Recent Works</h2>
-        <p class="note">Benchmark analyses and performance reports for RISC-V Vector Extension (RVV).</p>
+	<main>
+		<main>
+			<h2 id="about">About Me</h2>
+			<p>Greetings! I'm <strong>Guodong Xu</strong> (徐国栋), also known online as
+				<strong>docular</strong> / <strong>docularxu</strong>. I am a Linux kernel and platform
+				software specialist, open-source enthusiast, with 20+ years of experience spanning
+				embedded systems, BSP/device bring‑up, server software, performance/power optimization,
+				and upstreaming to mainline communities.
+			</p>
+			<p>I combine deep technical expertise with business execution: leading cross‑border teams,
+				aligning with customer needs, and delivering open‑source based solutions. I've been
+				invited to speak at openEuler, RISC‑V ecosystem conferences, and other industry forums.
+			</p>
 
-        <div class="works-two-column">
-            <div class="works-column">
-                <h3>SLEEF (Nonlinear Math)</h3>
-                <ul class="works-list">
-                    <li><a href="https://docularxu.github.io/sleef/webpages/rvv_benchmark_16Oct2025.html" target="_blank" rel="noopener noreferrer">SLEEF RVV Benchmark Summary (16 Oct 2025)</a></li>
-                    <li><a href="https://docularxu.github.io/sleef/webpages/rvv_benchmark_gelu_17Oct2025.html" target="_blank" rel="noopener noreferrer">GELU Kernel Benchmarks: erf/tanh on RVV (17 Oct 2025)</a></li>
-                </ul>
+			<h2 id="works">Recent Works</h2>
+			<p class="note">Benchmark analyses and performance reports for RISC-V Vector Extension (RVV).
+			</p>
 
-                <h3>OpenBLAS (Linear Algebra)</h3>
-                <ul class="works-list">
-                    <li><a href="https://docularxu.github.io/OpenBLAS/webpages/rvv_benchmark_openblas_gemv_16Oct2025.html" target="_blank" rel="noopener noreferrer">RISC-V GEMV Performance Summary (16 Oct 2025)</a></li>
-                    <li><a href="https://docularxu.github.io/OpenBLAS/webpages/rvv_benchmark_openblas_16Oct2025.html" target="_blank" rel="noopener noreferrer">OpenBLAS RVV Benchmark Summary (16 Oct 2025)</a></li>
-                </ul>
-            </div>
+			<div class="works-two-column">
+				<div class="works-column">
+					<h3>SLEEF (Nonlinear Math)</h3>
+					<ul class="works-list">
+						<li><a href="https://docularxu.github.io/sleef/webpages/rvv_benchmark_16Oct2025.html"
+								target="_blank" rel="noopener noreferrer">SLEEF RVV
+								Benchmark Summary (16 Oct 2025)</a></li>
+						<li><a href="https://docularxu.github.io/sleef/webpages/rvv_benchmark_gelu_17Oct2025.html"
+								target="_blank" rel="noopener noreferrer">GELU Kernel
+								Benchmarks: erf/tanh on RVV (17 Oct 2025)</a></li>
+					</ul>
 
-            <div class="works-column">
-                <div class="blog-card" style="height: 100%;">
-                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-                        <img src="RISC-V_ Stacked_Color.png" alt="RISC-V International" style="width: 60px; height: 60px; object-fit: contain;">
-                        <div style="flex: 1;">
-                            <div class="blog-card-header">RISC-V Summit NA 2025</div>
-                            <div class="blog-card-date">October 23, 2025</div>
-                        </div>
-                    </div>
-                    <div class="blog-card-title">Moving to RISC-V Vector: A Practical Journey of AI Operator Optimization</div>
-                    <div class="blog-card-desc">Conference talk on practical AI operator optimization using RISC-V Vector Extension, presented at RISC-V Summit North America.</div>
-                    <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px;">
-                        <a href="https://www.youtube.com/watch?v=ASA2XYi_QwA&list=PL85jopFZCnbNUnI0l_jg5C8UKNiuAwdVq&index=55" target="_blank" rel="noopener noreferrer" style="text-decoration: none; flex: 1; min-width: 120px;">
-                            <div class="blog-card-badge" style="text-align: center;">
-                                🎥 YouTube
-                            </div>
-                        </a>
-                        <a href="downloads/Moving_to_RISC-V_Vector-_A_Practical_Journey_of_AI_Operator_Optimization_-_Guodong_Xu_RISCstar_Solutions_-_19Oct2025-with-script.pdf" target="_blank" rel="noopener noreferrer" style="text-decoration: none; flex: 1; min-width: 120px;">
-                            <div class="blog-card-badge" style="text-align: center;">
-                                📄 PDF
-                            </div>
-                        </a>
-                        <a href="downloads/Moving_to_RISC-V_Vector-_A_Practical_Journey_of_AI_Operator_Optimization_-_Guodong_Xu_RISCstar_Solutions_-_19Oct2025-with-script.pptx" target="_blank" rel="noopener noreferrer" style="text-decoration: none; flex: 1; min-width: 120px;">
-                            <div class="blog-card-badge" style="text-align: center;">
-                                📊 PPTX
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
+					<h3>OpenBLAS (Linear Algebra)</h3>
+					<ul class="works-list">
+						<li><a href="https://docularxu.github.io/OpenBLAS/webpages/rvv_benchmark_openblas_gemv_16Oct2025.html"
+								target="_blank" rel="noopener noreferrer">RISC-V GEMV
+								Performance Summary (16 Oct 2025)</a></li>
+						<li><a href="https://docularxu.github.io/OpenBLAS/webpages/rvv_benchmark_openblas_16Oct2025.html"
+								target="_blank" rel="noopener noreferrer">OpenBLAS RVV
+								Benchmark Summary (16 Oct 2025)</a></li>
+					</ul>
+				</div>
 
-        <h2>Blog Posts & Publications</h2>
-        <p class="note">Sharing insights and experiences from the RISC-V ecosystem and open source community.</p>
+				<div class="works-column">
+					<div class="blog-card" style="height: 100%;">
+						<div
+							style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+							<img src="RISC-V_ Stacked_Color.png" alt="RISC-V International"
+								style="width: 60px; height: 60px; object-fit: contain;">
+							<div style="flex: 1;">
+								<div class="blog-card-header">RISC-V Summit NA 2025
+								</div>
+								<div class="blog-card-date">October 23, 2025</div>
+							</div>
+						</div>
+						<div class="blog-card-title">Moving to RISC-V Vector: A Practical
+							Journey of AI Operator Optimization</div>
+						<div class="blog-card-desc">Conference talk on practical AI operator
+							optimization using RISC-V Vector Extension, presented at RISC-V
+							Summit North America.</div>
+						<div
+							style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px;">
+							<a href="https://www.youtube.com/watch?v=ASA2XYi_QwA&list=PL85jopFZCnbNUnI0l_jg5C8UKNiuAwdVq&index=55"
+								target="_blank" rel="noopener noreferrer"
+								style="text-decoration: none; flex: 1; min-width: 120px;">
+								<div class="blog-card-badge"
+									style="text-align: center;">
+									🎥 YouTube
+								</div>
+							</a>
+							<a href="downloads/Moving_to_RISC-V_Vector-_A_Practical_Journey_of_AI_Operator_Optimization_-_Guodong_Xu_RISCstar_Solutions_-_19Oct2025-with-script.pdf"
+								target="_blank" rel="noopener noreferrer"
+								style="text-decoration: none; flex: 1; min-width: 120px;">
+								<div class="blog-card-badge"
+									style="text-align: center;">
+									📄 PDF
+								</div>
+							</a>
+							<a href="downloads/Moving_to_RISC-V_Vector-_A_Practical_Journey_of_AI_Operator_Optimization_-_Guodong_Xu_RISCstar_Solutions_-_19Oct2025-with-script.pptx"
+								target="_blank" rel="noopener noreferrer"
+								style="text-decoration: none; flex: 1; min-width: 120px;">
+								<div class="blog-card-badge"
+									style="text-align: center;">
+									📊 PPTX
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
 
-        <div style="display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-start; margin-bottom: 20px;">
-            <a href="https://riscv.org/blog/2025/07/risc-v-summit-china-2025-reflections-from-a-risc-v-software-contributor/" target="_blank" rel="noopener noreferrer" style="text-decoration: none; flex: 1; min-width: 280px;">
-                <div class="blog-card">
-                    <div class="blog-card-lead">
-                        <img src="RISC-V_ Stacked_Color.png" alt="RISC-V International" style="width: 60px; height: 60px; object-fit: contain;">
-                        <div style="flex: 1;">
-                            <div class="blog-card-header">RISC-V International Blog</div>
-                            <div class="blog-card-date">July 24, 2025</div>
-                        </div>
-                    </div>
-                    <div class="blog-card-title">RISC-V Summit China 2025: Reflections from a RISC-V Software Contributor</div>
-                    <div class="blog-card-desc">Insights and observations from attending the 5th RISC-V Summit China, sharing perspectives on ecosystem development and community growth.</div>
-                    <div class="blog-card-badge">
-                        📢 Republished by CRVA (China RISC-V Alliance)
-                    </div>
-                </div>
-            </a>
-            <a href="https://riscstar.com/blog/risc-v-linux-kernel-upstreaming-china-conference/" target="_blank" rel="noopener noreferrer" style="text-decoration: none; flex: 1; min-width: 280px;">
-                <div class="blog-card">
-                    <div class="blog-card-lead">
-                        <img src="RiscStar_Logo08.png" alt="RISCstar Solutions" style="width: 60px; height: 60px; object-fit: contain;">
-                        <div style="flex: 1;">
-                            <div class="blog-card-header">RISCstar Solutions Blog</div>
-                            <div class="blog-card-date">April 14, 2025</div>
-                        </div>
-                    </div>
-                    <div class="blog-card-title">RISC-V Linux Kernel Upstreaming: Insights from the 2025 China RISC-V Ecosystem Conference</div>
-                    <div class="blog-card-desc">Key insights on the current state of RISC-V Linux kernel upstreaming and challenges faced by the community.</div>
-                    <div class="blog-card-badge">
-                        🔧 Linux Kernel • RISC-V
-                    </div>
-                </div>
-            </a>
-        </div>
+			<h2 id="blog">Blog Posts & Publications</h2>
+			<p class="note">Sharing insights and experiences from the RISC-V ecosystem and open source
+				community.</p>
+
+			<div
+				style="display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-start; margin-bottom: 20px;">
+				<a href="https://riscv.org/blog/2025/07/risc-v-summit-china-2025-reflections-from-a-risc-v-software-contributor/"
+					target="_blank" rel="noopener noreferrer"
+					style="text-decoration: none; flex: 1; min-width: 280px;">
+					<div class="blog-card">
+						<div class="blog-card-lead">
+							<img src="RISC-V_ Stacked_Color.png" alt="RISC-V International"
+								style="width: 60px; height: 60px; object-fit: contain;">
+							<div style="flex: 1;">
+								<div class="blog-card-header">RISC-V International Blog
+								</div>
+								<div class="blog-card-date">July 24, 2025</div>
+							</div>
+						</div>
+						<div class="blog-card-title">RISC-V Summit China 2025: Reflections from
+							a RISC-V Software Contributor</div>
+						<div class="blog-card-desc">Insights and observations from attending the
+							5th RISC-V Summit China, sharing perspectives on ecosystem
+							development and community growth.</div>
+						<div class="blog-card-badge">
+							📢 Republished by CRVA (China RISC-V Alliance)
+						</div>
+					</div>
+				</a>
+				<a href="https://riscstar.com/blog/risc-v-linux-kernel-upstreaming-china-conference/"
+					target="_blank" rel="noopener noreferrer"
+					style="text-decoration: none; flex: 1; min-width: 280px;">
+					<div class="blog-card">
+						<div class="blog-card-lead">
+							<img src="RiscStar_Logo08.png" alt="RISCstar Solutions"
+								style="width: 60px; height: 60px; object-fit: contain;">
+							<div style="flex: 1;">
+								<div class="blog-card-header">RISCstar Solutions Blog
+								</div>
+								<div class="blog-card-date">April 14, 2025</div>
+							</div>
+						</div>
+						<div class="blog-card-title">RISC-V Linux Kernel Upstreaming: Insights
+							from the 2025 China RISC-V Ecosystem Conference</div>
+						<div class="blog-card-desc">Key insights on the current state of RISC-V
+							Linux kernel upstreaming and challenges faced by the community.
+						</div>
+						<div class="blog-card-badge">
+							🔧 Linux Kernel • RISC-V
+						</div>
+					</div>
+				</a>
+			</div>
 
 
-        <h2>Linux Kernel Upstreaming</h2>
-        <p class="note">With over 20 years of experience in Linux kernel development, I have consistently contributed to mainline upstream work throughout my career. During my tenure at Linaro, I led upstream efforts for various client platforms. Now at RISCstar, Linux kernel upstream contributions remain a core part of my work and my ongoing commitment to the open source community.</p>
+			<h2>Linux Kernel Upstreaming</h2>
+			<p class="note">With over 20 years of experience in Linux kernel development, I have
+				consistently contributed to mainline upstream work throughout my career. During my
+				tenure at Linaro, I led upstream efforts for various client platforms. Now at RISCstar,
+				Linux kernel upstream contributions remain a core part of my work and my ongoing
+				commitment to the open source community.</p>
 
-        <h3>StarFive JH7110 SoC Support</h3>
-        <ul class="works-list">
-            <li><a href="https://lore.kernel.org/all/20241028082553.1989797-1-guodong@riscstar.com/" target="_blank" rel="noopener noreferrer">Add DeepComputing FML13V01 board dts (28 Oct 2024, merged into v6.12)</a></li>
-        </ul>
+			<h3>StarFive JH7110 SoC Support</h3>
+			<ul class="works-list">
+				<li><a href="https://lore.kernel.org/all/20241028082553.1989797-1-guodong@riscstar.com/"
+						target="_blank" rel="noopener noreferrer">Add DeepComputing FML13V01
+						board dts (28 Oct 2024, merged into v6.12)</a></li>
+			</ul>
 
-        <h3>SpacemiT K1 SoC Support</h3>
-        <ul class="works-list">
-            <li><a href="https://lore.kernel.org/all/20250822-working_dma_0701_v2-v5-0-f5c0eda734cc@riscstar.com/#r" target="_blank" rel="noopener noreferrer">PDMA: Working DMA driver for SpacemiT K1 (22 Aug 2025, merged into v6.18)</a></li>
-            <li><a href="https://lore.kernel.org/all/20250707222910-GYC408198@gentoo/#r" target="_blank" rel="noopener noreferrer">PWM: PWM support for SpacemiT K1 SoC (7 Jul 2025, merged into v6.17)</a></li>
-        </ul>
+			<h3>SpacemiT K1 SoC Support</h3>
+			<ul class="works-list">
+				<li><a href="https://lore.kernel.org/all/20250822-working_dma_0701_v2-v5-0-f5c0eda734cc@riscstar.com/#r"
+						target="_blank" rel="noopener noreferrer">PDMA: Working DMA driver for
+						SpacemiT K1 (22 Aug 2025, merged into v6.18)</a></li>
+				<li><a href="https://lore.kernel.org/all/20250707222910-GYC408198@gentoo/#r"
+						target="_blank" rel="noopener noreferrer">PWM: PWM support for SpacemiT
+						K1 SoC (7 Jul 2025, merged into v6.17)</a></li>
+			</ul>
 
-        <h2>Computing Acceleration Contributions</h2>
-        <p>I have extensive experience accelerating computing libraries using vector instructions (including Arm SVE/SME and RISC-V Vector Extension). The contributions listed here represent only my open source work; significant additional contributions to commercial software libraries are not shown.</p>
+			<h2>Computing Acceleration Contributions</h2>
+			<p>I have extensive experience accelerating computing libraries using vector instructions
+				(including Arm SVE/SME and RISC-V Vector Extension). The contributions listed here
+				represent only my open source work; significant additional contributions to commercial
+				software libraries are not shown.</p>
 
-        <h3>BLIS (BLAS-like Library Instantiation Software)</h3>
-        <p class="note">Added two kernels (dgemm and dpackm) that employ ARM SVE vector extensions, released in BLIS 0.8.0 on November 19, 2020.</p>
-        <ul class="works-list">
-            <li><a href="https://github.com/flame/blis/blob/master/docs/ReleaseNotes.md#changes-in-080" target="_blank" rel="noopener noreferrer">BLIS 0.8.0 Release Notes - ARM SVE kernels contribution</a></li>
-        </ul>
+			<h3>BLIS (BLAS-like Library Instantiation Software)</h3>
+			<p class="note">Added two kernels (dgemm and dpackm) that employ ARM SVE vector extensions,
+				released in BLIS 0.8.0 on November 19, 2020.</p>
+			<ul class="works-list">
+				<li><a href="https://github.com/flame/blis/blob/master/docs/ReleaseNotes.md#changes-in-080"
+						target="_blank" rel="noopener noreferrer">BLIS 0.8.0 Release Notes - ARM
+						SVE kernels contribution</a></li>
+			</ul>
 
-        <h3>ISA-L (Intel Intelligent Storage Acceleration Library)</h3>
-        <p class="note">Enabled SVE (Scalable Vector Extension) support in ISA-L erasure code for aarch64 architecture.</p>
-        <ul class="works-list">
-            <li><a href="https://github.com/intel/isa-l/commit/3b3d7cc" target="_blank" rel="noopener noreferrer">Enable SVE in ISA-L erasure code for aarch64 (28 Dec 2021)</a></li>
-        </ul>
+			<h3>ISA-L (Intel Intelligent Storage Acceleration Library)</h3>
+			<p class="note">Enabled SVE (Scalable Vector Extension) support in ISA-L erasure code for
+				aarch64 architecture.</p>
+			<ul class="works-list">
+				<li><a href="https://github.com/intel/isa-l/commit/3b3d7cc" target="_blank"
+						rel="noopener noreferrer">Enable SVE in ISA-L erasure code for aarch64
+						(28 Dec 2021)</a></li>
+			</ul>
 
-        <h2>Education & Experience</h2>
-        <h3>Current</h3>
-        <p><strong>Director of China Operations, RISCstar</strong> — 2024.09 – Present (Beijing/Remote)<br>
-        RISCstar provides low‑level software solutions for Arm and RISC‑V. I drive China operations across BD/Sales and technical delivery: brand building, opportunity discovery, contract management, technical scoping/effort estimates, coordinating global teams, and directly contributing to Linux kernel upstream work for domestic RISC‑V chips. Secured multiple contracts, including the company’s first global deal; delivered talks at openEuler, RISC-V Summit and RVEI events.</p>
+			<h2>Education & Experience</h2>
+			<h3>Current</h3>
+			<p><strong>Director of China Operations, RISCstar</strong> — 2024.09 – Present
+				(Beijing/Remote)<br>
+				RISCstar provides low‑level software solutions for Arm and RISC‑V. I drive China
+				operations across BD/Sales and technical delivery: brand building, opportunity
+				discovery, contract management, technical scoping/effort estimates, coordinating global
+				teams, and directly contributing to Linux kernel upstream work for domestic RISC‑V
+				chips. Secured multiple contracts, including the company’s first global deal; delivered
+				talks at openEuler, RISC-V Summit and RVEI events.</p>
 
-        <h3>Previously</h3>
-        <div class="timeline">
-            <div class="timeline-item">
-                <span class="timeline-bullet"></span>
-                <p><strong>Senior Tech Lead, Linaro</strong> — 2012.01 – 2024.09: Led Linaro/HiSilicon Landing Team; Linux kernel, SVE/SVE2, Big Data, OpenSSL 3.0, JDK on Kirin/HiKey/Kunpeng; member relations and technical leadership.</p>
-            </div>
-            <div class="timeline-item">
-                <span class="timeline-bullet"></span>
-                <p><strong>Manager of Software Development, Flextronics (伟创力)</strong> — 2010.09 – 2011.10: Led BSP for dual‑screen Android; drivers/HAL for battery, charger, USB, PM, HDMI, Wi‑Fi.</p>
-            </div>
-            <div class="timeline-item">
-                <span class="timeline-bullet"></span>
-                <p><strong>Assistant Manager / Software Development, SK Telecom</strong> — 2007.12 – 2010.09: Smart SIM + Android; USB connectivity; kernel upgrades; Android porting for Smart SIM.</p>
-            </div>
-            <div class="timeline-item">
-                <span class="timeline-bullet"></span>
-                <p><strong>Senior Software Engineer, Motorola Mobile Devices</strong> — 2003.05 – 2007.11: Power management & Wi‑Fi driver on EZX (MontaVista 2.4.10); contributed to A910, first dual‑mode phone.</p>
-            </div>
-        </div>
+			<h3>Previously</h3>
+			<div class="timeline">
+				<div class="timeline-item">
+					<span class="timeline-bullet"></span>
+					<p><strong>Senior Tech Lead, Linaro</strong> — 2012.01 – 2024.09: Led
+						Linaro/HiSilicon Landing Team; Linux kernel, SVE/SVE2, Big Data, OpenSSL
+						3.0, JDK on Kirin/HiKey/Kunpeng; member relations and technical
+						leadership.</p>
+				</div>
+				<div class="timeline-item">
+					<span class="timeline-bullet"></span>
+					<p><strong>Manager of Software Development, Flextronics (伟创力)</strong> — 2010.09
+						– 2011.10: Led BSP for dual‑screen Android; drivers/HAL for battery,
+						charger, USB, PM, HDMI, Wi‑Fi.</p>
+				</div>
+				<div class="timeline-item">
+					<span class="timeline-bullet"></span>
+					<p><strong>Assistant Manager / Software Development, SK Telecom</strong> —
+						2007.12 – 2010.09: Smart SIM + Android; USB connectivity; kernel
+						upgrades; Android porting for Smart SIM.</p>
+				</div>
+				<div class="timeline-item">
+					<span class="timeline-bullet"></span>
+					<p><strong>Senior Software Engineer, Motorola Mobile Devices</strong> — 2003.05
+						– 2007.11: Power management & Wi‑Fi driver on EZX (MontaVista 2.4.10);
+						contributed to A910, first dual‑mode phone.</p>
+				</div>
+			</div>
 
-        <h3>Education</h3>
-        <ul>
-            <li><strong>M.S., Computer Science</strong> — Beijing University of Posts and Telecommunications (1999–2002)</li>
-            <li><strong>B.S., Computer Science</strong> — Qingdao University (1995–1999)</li>
-        </ul>
+			<h3>Education</h3>
+			<ul>
+				<li><strong>M.S., Computer Science</strong> — Beijing University of Posts and
+					Telecommunications (1999–2002)</li>
+				<li><strong>B.S., Computer Science</strong> — Qingdao University (1995–1999)</li>
+			</ul>
 
-        <h3>Selected Skills</h3>
-        <div class="chips">
-            <span class="chip">Linux Kernel</span>
-            <span class="chip">BSP & Bring‑up</span>
-            <span class="chip">Performance & Power</span>
-            <span class="chip">Upstreaming</span>
-            <span class="chip">Open‑Source Leadership</span>
-            <span class="chip">RISC-V</span>
-            <span class="chip">RISC-V Vector / RVV</span>
-            <span class="chip">Arm / Arm64</span>
-            <span class="chip">SVE/SVE2</span>
-            <span class="chip">OpenSSL · JDK</span>
-            <span class="chip">Tech‑Biz Delivery</span>
-        </div>
+			<h3>Selected Skills</h3>
+			<div class="chips">
+				<span class="chip">Linux Kernel</span>
+				<span class="chip">BSP & Bring‑up</span>
+				<span class="chip">Performance & Power</span>
+				<span class="chip">Upstreaming</span>
+				<span class="chip">Open‑Source Leadership</span>
+				<span class="chip">RISC-V</span>
+				<span class="chip">RISC-V Vector / RVV</span>
+				<span class="chip">Arm / Arm64</span>
+				<span class="chip">SVE/SVE2</span>
+				<span class="chip">OpenSSL · JDK</span>
+				<span class="chip">Tech‑Biz Delivery</span>
+			</div>
 
-        <h2>Contact</h2>
-        <p>Beijing, China<br>
-        <a href="mailto:docularxu@msn.com">docularxu@msn.com</a> · <a href="tel:+8613811548651">(+86) 138‑1154‑8651</a><br>
-        LinkedIn: <a href="https://www.linkedin.com/in/docularxu/" target="_blank" rel="noopener noreferrer">linkedin.com/in/docularxu</a></p>
+			<h2 id="contact">Contact</h2>
+			<p>Beijing, China<br>
+				<a href="mailto:docularxu@msn.com">docularxu@msn.com</a> · <a
+					href="tel:+8613811548651">(+86) 138‑1154‑8651</a><br>
+				LinkedIn: <a href="https://www.linkedin.com/in/docularxu/" target="_blank"
+					rel="noopener noreferrer">linkedin.com/in/docularxu</a>
+			</p>
 
-        <h2>Badges & Certifications</h2>
-        <div style="display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-start;">
-            <div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="edf559a7-ea86-4a47-b588-1cef37cce759" data-share-badge-host="https://www.credly.com"></div>
-            <div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="ea9d5111-061f-4dc9-9e75-f686a45f107a" data-share-badge-host="https://www.credly.com"></div>
-            <div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="3af44fbb-d2ff-4f1f-930e-d8b7a965f746" data-share-badge-host="https://www.credly.com"></div>
-            <div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="ba4ba360-6551-4369-814c-4abdaf4d2929" data-share-badge-host="https://www.credly.com"></div>
-            <a href="https://learn.deeplearning.ai/accomplishments/3e353ad3-1341-4888-8db7-3f237b9933fa?usp=sharing" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
-                <div style="width: 150px; height: 270px; border: 1px solid #cfe9e6; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; background: transparent; color: #1a1a1a; text-align: center; transition: transform 0.2s; cursor: pointer;">
-                    <img src="deeplearning-badge.png" alt="DeepLearning.AI" style="width: 80px; height: 80px; margin-bottom: 15px; object-fit: contain; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); border: 1px solid rgba(0, 0, 0, 0.08);">
-                    <div style="font-size: 13px; margin-bottom: 8px; line-height: 1.3;">Quantization Fundamentals</div>
-                    <div style="font-size: 11px; margin-bottom: 12px;">Hugging Face</div>
-                    <div style="font-size: 10px; border-top: 1px solid #cfe9e6; padding-top: 8px; width: 100%;">DeepLearning.AI</div>
-                    <div style="font-size: 10px; margin-top: 4px;">June 11, 2024</div>
-                </div>
-            </a>
-        </div>
-        <script type="text/javascript" async src="//cdn.credly.com/assets/utilities/embed.js"></script>
+			<h2>Badges & Certifications</h2>
+			<div style="display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-start;">
+				<div data-iframe-width="150" data-iframe-height="270"
+					data-share-badge-id="edf559a7-ea86-4a47-b588-1cef37cce759"
+					data-share-badge-host="https://www.credly.com"></div>
+				<div data-iframe-width="150" data-iframe-height="270"
+					data-share-badge-id="ea9d5111-061f-4dc9-9e75-f686a45f107a"
+					data-share-badge-host="https://www.credly.com"></div>
+				<div data-iframe-width="150" data-iframe-height="270"
+					data-share-badge-id="3af44fbb-d2ff-4f1f-930e-d8b7a965f746"
+					data-share-badge-host="https://www.credly.com"></div>
+				<div data-iframe-width="150" data-iframe-height="270"
+					data-share-badge-id="ba4ba360-6551-4369-814c-4abdaf4d2929"
+					data-share-badge-host="https://www.credly.com"></div>
+				<a href="https://learn.deeplearning.ai/accomplishments/3e353ad3-1341-4888-8db7-3f237b9933fa?usp=sharing"
+					target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+					<div
+						style="width: 150px; height: 270px; border: 1px solid #cfe9e6; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; background: transparent; color: #1a1a1a; text-align: center; transition: transform 0.2s; cursor: pointer;">
+						<img src="deeplearning-badge.png" alt="DeepLearning.AI"
+							style="width: 80px; height: 80px; margin-bottom: 15px; object-fit: contain; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); border: 1px solid rgba(0, 0, 0, 0.08);">
+						<div style="font-size: 13px; margin-bottom: 8px; line-height: 1.3;">
+							Quantization Fundamentals</div>
+						<div style="font-size: 11px; margin-bottom: 12px;">Hugging Face</div>
+						<div
+							style="font-size: 10px; border-top: 1px solid #cfe9e6; padding-top: 8px; width: 100%;">
+							DeepLearning.AI</div>
+						<div style="font-size: 10px; margin-top: 4px;">June 11, 2024</div>
+					</div>
+				</a>
+			</div>
+			<script type="text/javascript" async src="//cdn.credly.com/assets/utilities/embed.js"></script>
 
-        <h2>Conference Speaking Engagements</h2>
+			<h2>Conference Speaking Engagements</h2>
 
-        <!-- English Visual Timeline Chart -->
-        <div class="conference-timeline-chart" style="margin-top: 50px;">
-            <div class="chart-header">
-                <h3 class="chart-title">Timeline</h3>
-                <div class="chart-meta">
-                    <div class="chart-period">2022 ~ 2025</div>
-                    <div class="chart-note">Note: Includes open source and ecosystem events</div>
-                </div>
-            </div>
+			<!-- English Visual Timeline Chart -->
+			<div class="conference-timeline-chart" style="margin-top: 50px;">
+				<div class="chart-header">
+					<h3 class="chart-title">Timeline</h3>
+					<div class="chart-meta">
+						<div class="chart-period">2022 ~ 2025</div>
+						<div class="chart-note">Note: Includes open source and ecosystem events
+						</div>
+					</div>
+				</div>
 
-            <!-- 2022 & 2023 Events -->
-            <div class="chart-year-divider">
-                <span class="year-label">2022</span>
-                <span class="year-label">2023</span>
-            </div>
-            <div class="events-container">
-                <div class="event-item">
-                    <div class="event-date">May 16</div>
-                    <div class="event-title"><a href="#conferences">openEuler</a> + Linaro Developer Day</div>
-                    <div class="event-details">Talk<br>"Accelerating High-Performance Computing with Arm SVE Vector Instructions"</div>
-                </div>
-                <div class="event-item">
-                    <div class="event-date">August 19</div>
-                    <div class="event-title"><a href="https://apachecon.com/acasia2023/tracks/performance.html" target="_blank" rel="noopener noreferrer">ApacheCon 2023</a></div>
-                    <div class="event-details">Talk<br>"Optimizing HDFS Performance: Balanced Utilization of Hardware Accelerators and ARM64 Multi-core Capabilities on KUNPENG920"</div>
-                </div>
-            </div>
+				<!-- 2022 & 2023 Events -->
+				<div class="chart-year-divider">
+					<span class="year-label">2022</span>
+					<span class="year-label">2023</span>
+				</div>
+				<div class="events-container">
+					<div class="event-item">
+						<div class="event-date">May 16</div>
+						<div class="event-title"><a href="#conferences">openEuler</a> + Linaro
+							Developer Day</div>
+						<div class="event-details">Talk<br>"Accelerating High-Performance
+							Computing with Arm SVE Vector Instructions"</div>
+					</div>
+					<div class="event-item">
+						<div class="event-date">August 19</div>
+						<div class="event-title"><a
+								href="https://apachecon.com/acasia2023/tracks/performance.html"
+								target="_blank" rel="noopener noreferrer">ApacheCon
+								2023</a></div>
+						<div class="event-details">Talk<br>"Optimizing HDFS Performance:
+							Balanced Utilization of Hardware Accelerators and ARM64
+							Multi-core Capabilities on KUNPENG920"</div>
+					</div>
+				</div>
 
-            <!-- 2024 Events -->
-            <div class="chart-year-divider" style="margin-top: 40px;">
-                <span class="year-label">2024</span>
-            </div>
-            <div class="events-container">
-                <div class="event-item">
-                    <div class="event-date">April 10</div>
-                    <div class="event-title"><a href="https://www.youtube.com/watch?v=F1ty-fPf79Y" target="_blank" rel="noopener noreferrer">FOSSASIA Summit 2024</a>, Ha Noi</div>
-                    <div class="event-details">Talk<br>"Optimizing Workloads with Arm64 & Hardware Accelerators"<br><span class="note">Topics: HBase/HDFS Transparent Encryption, AES/SM4, OpenSSL 3.0</span></div>
-                </div>
-                <div class="event-item">
-                    <div class="event-date">July 5</div>
-                    <div class="event-title"><a href="#conferences">openEuler</a> Big Data Meetup</div>
-                    <div class="event-details">Talk<br>"Advantages and Challenges of Using UADK Acceleration in Big Data"</div>
-                </div>
-                <div class="event-item">
-                    <div class="event-date">December 18</div>
-                    <div class="event-title"><a href="https://en.cixtech.com/" target="_blank" rel="noopener noreferrer">CIX Technology</a> 2024 Ecosystem Conference</div>
-                    <div class="event-details">Panel Discussion with ecosystem leaders from Red Hat, Ubuntu, Deepin, Kylin, and <a href="#conferences">openEuler</a><br>"Embracing Community, Open and Win-Win"</div>
-                </div>
-                <div class="event-item">
-                    <div class="event-date">December 28</div>
-                    <div class="event-title">RISC-V Industry Development Conference 2024</div>
-                    <div class="event-details">Talk<br>"Crossing the Chasm: Ecosystem Transition and Challenges from Arm to RISC-V"</div>
-                </div>
-            </div>
+				<!-- 2024 Events -->
+				<div class="chart-year-divider" style="margin-top: 40px;">
+					<span class="year-label">2024</span>
+				</div>
+				<div class="events-container">
+					<div class="event-item">
+						<div class="event-date">April 10</div>
+						<div class="event-title"><a
+								href="https://www.youtube.com/watch?v=F1ty-fPf79Y"
+								target="_blank" rel="noopener noreferrer">FOSSASIA
+								Summit 2024</a>, Ha Noi</div>
+						<div class="event-details">Talk<br>"Optimizing Workloads with Arm64 &
+							Hardware Accelerators"<br><span class="note">Topics: HBase/HDFS
+								Transparent Encryption, AES/SM4, OpenSSL 3.0</span>
+						</div>
+					</div>
+					<div class="event-item">
+						<div class="event-date">July 5</div>
+						<div class="event-title"><a href="#conferences">openEuler</a> Big Data
+							Meetup</div>
+						<div class="event-details">Talk<br>"Advantages and Challenges of Using
+							UADK Acceleration in Big Data"</div>
+					</div>
+					<div class="event-item">
+						<div class="event-date">December 18</div>
+						<div class="event-title"><a href="https://en.cixtech.com/"
+								target="_blank" rel="noopener noreferrer">CIX
+								Technology</a> 2024 Ecosystem Conference</div>
+						<div class="event-details">Panel Discussion with ecosystem leaders from
+							Red Hat, Ubuntu, Deepin, Kylin, and <a
+								href="#conferences">openEuler</a><br>"Embracing
+							Community, Open and Win-Win"</div>
+					</div>
+					<div class="event-item">
+						<div class="event-date">December 28</div>
+						<div class="event-title">RISC-V Industry Development Conference 2024
+						</div>
+						<div class="event-details">Talk<br>"Crossing the Chasm: Ecosystem
+							Transition and Challenges from Arm to RISC-V"</div>
+					</div>
+				</div>
 
-            <!-- 2025 Events -->
-            <div class="chart-year-divider" style="margin-top: 40px;">
-                <span class="year-label">2025</span>
-            </div>
-            <div class="events-container">
-                <div class="event-item">
-                    <div class="event-date">February 28</div>
-                    <div class="event-title">2025 China RISC-V Ecosystem Conference</div>
-                    <div class="event-details">Talk<br>"Current Status of RISC-V Linux Kernel Open Source Upstream"</div>
-                </div>
-                <div class="event-item">
-                    <div class="event-date">March 22</div>
-                    <div class="event-title"><a href="#conferences">openEuler on RISC-V</a> & <a href="#conferences">deepin</a> Meetup</div>
-                    <div class="event-details">Lightning Talk<br>"Understanding RISC-V Ecosystem Development Stages and Construction Path from the Perspective of Arm Ecosystem Development"</div>
-                </div>
-                <div class="event-item">
-                    <div class="event-date">July 16</div>
-                    <div class="event-title">The 5th RISC-V Summit China</div>
-                    <div class="event-details">Poster<br>"RISC-V Linux Kernel / Boot Firmware 2025 Progress Report: Challenges from Upstream and Downstream"</div>
-                </div>
-                <div class="event-item">
-                    <div class="event-date">October 23</div>
-                    <div class="event-title">RISC-V Summit 2025 NA</div>
-                    <div class="event-details">Talk<br>"Moving to RISC-V Vector: A Practical Journey of AI Operator Optimization"</div>
-                </div>
-                <div class="event-item">
-                    <div class="event-date">November 25</div>
-                    <div class="event-title"><a href="http://www.rdsa-summit.com/" target="_blank" rel="noopener noreferrer">RISC-V Industry Development Conference and RDSA International Summit</a></div>
-                    <div class="event-details">Talk<br>"Porting Code to RISC-V: Course Development practices accelerating the RISC-V developer ecosystem"</div>
-                </div>
-            </div>
-        </div>
+				<!-- 2025 Events -->
+				<div class="chart-year-divider" style="margin-top: 40px;">
+					<span class="year-label">2025</span>
+				</div>
+				<div class="events-container">
+					<div class="event-item">
+						<div class="event-date">February 28</div>
+						<div class="event-title">2025 China RISC-V Ecosystem Conference</div>
+						<div class="event-details">Talk<br>"Current Status of RISC-V Linux
+							Kernel Open Source Upstream"</div>
+					</div>
+					<div class="event-item">
+						<div class="event-date">March 22</div>
+						<div class="event-title"><a href="#conferences">openEuler on RISC-V</a>
+							& <a href="#conferences">deepin</a> Meetup</div>
+						<div class="event-details">Lightning Talk<br>"Understanding RISC-V
+							Ecosystem Development Stages and Construction Path from the
+							Perspective of Arm Ecosystem Development"</div>
+					</div>
+					<div class="event-item">
+						<div class="event-date">July 16</div>
+						<div class="event-title">The 5th RISC-V Summit China</div>
+						<div class="event-details">Poster<br>"RISC-V Linux Kernel / Boot
+							Firmware 2025 Progress Report: Challenges from Upstream and
+							Downstream"</div>
+					</div>
+					<div class="event-item">
+						<div class="event-date">October 23</div>
+						<div class="event-title">RISC-V Summit 2025 NA</div>
+						<div class="event-details">Talk<br>"Moving to RISC-V Vector: A Practical
+							Journey of AI Operator Optimization"</div>
+					</div>
+					<div class="event-item">
+						<div class="event-date">November 25</div>
+						<div class="event-title"><a href="http://www.rdsa-summit.com/"
+								target="_blank" rel="noopener noreferrer">RISC-V
+								Industry Development Conference and RDSA International
+								Summit</a></div>
+						<div class="event-details">Talk<br>"Porting Code to RISC-V: Course
+							Development practices accelerating the RISC-V developer
+							ecosystem"</div>
+					</div>
+				</div>
+			</div>
 
-        <h3>English</h3>
-        <ul class="works-list">
-            <li>16 May 2022, openEuler + Linaro Developer Day, Talk: "Accelerating High-Performance Computing with Arm SVE Vector Instructions"</li>
-            <li>19 Aug 2023, <a href="https://apachecon.com/acasia2023/tracks/performance.html" target="_blank" rel="noopener noreferrer">ApacheCon 2023</a>, Talk: "Optimizing HDFS Performance: Balanced Utilization of Hardware Accelerators and ARM64 Multi-core Capabilities on KUNPENG920"
-                <br><span class="note">Topics: HDFS, Big Data, MD5, Multi-buffer, UADK Acceleration, OPENSSL</span></li>
-            <li>10 Apr 2024, <a href="https://www.youtube.com/watch?v=F1ty-fPf79Y" target="_blank" rel="noopener noreferrer">FOSSASIA Summit 2024</a>, Ha Noi, Talk: "Optimizing Workloads with Arm64 & Hardware Accelerators"
-                <br><span class="note">Topics: HBase/HDFS Transparent Encryption, AES/SM4, OpenSSL 3.0</span></li>
-            <li>5 Jul 2024, openEuler Big Data Meetup, Talk: "Advantages and Challenges of Using UADK Acceleration in Big Data"</li>
-            <li>18 Dec 2024, Shanghai Zhangjiang, <a href="https://en.cixtech.com/" target="_blank" rel="noopener noreferrer">CIX Technology</a> 2024 Ecosystem Conference, Panel Discussion with ecosystem leaders from Red Hat, Ubuntu, Deepin, Kylin, and openEuler: "Embracing Community, Open and Win-Win"</li>
-            <li>28 Dec 2024, RISC-V Industry Development Conference 2024, Talk: "Crossing the Chasm: Ecosystem Transition and Challenges from Arm to RISC-V"</li>
-            <li>28 Feb 2025, 2025 China RISC-V Ecosystem Conference, Talk: "Current Status of RISC-V Linux Kernel Open Source Upstream"</li>
-            <li>22 Mar 2025, openEuler on RISC-V & deepin Meetup-Beijing, Lightning Talk: "Understanding RISC-V Ecosystem Development Stages and Construction Path from the Perspective of Arm Ecosystem Development"</li>
-            <li>16 Jul 2025, The 5th RISC-V Summit China, Shanghai, Poster: "RISC-V Linux Kernel / Boot Firmware 2025 Progress Report: Challenges from Upstream and Downstream"</li>
-            <li>23 Oct 2025, RISC-V Summit 2025 NA, Talk: "Moving to RISC-V Vector: A Practical Journey of AI Operator Optimization"</li>
-            <li>25 Nov 2025, <a href="http://www.rdsa-summit.com/" target="_blank" rel="noopener noreferrer">RISC-V Industry Development Conference and RDSA International Summit</a>, Zhuhai/Macao, Talk: "Porting Code to RISC-V: Course Development practices accelerating the RISC-V developer ecosystem"</li>
-        </ul>
+			<h3>English</h3>
+			<ul class="works-list">
+				<li>16 May 2022, openEuler + Linaro Developer Day, Talk: "Accelerating High-Performance
+					Computing with Arm SVE Vector Instructions"</li>
+				<li>19 Aug 2023, <a href="https://apachecon.com/acasia2023/tracks/performance.html"
+						target="_blank" rel="noopener noreferrer">ApacheCon 2023</a>, Talk:
+					"Optimizing HDFS Performance: Balanced Utilization of Hardware Accelerators and
+					ARM64 Multi-core Capabilities on KUNPENG920"
+					<br><span class="note">Topics: HDFS, Big Data, MD5, Multi-buffer, UADK
+						Acceleration, OPENSSL</span>
+				</li>
+				<li>10 Apr 2024, <a href="https://www.youtube.com/watch?v=F1ty-fPf79Y" target="_blank"
+						rel="noopener noreferrer">FOSSASIA Summit 2024</a>, Ha Noi, Talk:
+					"Optimizing Workloads with Arm64 & Hardware Accelerators"
+					<br><span class="note">Topics: HBase/HDFS Transparent Encryption, AES/SM4,
+						OpenSSL 3.0</span>
+				</li>
+				<li>5 Jul 2024, openEuler Big Data Meetup, Talk: "Advantages and Challenges of Using
+					UADK Acceleration in Big Data"</li>
+				<li>18 Dec 2024, Shanghai Zhangjiang, <a href="https://en.cixtech.com/" target="_blank"
+						rel="noopener noreferrer">CIX Technology</a> 2024 Ecosystem Conference,
+					Panel Discussion with ecosystem leaders from Red Hat, Ubuntu, Deepin, Kylin, and
+					openEuler: "Embracing Community, Open and Win-Win"</li>
+				<li>28 Dec 2024, RISC-V Industry Development Conference 2024, Talk: "Crossing the Chasm:
+					Ecosystem Transition and Challenges from Arm to RISC-V"</li>
+				<li>28 Feb 2025, 2025 China RISC-V Ecosystem Conference, Talk: "Current Status of RISC-V
+					Linux Kernel Open Source Upstream"</li>
+				<li>22 Mar 2025, openEuler on RISC-V & deepin Meetup-Beijing, Lightning Talk:
+					"Understanding RISC-V Ecosystem Development Stages and Construction Path from
+					the Perspective of Arm Ecosystem Development"</li>
+				<li>16 Jul 2025, The 5th RISC-V Summit China, Shanghai, Poster: "RISC-V Linux Kernel /
+					Boot Firmware 2025 Progress Report: Challenges from Upstream and Downstream"
+				</li>
+				<li>23 Oct 2025, RISC-V Summit 2025 NA, Talk: "Moving to RISC-V Vector: A Practical
+					Journey of AI Operator Optimization"</li>
+				<li>25 Nov 2025, <a href="http://www.rdsa-summit.com/" target="_blank"
+						rel="noopener noreferrer">RISC-V Industry Development Conference and
+						RDSA International Summit</a>, Zhuhai/Macao, Talk: "Porting Code to
+					RISC-V: Course Development practices accelerating the RISC-V developer
+					ecosystem"</li>
+			</ul>
 
-        <!-- Visual Timeline Chart (Chinese) -->
-        <div class="conference-timeline-chart">
-            <div class="chart-header">
-                <h3 class="chart-title">开源社区<br>运作、参与和贡献</h3>
-                <div class="chart-meta">
-                    <div class="chart-period">2022 ~ 2025</div>
-                    <div class="chart-note">注：收录操作系统及开源社区相关的活动</div>
-                </div>
-            </div>
+			<!-- Visual Timeline Chart (Chinese) -->
+			<div class="conference-timeline-chart">
+				<div class="chart-header">
+					<h3 class="chart-title">开源社区<br>运作、参与和贡献</h3>
+					<div class="chart-meta">
+						<div class="chart-period">2022 ~ 2025</div>
+						<div class="chart-note">注：收录操作系统及开源社区相关的活动</div>
+					</div>
+				</div>
 
-            <!-- 2022 & 2023 Events -->
-            <div class="chart-year-divider">
-                <span class="year-label">2022</span>
-                <span class="year-label">2023</span>
-            </div>
-            <div class="events-container">
-                <div class="event-item">
-                    <div class="event-date">5月16日</div>
-                    <div class="event-title"><a href="#conferences">openEuler</a> + Linaro Developer Day</div>
-                    <div class="event-details">演讲<br>《利用 Arm SVE 向量指令加速高性能计算》</div>
-                </div>
-                <div class="event-item">
-                    <div class="event-date">8月19日</div>
-                    <div class="event-title"><a href="https://apachecon.com/acasia2023/tracks/performance.html" target="_blank" rel="noopener noreferrer">ApacheCon 2023</a></div>
-                    <div class="event-details">演讲<br>《优化HDFS性能:在KUNPENG920上实现硬件加速器和ARM64多核能力的均衡利用》<br><span class="note">主要内容：HDFS，大数据，MD5，Multi-buffer，UADK 加速，OPENSSL</span></div>
-                </div>
-            </div>
+				<!-- 2022 & 2023 Events -->
+				<div class="chart-year-divider">
+					<span class="year-label">2022</span>
+					<span class="year-label">2023</span>
+				</div>
+				<div class="events-container">
+					<div class="event-item">
+						<div class="event-date">5月16日</div>
+						<div class="event-title"><a href="#conferences">openEuler</a> + Linaro
+							Developer Day</div>
+						<div class="event-details">演讲<br>《利用 Arm SVE 向量指令加速高性能计算》</div>
+					</div>
+					<div class="event-item">
+						<div class="event-date">8月19日</div>
+						<div class="event-title"><a
+								href="https://apachecon.com/acasia2023/tracks/performance.html"
+								target="_blank" rel="noopener noreferrer">ApacheCon
+								2023</a></div>
+						<div class="event-details">
+							演讲<br>《优化HDFS性能:在KUNPENG920上实现硬件加速器和ARM64多核能力的均衡利用》<br><span
+								class="note">主要内容：HDFS，大数据，MD5，Multi-buffer，UADK
+								加速，OPENSSL</span></div>
+					</div>
+				</div>
 
-            <!-- 2024 Events -->
-            <div class="chart-year-divider">
-                <span class="year-label">2024</span>
-            </div>
-            <div class="events-container">
-                <div class="event-item">
-                    <div class="event-date">4月10日</div>
-                    <div class="event-title"><a href="https://www.youtube.com/watch?v=F1ty-fPf79Y" target="_blank" rel="noopener noreferrer">FOSSASIA Summit 2024</a>, Ha Noi</div>
-                    <div class="event-details">演讲<br>《Optimizing Workloads with Arm64 & Hardware Accelerators》<br><span class="note">主要内容：HBase/HDFS Transparent Encryption，AES/SM4，OpenSSL 3.0</span></div>
-                </div>
-                <div class="event-item">
-                    <div class="event-date">7月5日</div>
-                    <div class="event-title"><a href="#conferences">openEuler</a> 大数据 Meetup</div>
-                    <div class="event-details">演讲<br>《大数据领域使用 UADK 加速的优势和挑战》</div>
-                </div>
-                <div class="event-item">
-                    <div class="event-date">12月18日</div>
-                    <div class="event-title"><a href="https://en.cixtech.com/" target="_blank" rel="noopener noreferrer">此芯科技</a>2024生态大会</div>
-                    <div class="event-details">圆桌论坛：与来自 红帽 / Ubuntu / 统信 Deepin / 麒麟 <a href="#conferences">openEuler</a> 的生态负责人共话《拥抱社区，开放共赢》</div>
-                </div>
-                <div class="event-item">
-                    <div class="event-date">12月28日</div>
-                    <div class="event-title">2024 RISC-V 产业发展大会</div>
-                    <div class="event-details">演讲<br>《跨越鸿沟：从Arm到RISC-V的生态转型与挑战》</div>
-                </div>
-            </div>
+				<!-- 2024 Events -->
+				<div class="chart-year-divider">
+					<span class="year-label">2024</span>
+				</div>
+				<div class="events-container">
+					<div class="event-item">
+						<div class="event-date">4月10日</div>
+						<div class="event-title"><a
+								href="https://www.youtube.com/watch?v=F1ty-fPf79Y"
+								target="_blank" rel="noopener noreferrer">FOSSASIA
+								Summit 2024</a>, Ha Noi</div>
+						<div class="event-details">演讲<br>《Optimizing Workloads with Arm64 &
+							Hardware Accelerators》<br><span class="note">主要内容：HBase/HDFS
+								Transparent Encryption，AES/SM4，OpenSSL 3.0</span></div>
+					</div>
+					<div class="event-item">
+						<div class="event-date">7月5日</div>
+						<div class="event-title"><a href="#conferences">openEuler</a> 大数据 Meetup
+						</div>
+						<div class="event-details">演讲<br>《大数据领域使用 UADK 加速的优势和挑战》</div>
+					</div>
+					<div class="event-item">
+						<div class="event-date">12月18日</div>
+						<div class="event-title"><a href="https://en.cixtech.com/"
+								target="_blank"
+								rel="noopener noreferrer">此芯科技</a>2024生态大会</div>
+						<div class="event-details">圆桌论坛：与来自 红帽 / Ubuntu / 统信 Deepin / 麒麟 <a
+								href="#conferences">openEuler</a> 的生态负责人共话《拥抱社区，开放共赢》
+						</div>
+					</div>
+					<div class="event-item">
+						<div class="event-date">12月28日</div>
+						<div class="event-title">2024 RISC-V 产业发展大会</div>
+						<div class="event-details">演讲<br>《跨越鸿沟：从Arm到RISC-V的生态转型与挑战》</div>
+					</div>
+				</div>
 
-            <!-- 2025 Events -->
-            <div class="chart-year-divider" style="margin-top: 40px;">
-                <span class="year-label">2025</span>
-            </div>
-            <div class="events-container">
-                <div class="event-item">
-                    <div class="event-date">2月28日</div>
-                    <div class="event-title">2025 中国 RISC-V 生态大会</div>
-                    <div class="event-details">演讲<br>《RISC-V Linux内核开源upstream现状》</div>
-                </div>
-                <div class="event-item">
-                    <div class="event-date">3月22日</div>
-                    <div class="event-title"><a href="#conferences">openEuler on RISC-V</a> & <a href="#conferences">Deepin</a> Meetup</div>
-                    <div class="event-details">演讲<br>《从 Arm 生态的发展看 RISC-V 生态的发展阶段和构建之路》</div>
-                </div>
-                <div class="event-item">
-                    <div class="event-date">7月16日</div>
-                    <div class="event-title">第五届RISC-V中国峰会</div>
-                    <div class="event-details">Poster<br>《RISC-V Linux 内核/启动固件2025进展报告》</div>
-                </div>
-                <div class="event-item">
-                    <div class="event-date">10月23日</div>
-                    <div class="event-title">RISC-V Summit 2025 NA</div>
-                    <div class="event-details">Talk<br>"Moving to RISC-V Vector: A Practical Journey of AI Operator Optimization"</div>
-                </div>
-                <div class="event-item">
-                    <div class="event-date">11月25日</div>
-                    <div class="event-title"><a href="http://www.rdsa-summit.com/" target="_blank" rel="noopener noreferrer">RISC-V产业发展大会暨RDSA国际论坛</a>，人才分论坛</div>
-                    <div class="event-details">演讲<br>《〈Porting Code to RISC-V〉：加速 RISC-V 开发者生态的课程实践》</div>
-                </div>
-            </div>
-        </div>
+				<!-- 2025 Events -->
+				<div class="chart-year-divider" style="margin-top: 40px;">
+					<span class="year-label">2025</span>
+				</div>
+				<div class="events-container">
+					<div class="event-item">
+						<div class="event-date">2月28日</div>
+						<div class="event-title">2025 中国 RISC-V 生态大会</div>
+						<div class="event-details">演讲<br>《RISC-V Linux内核开源upstream现状》</div>
+					</div>
+					<div class="event-item">
+						<div class="event-date">3月22日</div>
+						<div class="event-title"><a href="#conferences">openEuler on RISC-V</a>
+							& <a href="#conferences">Deepin</a> Meetup</div>
+						<div class="event-details">演讲<br>《从 Arm 生态的发展看 RISC-V 生态的发展阶段和构建之路》
+						</div>
+					</div>
+					<div class="event-item">
+						<div class="event-date">7月16日</div>
+						<div class="event-title">第五届RISC-V中国峰会</div>
+						<div class="event-details">Poster<br>《RISC-V Linux 内核/启动固件2025进展报告》
+						</div>
+					</div>
+					<div class="event-item">
+						<div class="event-date">10月23日</div>
+						<div class="event-title">RISC-V Summit 2025 NA</div>
+						<div class="event-details">Talk<br>"Moving to RISC-V Vector: A Practical
+							Journey of AI Operator Optimization"</div>
+					</div>
+					<div class="event-item">
+						<div class="event-date">11月25日</div>
+						<div class="event-title"><a href="http://www.rdsa-summit.com/"
+								target="_blank"
+								rel="noopener noreferrer">RISC-V产业发展大会暨RDSA国际论坛</a>，人才分论坛
+						</div>
+						<div class="event-details">演讲<br>《〈Porting Code to RISC-V〉：加速 RISC-V
+							开发者生态的课程实践》</div>
+					</div>
+				</div>
+			</div>
 
-        <h3>中文</h3>
-        <ul class="works-list">
-            <li>16 May 2022，openEuler + Linaro Developer Day，演讲《利用 Arm SVE 向量指令加速高性能计算》</li>
-            <li>19 Aug 2023，<a href="https://apachecon.com/acasia2023/tracks/performance.html" target="_blank" rel="noopener noreferrer">ApacheCon 2023</a>，《优化HDFS性能:在KUNPENG920上实现硬件加速器和ARM64多核能力的均衡利用》
-                <br><span class="note">主要内容：HDFS，大数据，MD5，Multi-buffer，UADK 加速，OPENSSL</span></li>
-            <li>10 Apr 2024，<a href="https://www.youtube.com/watch?v=F1ty-fPf79Y" target="_blank" rel="noopener noreferrer">FOSSASIA Summit 2024</a>，Ha Noi，演讲《Optimizing Workloads with Arm64 & Hardware Accelerators》
-                <br><span class="note">主要内容：HBase/HDFS Transparent Encryption，AES/SM4，OpenSSL 3.0</span></li>
-            <li>5 Jul 2024，openEuler 大数据 Meetup，演讲《大数据领域使用 UADK 加速的优势和挑战》</li>
-            <li>18 Dec 2024，上海张江，<a href="https://en.cixtech.com/" target="_blank" rel="noopener noreferrer">此芯科技</a>2024生态大会，圆桌论坛：与来自 红帽 / Ubuntu / 统信 Deepin / 麒麟 openEuler 的生态负责人共话《拥抱社区，开放共赢》</li>
-            <li>28 Dec 2024，RISC-V 产业发展大会 2024，演讲《跨越鸿沟：从Arm到RISC-V的生态转型与挑战》</li>
-            <li>28 Feb 2025，2025 中国 RISC-V 生态大会，演讲《RISC-V Linux内核开源upstream现状》</li>
-            <li>22 Mar 2025，openEuler on RISC-V & deepin Meetup-北京站，闪电演讲《从 Arm 生态的发展看 RISC-V 生态的发展阶段和构建之路》</li>
-            <li>16 Jul 2025，第五届RISC-V中国峰会，The 5th RISC-V Summit China, 上海。Posters，《RISC-V Linux 内核/启动固件2025进展报告 - 从上游支持到生产级部署的实践与挑战》</li>
-            <li>23 Oct 2025，RISC-V Summit 2025 NA，"Moving to RISC-V Vector: A Practical Journey of AI Operator Optimization - Guodong Xu, RISCstar Solutions"</li>
-            <li>25 Nov 2025，<a href="http://www.rdsa-summit.com/" target="_blank" rel="noopener noreferrer">RISC-V产业发展大会暨RDSA国际论坛</a>，人才分论坛，珠海/澳门，演讲《〈Porting Code to RISC-V〉：加速 RISC-V 开发者生态的课程实践》</li>
-        </ul>
+			<h3>中文</h3>
+			<ul class="works-list">
+				<li>16 May 2022，openEuler + Linaro Developer Day，演讲《利用 Arm SVE 向量指令加速高性能计算》</li>
+				<li>19 Aug 2023，<a href="https://apachecon.com/acasia2023/tracks/performance.html"
+						target="_blank" rel="noopener noreferrer">ApacheCon
+						2023</a>，《优化HDFS性能:在KUNPENG920上实现硬件加速器和ARM64多核能力的均衡利用》
+					<br><span class="note">主要内容：HDFS，大数据，MD5，Multi-buffer，UADK 加速，OPENSSL</span>
+				</li>
+				<li>10 Apr 2024，<a href="https://www.youtube.com/watch?v=F1ty-fPf79Y" target="_blank"
+						rel="noopener noreferrer">FOSSASIA Summit 2024</a>，Ha Noi，演讲《Optimizing
+					Workloads with Arm64 & Hardware Accelerators》
+					<br><span class="note">主要内容：HBase/HDFS Transparent Encryption，AES/SM4，OpenSSL
+						3.0</span>
+				</li>
+				<li>5 Jul 2024，openEuler 大数据 Meetup，演讲《大数据领域使用 UADK 加速的优势和挑战》</li>
+				<li>18 Dec 2024，上海张江，<a href="https://en.cixtech.com/" target="_blank"
+						rel="noopener noreferrer">此芯科技</a>2024生态大会，圆桌论坛：与来自 红帽 / Ubuntu / 统信
+					Deepin / 麒麟 openEuler 的生态负责人共话《拥抱社区，开放共赢》</li>
+				<li>28 Dec 2024，RISC-V 产业发展大会 2024，演讲《跨越鸿沟：从Arm到RISC-V的生态转型与挑战》</li>
+				<li>28 Feb 2025，2025 中国 RISC-V 生态大会，演讲《RISC-V Linux内核开源upstream现状》</li>
+				<li>22 Mar 2025，openEuler on RISC-V & deepin Meetup-北京站，闪电演讲《从 Arm 生态的发展看 RISC-V
+					生态的发展阶段和构建之路》</li>
+				<li>16 Jul 2025，第五届RISC-V中国峰会，The 5th RISC-V Summit China, 上海。Posters，《RISC-V Linux
+					内核/启动固件2025进展报告 - 从上游支持到生产级部署的实践与挑战》</li>
+				<li>23 Oct 2025，RISC-V Summit 2025 NA，"Moving to RISC-V Vector: A Practical Journey of
+					AI Operator Optimization - Guodong Xu, RISCstar Solutions"</li>
+				<li>25 Nov 2025，<a href="http://www.rdsa-summit.com/" target="_blank"
+						rel="noopener noreferrer">RISC-V产业发展大会暨RDSA国际论坛</a>，人才分论坛，珠海/澳门，演讲《〈Porting
+					Code to RISC-V〉：加速 RISC-V 开发者生态的课程实践》</li>
+			</ul>
 
-        <h2>Other Videos & References</h2>
-        <p class="note">Additional talks, interviews, and resources.</p>
+			<h2>Other Videos & References</h2>
+			<p class="note">Additional talks, interviews, and resources.</p>
 
-        <div style="display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-start; margin-bottom: 20px;">
-            <a href="https://www.youtube.com/shorts/O3rmJaGWz7g" target="_blank" rel="noopener noreferrer" style="text-decoration: none; flex: 1; min-width: 280px;">
-                <div class="blog-card">
-                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-                        <div style="flex: 1;">
-                            <div class="blog-card-header">FOSSASIA Summit 2024</div>
-                            <div class="blog-card-date">Apr 10, 2024</div>
-                        </div>
-                    </div>
-                    <div class="blog-card-title">Optimizing Workload Distribution</div>
-                    <div class="blog-card-desc">How to synergize #Arm64 multi-core CPUs with #hardware accelerators for enhanced system efficiency.</div>
-                    <div class="blog-card-badge">
-                        🎥 YouTube Short
-                    </div>
-                </div>
-            </a>
-            <a href="https://www.youtube.com/watch?v=qoO86Xzcz90" target="_blank" rel="noopener noreferrer" style="text-decoration: none; flex: 1; min-width: 280px;">
-                <div class="blog-card">
-                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-                        <div style="flex: 1;">
-                            <div class="blog-card-header">Interview</div>
-                            <div class="blog-card-date">Apr 9, 2024</div>
-                        </div>
-                    </div>
-                    <div class="blog-card-title">Pre-session Interview in FOSSASIA Summit 2024</div>
-                    <div class="blog-card-desc">Interview session discussing technology and ecosystem topics.</div>
-                    <div class="blog-card-badge">
-                        🎥 YouTube
-                    </div>
-                </div>
-            </a>
-            <a href="https://resources.linaro.org/zh/resource/iWPCMqGmwAAipyWu2Q8AZ3" target="_blank" rel="noopener noreferrer" style="text-decoration: none; flex: 1; min-width: 280px;">
-                <div class="blog-card">
-                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-                        <div style="flex: 1;">
-                            <div class="blog-card-header">Linaro Resource</div>
-                            <div class="blog-card-date">May 16, 2022</div>
-                        </div>
-                    </div>
-                    <div class="blog-card-title">Accelerating HPC with Arm SVE</div>
-                    <div class="blog-card-desc">Online talk: Accelerating for high performance computing with Arm SVE vector instructions.</div>
-                    <div class="blog-card-badge">
-                        🔗 Linaro
-                    </div>
-                </div>
-            </a>
-            <a href="https://www.youtube.com/watch?v=h4Cx7BNKm3c" target="_blank" rel="noopener noreferrer" style="text-decoration: none; flex: 1; min-width: 280px;">
-                <div class="blog-card">
-                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-                        <div style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; background: url('openEuler_logo.png') no-repeat center center; background-size: contain; border-radius: 8px; font-size: 24px;">
-                        </div>
-                        <div style="flex: 1;">
-                            <div class="blog-card-header">openEuler Interview</div>
-                            <div class="blog-card-date">Dec 16, 2024</div>
-                        </div>
-                    </div>
-                    <div class="blog-card-title">openEuler Quick Interview – Xu Guodong, RISCstar Solutions, Director</div>
-                    <div class="blog-card-desc">Quick interview discussing RISCstar Solutions' work in the RISC-V ecosystem and contributions to openEuler community.</div>
-                    <div class="blog-card-badge">
-                        🎥 YouTube Recording
-                    </div>
-                </div>
-            </a>
-        </div>
+			<div
+				style="display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-start; margin-bottom: 20px;">
+				<a href="https://www.youtube.com/shorts/O3rmJaGWz7g" target="_blank"
+					rel="noopener noreferrer"
+					style="text-decoration: none; flex: 1; min-width: 280px;">
+					<div class="blog-card">
+						<div
+							style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+							<div style="flex: 1;">
+								<div class="blog-card-header">FOSSASIA Summit 2024</div>
+								<div class="blog-card-date">Apr 10, 2024</div>
+							</div>
+						</div>
+						<div class="blog-card-title">Optimizing Workload Distribution</div>
+						<div class="blog-card-desc">How to synergize #Arm64 multi-core CPUs with
+							#hardware accelerators for enhanced system efficiency.</div>
+						<div class="blog-card-badge">
+							🎥 YouTube Short
+						</div>
+					</div>
+				</a>
+				<a href="https://www.youtube.com/watch?v=qoO86Xzcz90" target="_blank"
+					rel="noopener noreferrer"
+					style="text-decoration: none; flex: 1; min-width: 280px;">
+					<div class="blog-card">
+						<div
+							style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+							<div style="flex: 1;">
+								<div class="blog-card-header">Interview</div>
+								<div class="blog-card-date">Apr 9, 2024</div>
+							</div>
+						</div>
+						<div class="blog-card-title">Pre-session Interview in FOSSASIA Summit
+							2024</div>
+						<div class="blog-card-desc">Interview session discussing technology and
+							ecosystem topics.</div>
+						<div class="blog-card-badge">
+							🎥 YouTube
+						</div>
+					</div>
+				</a>
+				<a href="https://resources.linaro.org/zh/resource/iWPCMqGmwAAipyWu2Q8AZ3"
+					target="_blank" rel="noopener noreferrer"
+					style="text-decoration: none; flex: 1; min-width: 280px;">
+					<div class="blog-card">
+						<div
+							style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+							<div style="flex: 1;">
+								<div class="blog-card-header">Linaro Resource</div>
+								<div class="blog-card-date">May 16, 2022</div>
+							</div>
+						</div>
+						<div class="blog-card-title">Accelerating HPC with Arm SVE</div>
+						<div class="blog-card-desc">Online talk: Accelerating for high
+							performance computing with Arm SVE vector instructions.</div>
+						<div class="blog-card-badge">
+							🔗 Linaro
+						</div>
+					</div>
+				</a>
+				<a href="https://www.youtube.com/watch?v=h4Cx7BNKm3c" target="_blank"
+					rel="noopener noreferrer"
+					style="text-decoration: none; flex: 1; min-width: 280px;">
+					<div class="blog-card">
+						<div
+							style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+							<div
+								style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; background: url('openEuler_logo.png') no-repeat center center; background-size: contain; border-radius: 8px; font-size: 24px;">
+							</div>
+							<div style="flex: 1;">
+								<div class="blog-card-header">openEuler Interview</div>
+								<div class="blog-card-date">Dec 16, 2024</div>
+							</div>
+						</div>
+						<div class="blog-card-title">openEuler Quick Interview – Xu Guodong,
+							RISCstar Solutions, Director</div>
+						<div class="blog-card-desc">Quick interview discussing RISCstar
+							Solutions' work in the RISC-V ecosystem and contributions to
+							openEuler community.</div>
+						<div class="blog-card-badge">
+							🎥 YouTube Recording
+						</div>
+					</div>
+				</a>
+			</div>
 
-    </main>
+		</main>
 
-    <footer>
-        © <span id="year"></span> Guodong Xu. All rights reserved.
-    </footer>
+		<footer>
+			© <span id="year"></span> Guodong Xu. All rights reserved.
+		</footer>
 
-    <script>
-        // Footer year
-        document.getElementById('year').textContent = new Date().getFullYear();
+		<script>
+			// Footer year
+			document.getElementById('year').textContent = new Date().getFullYear();
 
-        // Theme toggle with persistence
-        (function() {
-            var body = document.body;
-            var saved = localStorage.getItem('theme');
-            if (saved === 'dark') {
-                body.classList.add('dark');
-            }
-            var btn = document.getElementById('themeToggle');
-            if (btn) {
-                var setLabel = function() {
-                    btn.textContent = body.classList.contains('dark') ? '🌙' : '🌓';
-                };
-                setLabel();
-                btn.addEventListener('click', function() {
-                    body.classList.toggle('dark');
-                    localStorage.setItem('theme', body.classList.contains('dark') ? 'dark' : 'light');
-                    setLabel();
-                });
-            }
-        })();
-    </script>
+			// Theme toggle with persistence
+			(function () {
+				var body = document.body;
+				var saved = localStorage.getItem('theme');
+				if (saved === 'dark') {
+					body.classList.add('dark');
+				}
+				var btn = document.getElementById('themeToggle');
+				if (btn) {
+					var setLabel = function () {
+						btn.textContent = body.classList.contains('dark') ? '🌙' : '🌓';
+					};
+					setLabel();
+					btn.addEventListener('click', function () {
+						body.classList.toggle('dark');
+						localStorage.setItem('theme', body.classList.contains('dark') ? 'dark' : 'light');
+						setLabel();
+					});
+				}
+			})();
+		</script>
 
 </body>
 
 </html>
-
