@@ -15,6 +15,8 @@
 		<header>
 			<h1>Linux Kernel ARM64 & RISC-V Support Analysis</h1>
 			<div class="subtitle">Tracking the growth of supported boards (DTBs) over time</div>
+			<a href="https://docularxu.github.io/" target="_blank" rel="noopener" class="author-btn">About
+				the author</a>
 		</header>
 
 		<section class="chart-section">
@@ -69,6 +71,17 @@
 				• RISC-V reached ~21 boards in v6.6 (Oct 2023).<br>
 				The chart shifts the ARM64 historical curve to align with this RISC-V milestone,
 				visualizing a potential growth path for RISC-V in the coming years (2025-2030).
+			</div>
+
+			<div class="sub-charts-row">
+				<div class="half-width-chart">
+					<h3>Logarithmic Scale</h3>
+					<canvas id="logProjectionChart"></canvas>
+				</div>
+				<div class="half-width-chart">
+					<h3>Zoomed View (2022-2028)</h3>
+					<canvas id="zoomedProjectionChart"></canvas>
+				</div>
 			</div>
 		</section>
 
@@ -547,6 +560,127 @@
 								const yStr = (m === 0 && val > y) ? y : y; // edge case handling
 								return `Year: ${y}.${mStr}`;
 							}
+						}
+					}
+				}
+			},
+			plugins: [alignmentLinePlugin]
+		});
+
+		// --- Log Scale Chart ---
+		new Chart(document.getElementById('logProjectionChart'), {
+			type: 'line',
+			data: {
+				datasets: [
+					{
+						label: 'RISC-V Actual',
+						data: riscvDatasetData,
+						borderColor: '#ea580c',
+						backgroundColor: '#ea580c',
+						pointStyle: pointStyles,
+						pointRadius: pointRadii,
+						pointBackgroundColor: pointColors,
+						pointBorderColor: pointBorderColors,
+						tension: 0.1
+					},
+					{
+						label: 'ARM64 Projected',
+						data: armProjectedData,
+						borderColor: 'rgba(79, 70, 229, 0.5)',
+						backgroundColor: 'rgba(79, 70, 229, 0.1)',
+						borderDash: [5, 5],
+						pointStyle: 'circle',
+						fill: true
+					}
+				]
+			},
+			options: {
+				responsive: true,
+				maintainAspectRatio: false,
+				scales: {
+					x: {
+						type: 'linear',
+						grid: { color: '#e5e7eb' },
+						ticks: {
+							color: '#57534e',
+							callback: function (value) { if (Number.isInteger(value)) return value.toString(); return ''; }
+						},
+						title: { display: true, text: 'Year', color: '#57534e' }
+					},
+					y: {
+						type: 'logarithmic',
+						grid: { color: '#e5e7eb' },
+						ticks: { color: '#57534e' },
+						title: { display: true, text: 'DTB Count (Log)', color: '#57534e' }
+					}
+				},
+				plugins: {
+					legend: { labels: { color: '#57534e' } },
+					tooltip: {
+						callbacks: {
+							label: function (context) { return `${context.dataset.label}: ${context.parsed.y}`; },
+							title: function (context) { return `Year: ${Math.floor(context[0].parsed.x)}`; }
+						}
+					}
+				}
+			},
+			plugins: [alignmentLinePlugin]
+		});
+
+		// --- Zoomed Chart (2022-2028) ---
+		new Chart(document.getElementById('zoomedProjectionChart'), {
+			type: 'line',
+			data: {
+				datasets: [
+					{
+						label: 'RISC-V Actual',
+						data: riscvDatasetData,
+						borderColor: '#ea580c',
+						backgroundColor: '#ea580c',
+						pointStyle: pointStyles,
+						pointRadius: pointRadii,
+						pointBackgroundColor: pointColors,
+						pointBorderColor: pointBorderColors,
+						tension: 0.1
+					},
+					{
+						label: 'ARM64 Projected',
+						data: armProjectedData,
+						borderColor: 'rgba(79, 70, 229, 0.5)',
+						backgroundColor: 'rgba(79, 70, 229, 0.1)',
+						borderDash: [5, 5],
+						pointStyle: 'circle',
+						fill: true
+					}
+				]
+			},
+			options: {
+				responsive: true,
+				maintainAspectRatio: false,
+				scales: {
+					x: {
+						type: 'linear',
+						min: 2022,
+						max: 2028,
+						grid: { color: '#e5e7eb' },
+						ticks: {
+							color: '#57534e',
+							callback: function (value) { if (Number.isInteger(value)) return value.toString(); return ''; }
+						},
+						title: { display: true, text: 'Year', color: '#57534e' }
+					},
+					y: {
+						grid: { color: '#e5e7eb' },
+						ticks: { color: '#57534e' },
+						title: { display: true, text: 'DTB Count', color: '#57534e' }
+					}
+				},
+				plugins: {
+					legend: { labels: { color: '#57534e' } },
+					tooltip: {
+						callbacks: {
+							label: function (context) { return `${context.dataset.label}: ${context.parsed.y}`; },
+							title: function (context) { return `Year: ${Math.floor(context[0].parsed.x)}`; }
 						}
 					}
 				}
