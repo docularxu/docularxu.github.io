@@ -590,6 +590,20 @@
 			/* Hide detailed list on mobile by default to save space, or keep simpler */
 			/* For now, just ensuring it looks usable */
 		}
+
+		.works-three-column {
+			display: grid;
+			grid-template-columns: 1fr 1fr 1fr;
+			gap: 20px;
+			margin-bottom: 20px;
+		}
+
+		@media (max-width: 900px) {
+			.works-three-column {
+				grid-template-columns: 1fr;
+				gap: 20px;
+			}
+		}
 	</style>
 </head>
 
@@ -717,6 +731,61 @@
 						</div>
 					</div>
 				</div>
+			</div>
+
+			<h2 id="ecosystem">RISC-V Ecosystem Intelligence</h2>
+			<p class="note">Interactive dashboards and analysis tools tracking the evolution of RISC-V
+				support in
+				the Linux Kernel.</p>
+
+			<div class="works-three-column">
+				<!-- Card 1 -->
+				<a href="riscv-arm64-targets/index.html" target="_blank" rel="noopener noreferrer"
+					style="text-decoration: none;">
+					<div class="blog-card" style="height: 100%;">
+						<div style="font-size: 24px; margin-bottom: 10px;">📊</div>
+						<div class="blog-card-title" style="margin-bottom: 8px;">ARM64 & RISC-V
+							Targets</div>
+						<div class="blog-card-desc">Tracking the growth of supported boards
+							(DTBs) over time, comparing
+							the trajectory of RISC-V against ARM64.</div>
+						<div class="blog-card-badge"
+							style="display: inline-block; margin-top: 5px;">Board Support
+							Growth</div>
+					</div>
+				</a>
+
+				<!-- Card 2 -->
+				<a href="rva23/rva23-kernel-support-evolution.html" target="_blank"
+					rel="noopener noreferrer" style="text-decoration: none;">
+					<div class="blog-card" style="height: 100%;">
+						<div style="font-size: 24px; margin-bottom: 10px;">📈</div>
+						<div class="blog-card-title" style="margin-bottom: 8px;">RVA23 Kernel
+							Evolution</div>
+						<div class="blog-card-desc">Track how RVA23 mandatory extension support
+							has evolved across
+							multiple stable Linux Kernel versions.</div>
+						<div class="blog-card-badge"
+							style="display: inline-block; margin-top: 5px;">Extension
+							History</div>
+					</div>
+				</a>
+
+				<!-- Card 3 -->
+				<a href="rva23/linux-kernel-coverage.html" target="_blank" rel="noopener noreferrer"
+					style="text-decoration: none;">
+					<div class="blog-card" style="height: 100%;">
+						<div style="font-size: 24px; margin-bottom: 10px;">🛠️</div>
+						<div class="blog-card-title" style="margin-bottom: 8px;">RVA23 Profile
+							Analysis</div>
+						<div class="blog-card-desc">Breaks down the RVA23 Profile (User &
+							Supervisor), checking
+							support status against Kernel Devicetree.</div>
+						<div class="blog-card-badge"
+							style="display: inline-block; margin-top: 5px;">Profile
+							Coverage</div>
+					</div>
+				</a>
 			</div>
 
 			<h2 id="blog">Blog Posts & Publications</h2>
