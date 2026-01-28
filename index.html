@@ -604,10 +604,147 @@
 				gap: 20px;
 			}
 		}
+
+		/* Floating Navigation */
+		.floating-nav {
+			position: fixed;
+			right: 20px;
+			top: 50%;
+			transform: translateY(-50%);
+			background: rgba(255, 255, 255, 0.95);
+			border: 1px solid #cfe9e6;
+			border-radius: 10px;
+			padding: 12px 8px;
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+			z-index: 1000;
+			max-height: 80vh;
+			overflow-y: auto;
+		}
+
+		.floating-nav ul {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+		}
+
+		.floating-nav li {
+			margin: 0;
+		}
+
+		.floating-nav a {
+			display: block;
+			padding: 8px 16px;
+			font-size: 16px;
+			color: #555;
+			text-decoration: none;
+			border-radius: 4px;
+			transition: background-color 0.2s, color 0.2s;
+			white-space: nowrap;
+		}
+
+		.floating-nav a:hover {
+			background-color: #eef7f6;
+			color: #0a7b6c;
+			text-decoration: none;
+		}
+
+		.floating-nav a.active {
+			background-color: #0a7b6c;
+			color: white;
+		}
+
+		body.dark .floating-nav {
+			background: rgba(16, 32, 30, 0.95);
+			border-color: #275e57;
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+		}
+
+		body.dark .floating-nav a {
+			color: #a9c6c2;
+		}
+
+		body.dark .floating-nav a:hover {
+			background-color: #12302c;
+			color: #7ae0d2;
+		}
+
+		body.dark .floating-nav a.active {
+			background-color: #7ae0d2;
+			color: #10201e;
+		}
+
+		.floating-nav-social {
+			display: flex;
+			justify-content: center;
+			gap: 12px;
+			margin-top: 10px;
+			padding-top: 10px;
+			border-top: 1px solid #cfe9e6;
+		}
+
+		.floating-nav-social a {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 40px;
+			height: 40px;
+			color: #555;
+			border-radius: 6px;
+			transition: background-color 0.2s, color 0.2s;
+		}
+
+		.floating-nav-social a:hover {
+			background-color: #eef7f6;
+			color: #0a7b6c;
+		}
+
+		body.dark .floating-nav-social {
+			border-top-color: #275e57;
+		}
+
+		body.dark .floating-nav-social a {
+			color: #a9c6c2;
+		}
+
+		body.dark .floating-nav-social a:hover {
+			background-color: #12302c;
+			color: #7ae0d2;
+		}
+
+		@media (max-width: 1200px) {
+			.floating-nav {
+				display: none;
+			}
+		}
 	</style>
 </head>
 
 <body>
+
+	<!-- Floating Navigation -->
+	<nav class="floating-nav" id="floatingNav">
+		<ul>
+			<li><a href="#about">About</a></li>
+			<li><a href="#upstreaming">Kernel Upstreaming</a></li>
+			<li><a href="#works">RVV Benchmarks</a></li>
+			<li><a href="#ecosystem">Ecosystem Intel</a></li>
+			<li><a href="#blog">Blog</a></li>
+			<li><a href="#acceleration">Arm SVE</a></li>
+			<li><a href="#experience">Experience</a></li>
+			<li><a href="#contact">Contact</a></li>
+			<li><a href="#badges">Badges</a></li>
+			<li><a href="#conferences">Conferences</a></li>
+			<li><a href="#videos">Videos</a></li>
+		</ul>
+		<div class="floating-nav-social">
+			<a href="https://www.linkedin.com/in/docularxu/" target="_blank" rel="noopener noreferrer" title="LinkedIn">
+				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+			</a>
+			<a href="https://github.com/docularxu" target="_blank" rel="noopener noreferrer" title="GitHub">
+				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+			</a>
+		</div>
+	</nav>
 
 	<header>
 		<button class="toggle" id="themeToggle" aria-label="Toggle dark mode" style="z-index: 102;">🌓</button>
@@ -662,7 +799,59 @@
 				similar events when I have something worth sharing.
 			</p>
 
-			<h2 id="works">Recent Works</h2>
+			<h2 id="upstreaming">Recent Works - Linux Kernel Upstreaming</h2>
+			<p class="note">My public upstream work since joining RISCstar. (The rest stays with clients.)</p>
+
+			<h3>SpacemiT K3 SoC Support</h3>
+			<ul class="works-list">
+				<li><a href="https://lore.kernel.org/r/20260115-k3-basic-dt-v5-0-6990ac9f4308@riscstar.com"
+						target="_blank" rel="noopener noreferrer">Basic device tree enablement
+						(15 Jan 2026, applied)</a></li>
+				<li><a href="https://lore.kernel.org/r/20260120-k3-reset-v3-0-effe87f4bdbe@riscstar.com"
+						target="_blank" rel="noopener noreferrer">Reset driver v3
+						(20 Jan 2026, under review)</a></li>
+			</ul>
+
+			<h3>RVA23 Contributions</h3>
+			<ul class="works-list">
+				<li><a href="https://lore.kernel.org/all/20260113-prism-unvaried-abf3b4679e3a@spud/"
+						target="_blank" rel="noopener noreferrer">RVA23U64/RVA23S64 mandatory
+						extensions support, patch 6-9 (13 Jan 2026, applied to riscv-dt-for-next)</a></li>
+				<li><a href="https://lore.kernel.org/r/20260115-adding-b-dtsi-v2-0-254dd61cf947@riscstar.com"
+						target="_blank" rel="noopener noreferrer">riscv: dts: Add "b" ISA
+						extension to existing devicetrees (20 Jan 2026, accepted)</a></li>
+				<li><a href="https://lore.kernel.org/lkml/20260125-supm-ext-id-v2-0-1e3b9714c860@riscstar.com/"
+						target="_blank" rel="noopener noreferrer">riscv: cpufeature: Add Supm
+						extension id and validation (25 Jan 2026, under review)</a></li>
+			</ul>
+			<p class="note" style="margin-top: 15px; margin-bottom: 8px;"><strong>Fixes found during RVA23 work:</strong></p>
+			<ul class="works-list">
+				<li><a href="https://lore.kernel.org/r/20251223-zk-missing-zknh-v1-1-b627c990ee1a@riscstar.com"
+						target="_blank" rel="noopener noreferrer">riscv/cpufeature.c: Zk missing
+						Zknh (6 Jan 2026, applied)</a></li>
+				<li><a href="https://lore.kernel.org/lkml/20251225-h-description-v2-1-b0c66080c704@riscstar.com/"
+						target="_blank" rel="noopener noreferrer">dt-bindings: riscv: update
+						ratified version of h, svinval, svnapot, svpbmt (10 Jan 2026, applied)</a></li>
+			</ul>
+
+			<h3>SpacemiT K1 SoC Support</h3>
+			<ul class="works-list">
+				<li><a href="https://lore.kernel.org/all/20250822-working_dma_0701_v2-v5-0-f5c0eda734cc@riscstar.com/#r"
+						target="_blank" rel="noopener noreferrer">PDMA: Working DMA driver for
+						SpacemiT K1 (22 Aug 2025, merged into v6.18)</a></li>
+				<li><a href="https://lore.kernel.org/all/20250707222910-GYC408198@gentoo/#r"
+						target="_blank" rel="noopener noreferrer">PWM: PWM support for SpacemiT
+						K1 SoC (7 Jul 2025, merged into v6.17)</a></li>
+			</ul>
+
+			<h3>StarFive JH7110 SoC Support</h3>
+			<ul class="works-list">
+				<li><a href="https://lore.kernel.org/all/20241028082553.1989797-1-guodong@riscstar.com/"
+						target="_blank" rel="noopener noreferrer">Add DeepComputing FML13V01
+						board dts (28 Oct 2024, merged into v6.12)</a></li>
+			</ul>
+
+			<h2 id="works">Recent Works - RVV Performance Benchmarks</h2>
 			<p class="note">Benchmark analyses and performance reports for RISC-V Vector Extension (RVV).
 			</p>
 
@@ -846,44 +1035,18 @@
 				</a>
 			</div>
 
-
-			<h2>Linux Kernel Upstreaming</h2>
-			<p class="note">With over 20 years of experience in Linux kernel development, I have
-				consistently contributed to mainline upstream work throughout my career. During my
-				tenure at Linaro, I led upstream efforts for various client platforms. Now at RISCstar,
-				Linux kernel upstream contributions remain a core part of my work and my ongoing
-				commitment to the open source community.</p>
-
-			<h3>StarFive JH7110 SoC Support</h3>
-			<ul class="works-list">
-				<li><a href="https://lore.kernel.org/all/20241028082553.1989797-1-guodong@riscstar.com/"
-						target="_blank" rel="noopener noreferrer">Add DeepComputing FML13V01
-						board dts (28 Oct 2024, merged into v6.12)</a></li>
-			</ul>
-
-			<h3>SpacemiT K1 SoC Support</h3>
-			<ul class="works-list">
-				<li><a href="https://lore.kernel.org/all/20250822-working_dma_0701_v2-v5-0-f5c0eda734cc@riscstar.com/#r"
-						target="_blank" rel="noopener noreferrer">PDMA: Working DMA driver for
-						SpacemiT K1 (22 Aug 2025, merged into v6.18)</a></li>
-				<li><a href="https://lore.kernel.org/all/20250707222910-GYC408198@gentoo/#r"
-						target="_blank" rel="noopener noreferrer">PWM: PWM support for SpacemiT
-						K1 SoC (7 Jul 2025, merged into v6.17)</a></li>
-			</ul>
-
-			<h2>Computing Acceleration Contributions</h2>
+			<h2 id="acceleration">Earlier Work: Arm SVE Libraries</h2>
 			<p>I have extensive experience accelerating computing libraries using vector instructions
 				(including Arm SVE/SME and RISC-V Vector Extension). The contributions listed here
 				represent only my open source work; significant additional contributions to commercial
 				software libraries are not shown.</p>
 
 			<h3>BLIS (BLAS-like Library Instantiation Software)</h3>
-			<p class="note">Added two kernels (dgemm and dpackm) that employ ARM SVE vector extensions,
-				released in BLIS 0.8.0 on November 19, 2020.</p>
+			<p class="note">Added two kernels (dgemm and dpackm) using ARM SVE.</p>
 			<ul class="works-list">
 				<li><a href="https://github.com/flame/blis/blob/master/docs/ReleaseNotes.md#changes-in-080"
 						target="_blank" rel="noopener noreferrer">BLIS 0.8.0 Release Notes - ARM
-						SVE kernels contribution</a></li>
+						SVE kernels contribution (19 Nov 2020)</a></li>
 			</ul>
 
 			<h3>ISA-L (Intel Intelligent Storage Acceleration Library)</h3>
@@ -895,7 +1058,7 @@
 						(28 Dec 2021)</a></li>
 			</ul>
 
-			<h2>Education & Experience</h2>
+			<h2 id="experience">Education & Experience</h2>
 			<h3>Current</h3>
 			<p><strong>Director of China Operations, RISCstar</strong> — 2024.09 – Present
 				(Beijing/Remote)<br>
@@ -965,7 +1128,7 @@
 					rel="noopener noreferrer">linkedin.com/in/docularxu</a>
 			</p>
 
-			<h2>Badges & Certifications</h2>
+			<h2 id="badges">Badges & Certifications</h2>
 			<div style="display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-start;">
 				<div data-iframe-width="150" data-iframe-height="270"
 					data-share-badge-id="edf559a7-ea86-4a47-b588-1cef37cce759"
@@ -997,7 +1160,7 @@
 			</div>
 			<script type="text/javascript" async src="//cdn.credly.com/assets/utilities/embed.js"></script>
 
-			<h2>Conference Speaking Engagements</h2>
+			<h2 id="conferences">Conference Speaking Engagements</h2>
 
 			<!-- English Visual Timeline Chart -->
 			<div class="conference-timeline-chart" style="margin-top: 50px;">
@@ -1308,7 +1471,7 @@
 					Code to RISC-V〉：加速 RISC-V 开发者生态的课程实践》</li>
 			</ul>
 
-			<h2>Other Videos & References</h2>
+			<h2 id="videos">Other Videos & References</h2>
 			<p class="note">Additional talks, interviews, and resources.</p>
 
 			<div
@@ -1426,6 +1589,34 @@
 						setLabel();
 					});
 				}
+			})();
+
+			// Floating nav scroll highlighting
+			(function () {
+				var sections = ['about', 'upstreaming', 'works', 'ecosystem', 'blog', 'acceleration', 'experience', 'contact', 'badges', 'conferences', 'videos'];
+				var navLinks = document.querySelectorAll('.floating-nav a');
+
+				function highlightNav() {
+					var scrollPos = window.scrollY + 150;
+					var current = '';
+
+					sections.forEach(function (id) {
+						var section = document.getElementById(id);
+						if (section && section.offsetTop <= scrollPos) {
+							current = id;
+						}
+					});
+
+					navLinks.forEach(function (link) {
+						link.classList.remove('active');
+						if (link.getAttribute('href') === '#' + current) {
+							link.classList.add('active');
+						}
+					});
+				}
+
+				window.addEventListener('scroll', highlightNav);
+				highlightNav();
 			})();
 		</script>
 
