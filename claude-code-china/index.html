@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How I Got Claude Code Working in China - Guodong Xu</title>
+    <meta name="description" content="Fix Claude Code 403 errors in China. Step-by-step guide for macOS Terminal, VS Code Terminal, and VS Code Claude Code Extension.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background-color: #f6f8fa;
+            color: #1a1a1a;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 820px;
+            margin: 0 auto;
+            padding: 2em 1.5em;
+            background: #fff;
+            min-height: 100vh;
+        }
+        h1 { font-size: 2em; margin-bottom: 0.2em; }
+        h2 { margin-top: 2em; border-bottom: 1px solid #e1e4e8; padding-bottom: 0.3em; }
+        h3 { margin-top: 1.5em; }
+        pre {
+            background: #f6f8fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 1em;
+            overflow-x: auto;
+            font-size: 0.9em;
+        }
+        code {
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.9em;
+        }
+        p code, li code {
+            background: #f0f0f0;
+            padding: 0.15em 0.4em;
+            border-radius: 3px;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1em 0;
+        }
+        th, td {
+            border: 1px solid #e1e4e8;
+            padding: 0.6em 1em;
+            text-align: left;
+        }
+        th { background: #f6f8fa; }
+        img {
+            max-width: 100%;
+            border-radius: 6px;
+            margin: 1em 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+        }
+        .date { color: #666; font-style: italic; }
+        a { color: #0366d6; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .back-link { margin-bottom: 1.5em; font-size: 0.9em; }
+        hr { border: none; border-top: 1px solid #e1e4e8; margin: 2em 0; }
+        .footer { color: #666; font-style: italic; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="back-link"><a href="/">&larr; Back to homepage</a></div>
+
+    <h1>How I Got Claude Code Working in China - What Works and What Doesn't</h1>
+    <p class="date">February 12, 2026</p>
+
+    <p>If you're a developer in China trying to use Claude Code, you've probably hit the 403 wall. This guide covers how to get it working in three scenarios:</p>
+    <ol>
+        <li><strong>macOS Terminal (shell)</strong> - using <code>claude</code> CLI directly in your terminal</li>
+        <li><strong>VS Code Terminal</strong> - using <code>claude</code> CLI inside VS Code's integrated terminal</li>
+        <li><strong>VS Code Claude Code Extension</strong> - using the Claude Code chat panel (installed as a VS Code extension)</li>
+    </ol>
+    <p>All three scenarios share the same root cause and solution, but each has its own gotchas.</p>
+
+    <h2>The Error</h2>
+    <p>You'll see one of these:</p>
+    <pre><code>OAuth error: Failed to fetch user roles: Request failed with status code 403</code></pre>
+    <pre><code>Unable to connect to Anthropic services
+Failed to connect to api.anthropic.com: ERR_BAD_REQUEST
+Note: Claude Code might not be available in your country.</code></pre>
+    <p>I spent a morning fighting this. Here's everything I learned so you don't have to.</p>
+
+    <h2>The Problem</h2>
+    <p>Anthropic blocks API access from Chinese IPs. This affects <strong>everything</strong> - OAuth login, API calls, the CLI, and VS Code extensions. Even with a paid Claude Max subscription, you'll get 403'd if your traffic originates from China.</p>
+    <p>A quick test:</p>
+    <pre><code>curl -I https://api.anthropic.com</code></pre>
+    <p>If you see <code>HTTP/2 403</code> - you're blocked. If you see a timeout - DNS or firewall issue.</p>
+
+    <h2>What Doesn't Work</h2>
+
+    <h3>❌ Just logging in harder</h3>
+    <p>The auth code exchange succeeds (you get a code from the browser), but the <strong>roles endpoint</strong> returns 403. Re-running <code>/login</code>, clearing credentials, switching browsers - none of it helps. The block is IP-based, not account-based.</p>
+
+    <h3>❌ VS Code <code>http.proxy</code> setting alone</h3>
+    <p>Adding this to VS Code settings:</p>
+    <pre><code>{
+  "http.proxy": "http://127.0.0.1:7890"
+}</code></pre>
+    <p>Did <strong>not</strong> fix the Claude extension for me. The extension may not respect VS Code's proxy settings.</p>
+
+    <h3>❌ Launching VS Code from Dock/Finder</h3>
+    <p>macOS GUI apps launched from the Dock or Finder do <strong>not</strong> inherit shell environment variables. So even if you have <code>HTTPS_PROXY</code> set in your <code>~/.zshrc</code>, VS Code won't see it when launched the normal way.</p>
+
+    <h2>What Works</h2>
+
+    <h3>✅ Step 1: Set Up a Proxy</h3>
+    <p>I use Clash with a proxy server outside China. Any VPN/proxy tool works (V2Ray, Shadowsocks, etc.) - you just need an HTTP proxy endpoint.</p>
+    <p>You need to know your proxy's <strong>HTTP port number</strong>. Where to find it:</p>
+    <ul>
+        <li><strong>Clash</strong>: Settings → HTTP Port (default <code>7890</code>)</li>
+        <li><strong>V2Ray</strong>: check your config file's <code>inbounds</code> section for the HTTP proxy port</li>
+        <li><strong>Shadowsocks</strong>: usually <code>1080</code> (SOCKS) or check your client's HTTP proxy setting</li>
+    </ul>
+    <p>My Clash runs locally on port <code>7890</code> (yours may differ - use your own port throughout this guide). Verify it works:</p>
+    <pre><code>curl -I --proxy http://127.0.0.1:7890 https://api.anthropic.com</code></pre>
+    <p>You should see <code>HTTP/1.1 200 Connection established</code> followed by a non-403 response (404 is fine - it means you reached Anthropic's servers).</p>
+
+    <h3>✅ Step 2: Set HTTPS_PROXY in Your Shell</h3>
+    <p><strong>macOS (zsh):</strong></p>
+    <pre><code>echo 'export HTTPS_PROXY="http://127.0.0.1:7890"' >> ~/.zshrc
+source ~/.zshrc</code></pre>
+    <p><strong>Linux (bash):</strong></p>
+    <pre><code>echo 'export HTTPS_PROXY="http://127.0.0.1:7890"' >> ~/.bashrc
+source ~/.bashrc</code></pre>
+
+    <h3>✅ Scenario 1: macOS Terminal (Claude CLI)</h3>
+    <p>With <code>HTTPS_PROXY</code> set, login works directly:</p>
+    <pre><code>claude /login</code></pre>
+    <p>The OAuth flow completes successfully - browser opens, you get the auth code, paste it back, and the roles endpoint no longer 403s because your traffic is routed through the proxy.</p>
+    <p>If you had a previous broken login, clear the state first:</p>
+    <pre><code>claude /logout
+claude /login</code></pre>
+    <p>After login, <code>claude</code> works normally in any terminal session (as long as <code>HTTPS_PROXY</code> is set).</p>
+
+    <h3>✅ Scenario 2: VS Code Terminal</h3>
+    <p>If you launch VS Code <strong>from the terminal</strong>, its integrated terminal inherits your shell's <code>HTTPS_PROXY</code>. So <code>claude</code> CLI works inside VS Code's terminal too.</p>
+    <p>The key: <strong>you must launch VS Code from the terminal, not from Dock/Finder</strong> (see "What Doesn't Work" above).</p>
+    <p>On macOS, if <code>code</code> is mapped to another editor (mine was mapped to Cursor), use:</p>
+    <pre><code>open -a "Visual Studio Code" .</code></pre>
+    <p>You can make an alias for convenience:</p>
+    <pre><code>echo 'alias vscode="open -a \"Visual Studio Code\""' >> ~/.zshrc
+source ~/.zshrc
+# Then just:
+vscode .</code></pre>
+
+    <h3>✅ Scenario 3: VS Code Claude Code Extension</h3>
+    <p>The Claude Code extension (the chat panel inside VS Code) also needs <code>HTTPS_PROXY</code> to reach Anthropic's servers. The same rule applies: <strong>launch VS Code from the terminal</strong> so the extension process inherits the proxy variable.</p>
+    <p>Once VS Code is launched this way, open the Claude Code chat panel - it should connect without 403.</p>
+
+    <h3>✅ Bonus: VS Code Remote SSH</h3>
+    <p>If you SSH into a remote machine (e.g., a Linux VM) from VS Code, the Claude extension runs on the <strong>remote</strong> side. So the remote machine also needs <code>HTTPS_PROXY</code> set.</p>
+    <p>My setup: MacBook Pro running an Ubuntu VM via Parallels. The Mac's bridge interface is <code>192.168.2.1</code>, so on the VM:</p>
+    <pre><code>echo 'export HTTPS_PROXY="http://192.168.2.1:7890"' >> ~/.bashrc
+source ~/.bashrc</code></pre>
+    <p>Make sure your proxy allows LAN connections (in Clash, enable <strong>Allow LAN</strong>).</p>
+    <p>Then launch VS Code from the terminal on the Mac side, open a Remote SSH session, and the Claude extension works on the remote machine too.</p>
+
+    <h2>TL;DR</h2>
+    <table>
+        <thead><tr><th>Step</th><th>What to do</th></tr></thead>
+        <tbody>
+            <tr><td>1</td><td>Run a proxy/VPN (Clash, V2Ray, etc.)</td></tr>
+            <tr><td>2</td><td>Set <code>HTTPS_PROXY=http://127.0.0.1:&lt;port&gt;</code> in your shell rc file</td></tr>
+            <tr><td>3</td><td><code>claude /logout</code> then <code>claude /login</code> for CLI</td></tr>
+            <tr><td>4</td><td><strong>Launch VS Code from terminal</strong> (not Dock) for the extension</td></tr>
+            <tr><td>5</td><td>Set <code>HTTPS_PROXY</code> on remote machines too, pointing to your proxy's LAN IP</td></tr>
+        </tbody>
+    </table>
+    <p>The fundamental issue is simple: Anthropic blocks Chinese IPs, and macOS GUI apps don't inherit shell env vars. Once you understand these two facts, everything falls into place.</p>
+
+    <h2>What It Looks Like When Everything Works</h2>
+    <img src="https://raw.githubusercontent.com/docularxu/docularxu.github.io/main/assets/images/claude-code-vscode-working.jpg" alt="Claude Code working in VS Code">
+    <p><em>VS Code with Claude Code extension running - the chat panel on the right, <code>claude</code> CLI in the terminal, and a Remote SSH session to a Linux VM. All working through the proxy.</em></p>
+
+    <hr>
+    <p class="footer">Setup: MacBook Pro + Ubuntu VM (Parallels) in China, Claude Max subscription, Clash proxy, Claude Code v2.1.39</p>
+    <p class="footer">By <a href="/">Guodong Xu</a></p>
+</div>
+</body>
+</html>
