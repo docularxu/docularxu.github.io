@@ -6,7 +6,7 @@
     <title>RVA23 Profile Linux Kernel Coverage Analysis</title>
     <!-- Chosen Palette: Warm Stone & Earth Tones (Stone, Amber, Emerald, Slate) -->
     <!-- Application Structure Plan: 
-         1. Header & Context: Introduction to RVA23 profiles and the specific analysis scope (Linux 7.0-rc1 DT).
+         1. Header & Context: Introduction to RVA23 profiles and the specific analysis scope (Linux 6.18 DT).
          2. High-Level Dashboard: KPI Cards for quick stats and Chart.js visualizations for Profile Composition and Adoption Rates.
          3. Interactive Data Explorer: A powerful filterable table allowing deep dives into specific extensions, filtering by profile, status, and implementation support.
          4. Gap Analysis: A focused section highlighting 'At Risk' items—mandatory extensions missing in implementations.
@@ -15,7 +15,7 @@
     -->
     <!-- Visualization & Content Choices:
          1. Profile Composition (Doughnut Chart): Goal -> Inform. Shows the breakdown of Mandatory vs. Optional extensions. Justification -> Quickly visualizes the weight of the profile requirements.
-         2. Implementation Coverage (Bar Chart): Goal -> Compare. Tracks Linux 7.0-rc1 coverage of Mandatory extensions. Justification -> Assessing readiness.
+         2. Implementation Coverage (Bar Chart): Goal -> Compare. Tracks Linux 6.18 coverage of Mandatory extensions. Justification -> Assessing readiness.
          3. Interactive Explorer (Table): Goal -> Organize & Search. Main interaction point. Allows text search and multifaceted filtering.
          4. Gap Analysis (Cards): Goal -> Inform/Alert. Highlights missing mandatory extensions.
          Confirming NO SVG graphics used. NO Mermaid JS used.
@@ -84,10 +84,11 @@
         <div class="max-w-[1920px] mx-auto py-12 px-4 sm:px-6 lg:px-8">
             <h1 class="text-3xl font-bold text-stone-900 mb-4">RISC-V RVA23 Profile Analysis</h1>
             <p class="text-lg text-stone-600 max-w-3xl">
-                This interactive tool breaks down the <strong>RVA23 Profile</strong> (User-mode and Supervisor-mode), tracking the status of standard extensions and their inclusion in the <strong>Linux Kernel v7.0-rc1 Device Tree</strong>. Use the dashboard to gauge compliance and the explorer to drill down into specific instruction set extensions.
+                This interactive tool breaks down the <strong>RVA23 Profile</strong> (User-mode and Supervisor-mode), tracking the status of standard extensions and their inclusion in the <strong>Linux Kernel v6.18 Device Tree</strong> (checked against <strong>v6.19-rc1</strong>: no RVA23 DT binding deltas). Use the dashboard to gauge compliance and the explorer to drill down into specific instruction set extensions.
             </p>
             <div class="mt-4 text-sm text-stone-500 space-y-1">
-                <p><strong>Note 1:</strong> Linux kernel v7.0-rc1 supports if the extension string exists in file <a href="https://github.com/torvalds/linux/blob/v7.0-rc1/Documentation/devicetree/bindings/riscv/extensions.yaml" class="text-amber-600 hover:underline" target="_blank">extensions.yaml</a> and <a href="https://github.com/torvalds/linux/blob/v7.0-rc1/Documentation/devicetree/bindings/riscv/cpus.yaml" class="text-amber-600 hover:underline" target="_blank">cpus.yaml</a>.</p>
+                <p><strong>Note 1:</strong> Linux kernel v6.18 supports if the extension string exists in file <a href="https://github.com/torvalds/linux/blob/v6.18/Documentation/devicetree/bindings/riscv/extensions.yaml" class="text-amber-600 hover:underline" target="_blank">extensions.yaml</a> and <a href="https://github.com/torvalds/linux/blob/v6.18/Documentation/devicetree/bindings/riscv/cpus.yaml" class="text-amber-600 hover:underline" target="_blank">cpus.yaml</a>.</p>
+                <p><strong>Note 1b:</strong> Comparing <a href="https://github.com/torvalds/linux/blob/v6.19-rc1/Documentation/devicetree/bindings/riscv/extensions.yaml" class="text-amber-600 hover:underline" target="_blank">v6.19-rc1 extensions.yaml</a> and <a href="https://github.com/torvalds/linux/blob/v6.19-rc1/Documentation/devicetree/bindings/riscv/cpus.yaml" class="text-amber-600 hover:underline" target="_blank">v6.19-rc1 cpus.yaml</a> shows no additional RVA23-relevant tokens beyond v6.18 in these DT bindings.</p>
                 <p><strong>Note 2:</strong> QEMU rva23s64 is dumped from: <code>qemu-system-riscv64</code> version <span class="font-semibold text-stone-700">10.1.92</span> (<span class="text-stone-600">v10.2.0-rc2-7-g1053bb627c</span>), launched with <code>-machine virt,acpi=off -cpu rva23s64</code>.</p>
             </div>
         </div>
@@ -118,7 +119,7 @@
                     <div class="mt-2 text-3xl font-bold text-emerald-600" id="newExtensions">0</div>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
-                    <div class="text-sm font-medium text-stone-500 uppercase">Linux v7.0-rc1 Coverage</div>
+                    <div class="text-sm font-medium text-stone-500 uppercase">Linux v6.18 Coverage</div>
                     <div class="mt-2 flex items-baseline">
                         <span class="text-3xl font-bold text-sky-600" id="linuxCoverage">0%</span>
                         <span class="ml-2 text-sm text-stone-400" id="linuxCoverageDetail">of Mandatory</span>
@@ -143,13 +144,13 @@
                             <canvas id="coverageChart"></canvas>
                         </div>
                     </div>
-                    <p class="text-sm text-stone-500 mt-4 italic text-center">Linux v7.0-rc1 Device Tree coverage for Mandatory extensions.</p>
+                    <p class="text-sm text-stone-500 mt-4 italic text-center">Linux v6.18 Device Tree coverage for Mandatory extensions.</p>
                 </div>
 
                 <!-- Linux Gaps -->
                 <div class="bg-white rounded-lg shadow-sm border border-stone-200 overflow-hidden flex flex-col h-full">
                     <div class="bg-sky-50 px-6 py-4 border-b border-sky-100">
-                        <h3 class="font-bold text-sky-800">Missing in Linux v7.0-rc1 DT</h3>
+                        <h3 class="font-bold text-sky-800">Missing in Linux v6.18 DT</h3>
                         <p class="text-xs text-sky-600 mt-1">Mandatory extensions not explicitly found in standard DT bindings.</p>
                     </div>
                     <div class="p-6 flex-grow">
@@ -224,7 +225,7 @@
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider cursor-pointer hover:text-stone-700" onclick="sortData('commit_id')">Commit ID ↕</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider cursor-pointer hover:text-stone-700" onclick="sortData('lore_url')">Lore ↕</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider cursor-pointer hover:text-stone-700" onclick="sortData('merged_in')">Merged In ↕</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider cursor-pointer hover:text-stone-700" onclick="sortData('linux')">Linux v7.0-rc1 ↕</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider cursor-pointer hover:text-stone-700" onclick="sortData('linux')">Linux v6.18 ↕</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider cursor-pointer hover:text-stone-700 whitespace-nowrap w-64" onclick="sortData('qemu')">QEMU rva23s64 ↕</th>
                             </tr>
                         </thead>
@@ -261,7 +262,7 @@
                         <section class="bg-stone-50 border border-stone-200 rounded-lg p-4 space-y-3">
                             <div>
                                 <p class="text-xs font-semibold text-stone-500 uppercase tracking-wide">Kernel Config</p>
-                                <a href="https://github.com/torvalds/linux/blob/v7.0-rc1/arch/riscv/Kconfig" class="text-amber-600 hover:underline text-sm font-medium" target="_blank" rel="noopener">arch/riscv/Kconfig</a>
+                                <a href="https://github.com/torvalds/linux/blob/v6.18/arch/riscv/Kconfig" class="text-amber-600 hover:underline text-sm font-medium" target="_blank" rel="noopener">arch/riscv/Kconfig</a>
                             </div>
                             <pre class="bg-stone-900 text-stone-100 text-xs rounded-lg p-4 overflow-x-auto leading-5">
 config RISCV_ISA_SUPM
@@ -280,7 +281,7 @@ config RISCV_ISA_SUPM
                         <section class="bg-stone-50 border border-stone-200 rounded-lg p-4 space-y-3">
                             <div>
                                 <p class="text-xs font-semibold text-stone-500 uppercase tracking-wide">HWCAP Alias</p>
-                                <a href="https://github.com/torvalds/linux/blob/v7.0-rc1/arch/riscv/include/asm/hwcap.h" class="text-amber-600 hover:underline text-sm font-medium" target="_blank" rel="noopener">arch/riscv/include/asm/hwcap.h</a>
+                                <a href="https://github.com/torvalds/linux/blob/v6.18/arch/riscv/include/asm/hwcap.h" class="text-amber-600 hover:underline text-sm font-medium" target="_blank" rel="noopener">arch/riscv/include/asm/hwcap.h</a>
                             </div>
                             <pre class="bg-stone-900 text-stone-100 text-xs rounded-lg p-4 overflow-x-auto leading-5">
 #ifdef CONFIG_RISCV_M_MODE
@@ -310,7 +311,7 @@ config RISCV_ISA_SUPM
                         <section class="bg-stone-50 border border-stone-200 rounded-lg p-4 space-y-3">
                             <div>
                                 <p class="text-xs font-semibold text-stone-500 uppercase tracking-wide">Device Tree Binding</p>
-                                <a href="https://github.com/torvalds/linux/blob/v7.0-rc1/Documentation/devicetree/bindings/riscv/extensions.yaml" class="text-amber-600 hover:underline text-sm font-medium" target="_blank" rel="noopener">Documentation/devicetree/bindings/riscv/extensions.yaml</a>
+                                <a href="https://github.com/torvalds/linux/blob/v6.18/Documentation/devicetree/bindings/riscv/extensions.yaml" class="text-amber-600 hover:underline text-sm font-medium" target="_blank" rel="noopener">Documentation/devicetree/bindings/riscv/extensions.yaml</a>
                             </div>
                             <ul class="list-disc ml-5 text-sm text-stone-600 space-y-1">
                                 <li>'riscv,cbom-block-size', 'riscv,cbop-block-size', and 'riscv,cboz-block-size' must be provided per hart.</li>
@@ -336,7 +337,7 @@ config RISCV_ISA_SUPM
                         <section class="bg-stone-50 border border-stone-200 rounded-lg p-4 space-y-3">
                             <div>
                                 <p class="text-xs font-semibold text-stone-500 uppercase tracking-wide">Device Tree Binding</p>
-                                <a href="https://github.com/torvalds/linux/blob/v7.0-rc1/Documentation/devicetree/bindings/riscv/extensions.yaml" class="text-amber-600 hover:underline text-sm font-medium" target="_blank" rel="noopener">Documentation/devicetree/bindings/riscv/extensions.yaml</a>
+                                <a href="https://github.com/torvalds/linux/blob/v6.18/Documentation/devicetree/bindings/riscv/extensions.yaml" class="text-amber-600 hover:underline text-sm font-medium" target="_blank" rel="noopener">Documentation/devicetree/bindings/riscv/extensions.yaml</a>
                             </div>
                             <pre class="bg-stone-900 text-stone-100 text-xs rounded-lg p-4 overflow-x-auto leading-5">
         - const: smstateen
@@ -366,9 +367,8 @@ config RISCV_ISA_SUPM
         <div class="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center">
                 <p class="font-semibold text-lg text-white mb-2">RISC-V RVA23 Profile Analyzer</p>
-                <p class="text-sm text-stone-400">Generated based on RVA23 Profile Ratified Specs and Linux Kernel v7.0-rc1 documentation.</p>
-                <p class="text-xs text-stone-500 mt-4">&copy; 2025-2026 Analysis Tool. NO SVG/Mermaid JS used.</p>
-                <p class="text-xs text-stone-600 mt-2"><a href="linux-kernel-coverage-v6.18.html" class="text-amber-400 hover:text-amber-300 underline">Historical archive (v6.18)</a></p>
+                <p class="text-sm text-stone-400">Generated based on RVA23 Profile Ratified Specs and Linux Kernel v6.18 documentation.</p>
+                <p class="text-xs text-stone-500 mt-4">&copy; 2025 Analysis Tool. NO SVG/Mermaid JS used.</p>
             </div>
         </div>
     </footer>
@@ -387,11 +387,11 @@ config RISCV_ISA_SUPM
             { name: "Zicsr", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "Yes" },
             { name: "Zicntr", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "Yes" },
             { name: "Zihpm", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "Yes" },
-            { name: "Ziccif", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "Yes" },
+            { name: "Ziccif", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "No" },
             { name: "Ziccrse", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "Yes" },
-            { name: "Ziccamoa", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "Yes" },
-            { name: "Zicclsm", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "Yes" },
-            { name: "Za64rs", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "Yes" },
+            { name: "Ziccamoa", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "No" },
+            { name: "Zicclsm", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "No" },
+            { name: "Za64rs", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "No" },
             { name: "Zihintpause", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "Yes" },
             { name: "Zic64b", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "Yes (DT cache blocks fixed at 64B)", note: "Linux does not parse a 'zic64b' string; Device Tree provides the mandated 64-byte cache blocks via <code>riscv,cbom-block-size</code>, <code>riscv,cbop-block-size</code>, and <code>riscv,cboz-block-size</code> properties." },
             { name: "Zicbom", category: "RVA23U64", status: "Mandatory", history: "present in RVA22U64", linux: "Yes" },
@@ -420,8 +420,8 @@ config RISCV_ISA_SUPM
             { name: "Zama16b", category: "RVA23U64", status: "Optional (Development)", history: "new in RVA23U64", linux: "No" },
             { name: "Zfh", category: "RVA23U64", status: "Optional (Expansion)", history: "present in RVA22U64", linux: "Yes" },
             { name: "Zbc", category: "RVA23U64", status: "Optional (Expansion)", history: "new in RVA23U64", linux: "Yes" },
-            { name: "Zicfilp", category: "RVA23U64", status: "Optional (Expansion)", history: "new in RVA23U64", linux: "Yes" },
-            { name: "Zicfiss", category: "RVA23U64", status: "Optional (Expansion)", history: "new in RVA23U64", linux: "Yes" },
+            { name: "Zicfilp", category: "RVA23U64", status: "Optional (Expansion)", history: "new in RVA23U64", linux: "No" },
+            { name: "Zicfiss", category: "RVA23U64", status: "Optional (Expansion)", history: "new in RVA23U64", linux: "No" },
             { name: "Zvfh", category: "RVA23U64", status: "Optional (Expansion)", history: "new in RVA23U64", linux: "Yes" },
             { name: "Zfbfmin", category: "RVA23U64", status: "Optional (Expansion)", history: "new in RVA23U64", linux: "Yes" },
             { name: "Zvfbfmin", category: "RVA23U64", status: "Optional (Expansion)", history: "new in RVA23U64", linux: "Yes" },
@@ -433,26 +433,26 @@ config RISCV_ISA_SUPM
             { name: "Svbare", category: "RVA23S64", status: "Mandatory", history: "present in RVA22S64", linux: "Yes (as 'riscv,none')" },
             { name: "Sv39", category: "RVA23S64", status: "Mandatory", history: "present in RVA22S64", linux: "Yes (as 'riscv,sv39')" },
             { name: "Svade", category: "RVA23S64", status: "Mandatory", history: "present in RVA22S64", linux: "Yes" },
-            { name: "Ssccptr", category: "RVA23S64", status: "Mandatory", history: "present in RVA22S64", linux: "Yes" },
-            { name: "Sstvecd", category: "RVA23S64", status: "Mandatory", history: "present in RVA22S64", linux: "Yes" },
-            { name: "Sstvala", category: "RVA23S64", status: "Mandatory", history: "present in RVA22S64", linux: "Yes" },
-            { name: "Sscounterenw", category: "RVA23S64", status: "Mandatory", history: "present in RVA22S64", linux: "Yes" },
+            { name: "Ssccptr", category: "RVA23S64", status: "Mandatory", history: "present in RVA22S64", linux: "No" },
+            { name: "Sstvecd", category: "RVA23S64", status: "Mandatory", history: "present in RVA22S64", linux: "No" },
+            { name: "Sstvala", category: "RVA23S64", status: "Mandatory", history: "present in RVA22S64", linux: "No" },
+            { name: "Sscounterenw", category: "RVA23S64", status: "Mandatory", history: "present in RVA22S64", linux: "No" },
             { name: "Svpbmt", category: "RVA23S64", status: "Mandatory", history: "present in RVA22S64", linux: "Yes" },
             { name: "Svinval", category: "RVA23S64", status: "Mandatory", history: "present in RVA22S64", linux: "Yes" },
             { name: "Svnapot", category: "RVA23S64", status: "Mandatory", history: "new in RVA23S64", linux: "Yes" },
             { name: "Sstc", category: "RVA23S64", status: "Mandatory", history: "new in RVA23S64", linux: "Yes" },
             { name: "Sscofpmf", category: "RVA23S64", status: "Mandatory", history: "new in RVA23S64", linux: "Yes" },
             { name: "Ssnpm", category: "RVA23S64", status: "Mandatory", history: "new in RVA23S64", linux: "Yes" },
-            { name: "Ssu64xl", category: "RVA23S64", status: "Mandatory", history: "new in RVA23S64", linux: "Yes" },
-            { name: "Sha", category: "RVA23S64", status: "Mandatory", history: "new in RVA23S64", linux: "Yes" },
+            { name: "Ssu64xl", category: "RVA23S64", status: "Mandatory", history: "new in RVA23S64", linux: "No" },
+            { name: "Sha", category: "RVA23S64", status: "Mandatory", history: "new in RVA23S64", linux: "No" },
             { name: "H", category: "RVA23S64 (Sha)", status: "Mandatory", history: "new in RVA23S64", linux: "Yes (as 'h')" },
             { name: "Ssstateen", category: "RVA23S64 (Sha)", status: "Mandatory", history: "new in RVA23S64", linux: "Yes (as 'smstateen')" },
-            { name: "Shcounterenw", category: "RVA23S64 (Sha)", status: "Mandatory", history: "new in RVA23S64", linux: "Yes" },
-            { name: "Shvstvala", category: "RVA23S64 (Sha)", status: "Mandatory", history: "new in RVA23S64", linux: "Yes" },
-            { name: "Shtvala", category: "RVA23S64 (Sha)", status: "Mandatory", history: "new in RVA23S64", linux: "Yes" },
-            { name: "Shvstvecd", category: "RVA23S64 (Sha)", status: "Mandatory", history: "new in RVA23S64", linux: "Yes" },
-            { name: "Shvsatpa", category: "RVA23S64 (Sha)", status: "Mandatory", history: "new in RVA23S64", linux: "Yes" },
-            { name: "Shgatpa", category: "RVA23S64 (Sha)", status: "Mandatory", history: "new in RVA23S64", linux: "Yes" },
+            { name: "Shcounterenw", category: "RVA23S64 (Sha)", status: "Mandatory", history: "new in RVA23S64", linux: "No" },
+            { name: "Shvstvala", category: "RVA23S64 (Sha)", status: "Mandatory", history: "new in RVA23S64", linux: "No" },
+            { name: "Shtvala", category: "RVA23S64 (Sha)", status: "Mandatory", history: "new in RVA23S64", linux: "No" },
+            { name: "Shvstvecd", category: "RVA23S64 (Sha)", status: "Mandatory", history: "new in RVA23S64", linux: "No" },
+            { name: "Shvsatpa", category: "RVA23S64 (Sha)", status: "Mandatory", history: "new in RVA23S64", linux: "No" },
+            { name: "Shgatpa", category: "RVA23S64 (Sha)", status: "Mandatory", history: "new in RVA23S64", linux: "No" },
             
             // Supervisor Optional
             { name: "Sv48", category: "RVA23S64", status: "Optional (Expansion)", history: "present in RVA22S64", linux: "Yes (as 'riscv,sv48')" },
@@ -472,15 +472,15 @@ config RISCV_ISA_SUPM
           { "extension": "F", "commit_id": "aeb71e42caae2031ec849a858080d81462cacca9", "github_url": "https://github.com/torvalds/linux/commit/aeb71e42caae2031ec849a858080d81462cacca9", "lore_url": "https://lore.kernel.org/r/20230702-eats-scorebook-c951f170d29f@spud", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: f" },
           { "extension": "D", "commit_id": "aeb71e42caae2031ec849a858080d81462cacca9", "github_url": "https://github.com/torvalds/linux/commit/aeb71e42caae2031ec849a858080d81462cacca9", "lore_url": "https://lore.kernel.org/r/20230702-eats-scorebook-c951f170d29f@spud", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: d" },
           { "extension": "C", "commit_id": "aeb71e42caae2031ec849a858080d81462cacca9", "github_url": "https://github.com/torvalds/linux/commit/aeb71e42caae2031ec849a858080d81462cacca9", "lore_url": "https://lore.kernel.org/r/20230702-eats-scorebook-c951f170d29f@spud", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: c" },
-          { "extension": "B", "commit_id": "0cdb7fc1879b891a31e32e6dacb42f6c1236daba", "github_url": "https://github.com/torvalds/linux/commit/0cdb7fc1879b891a31e32e6dacb42f6c1236daba", "lore_url": "https://lore.kernel.org/r/20260110-k3-basic-dt-v4-6-d492f3a30ffa@riscstar.com", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: b" },
+          { "extension": "B", "error": "Not found" },
           { "extension": "Zicsr", "commit_id": "aeb71e42caae2031ec849a858080d81462cacca9", "github_url": "https://github.com/torvalds/linux/commit/aeb71e42caae2031ec849a858080d81462cacca9", "lore_url": "https://lore.kernel.org/r/20230702-eats-scorebook-c951f170d29f@spud", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: zicsr" },
           { "extension": "Zicntr", "commit_id": "aeb71e42caae2031ec849a858080d81462cacca9", "github_url": "https://github.com/torvalds/linux/commit/aeb71e42caae2031ec849a858080d81462cacca9", "lore_url": "https://lore.kernel.org/r/20230702-eats-scorebook-c951f170d29f@spud", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: zicntr" },
           { "extension": "Zihpm", "commit_id": "aeb71e42caae2031ec849a858080d81462cacca9", "github_url": "https://github.com/torvalds/linux/commit/aeb71e42caae2031ec849a858080d81462cacca9", "lore_url": "https://lore.kernel.org/r/20230702-eats-scorebook-c951f170d29f@spud", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: zihpm" },
-          { "extension": "Ziccif", "commit_id": "b321256a4f36e4e100c04beed2c2581ab9c04db2", "github_url": "https://github.com/torvalds/linux/commit/b321256a4f36e4e100c04beed2c2581ab9c04db2", "lore_url": "https://lore.kernel.org/r/20260110-k3-basic-dt-v4-7-d492f3a30ffa@riscstar.com", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: ziccif" },
+          { "extension": "Ziccif", "error": "Not found" },
           { "extension": "Ziccrse", "commit_id": "447b2afbcde16be43c9459507f48f5c602c121c0", "github_url": "https://github.com/torvalds/linux/commit/447b2afbcde16be43c9459507f48f5c602c121c0", "lore_url": "https://lore.kernel.org/r/20241103145153.105097-13-alexghiti@rivosinc.com", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: ziccrse" },
-          { "extension": "Ziccamoa", "commit_id": "b321256a4f36e4e100c04beed2c2581ab9c04db2", "github_url": "https://github.com/torvalds/linux/commit/b321256a4f36e4e100c04beed2c2581ab9c04db2", "lore_url": "https://lore.kernel.org/r/20260110-k3-basic-dt-v4-7-d492f3a30ffa@riscstar.com", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: ziccamoa" },
-          { "extension": "Zicclsm", "commit_id": "b321256a4f36e4e100c04beed2c2581ab9c04db2", "github_url": "https://github.com/torvalds/linux/commit/b321256a4f36e4e100c04beed2c2581ab9c04db2", "lore_url": "https://lore.kernel.org/r/20260110-k3-basic-dt-v4-7-d492f3a30ffa@riscstar.com", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: zicclsm" },
-          { "extension": "Za64rs", "commit_id": "b321256a4f36e4e100c04beed2c2581ab9c04db2", "github_url": "https://github.com/torvalds/linux/commit/b321256a4f36e4e100c04beed2c2581ab9c04db2", "lore_url": "https://lore.kernel.org/r/20260110-k3-basic-dt-v4-7-d492f3a30ffa@riscstar.com", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: za64rs" },
+          { "extension": "Ziccamoa", "error": "Not found" },
+          { "extension": "Zicclsm", "error": "Not found" },
+          { "extension": "Za64rs", "error": "Not found" },
           { "extension": "Zihintpause", "commit_id": "aeb71e42caae2031ec849a858080d81462cacca9", "github_url": "https://github.com/torvalds/linux/commit/aeb71e42caae2031ec849a858080d81462cacca9", "lore_url": "https://lore.kernel.org/r/20230702-eats-scorebook-c951f170d29f@spud", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: zihintpause" },
           { "extension": "Zic64b", "commit_id": "d1afce6709595b39cd159bdc54fe2093808c02fc", "github_url": "https://github.com/torvalds/linux/commit/d1afce6709595b39cd159bdc54fe2093808c02fc", "lore_url": "https://lore.kernel.org/r/20220706231536.2041855-3-heiko@sntech.de", "file_found": "Documentation/devicetree/bindings/riscv/cpus.yaml", "term_found": "riscv,cbom-block-size" },
           { "extension": "Zicbom", "commit_id": "aeb71e42caae2031ec849a858080d81462cacca9", "github_url": "https://github.com/torvalds/linux/commit/aeb71e42caae2031ec849a858080d81462cacca9", "lore_url": "https://lore.kernel.org/r/20230702-eats-scorebook-c951f170d29f@spud", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: zicbom" },
@@ -509,8 +509,8 @@ config RISCV_ISA_SUPM
           { "extension": "Zama16b", "error": "Not found" },
           { "extension": "Zfh", "commit_id": "c44714c35ff861d69db9c8bb4ae1347373f817f0", "github_url": "https://github.com/torvalds/linux/commit/c44714c35ff861d69db9c8bb4ae1347373f817f0", "lore_url": "https://lore.kernel.org/r/20231114141256.126749-12-cleger@rivosinc.com", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: zfh" },
           { "extension": "Zbc", "commit_id": "aeb71e42caae2031ec849a858080d81462cacca9", "github_url": "https://github.com/torvalds/linux/commit/aeb71e42caae2031ec849a858080d81462cacca9", "lore_url": "https://lore.kernel.org/r/20230702-eats-scorebook-c951f170d29f@spud", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: zbc" },
-          { "extension": "Zicfilp", "commit_id": "f94645fc03b8c1508b0a1c701e03f15291d3ade0", "github_url": "https://github.com/torvalds/linux/commit/f94645fc03b8c1508b0a1c701e03f15291d3ade0", "lore_url": "https://lore.kernel.org/r/20251112-v5_user_cfi_series-v23-2-b55691eacf4f@rivosinc.com", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: zicfilp" },
-          { "extension": "Zicfiss", "commit_id": "f94645fc03b8c1508b0a1c701e03f15291d3ade0", "github_url": "https://github.com/torvalds/linux/commit/f94645fc03b8c1508b0a1c701e03f15291d3ade0", "lore_url": "https://lore.kernel.org/r/20251112-v5_user_cfi_series-v23-2-b55691eacf4f@rivosinc.com", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: zicfiss" },
+          { "extension": "Zicfilp", "error": "Not found" },
+          { "extension": "Zicfiss", "error": "Not found" },
           { "extension": "Zvfh", "commit_id": "e11880b4be3a8db558147409b9ed0d1855526910", "github_url": "https://github.com/torvalds/linux/commit/e11880b4be3a8db558147409b9ed0d1855526910", "lore_url": "https://lore.kernel.org/r/20231114141256.126749-18-cleger@rivosinc.com", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: zvfh" },
           { "extension": "Zfbfmin", "commit_id": "35bc1883733c81ff307c9c73bd00191313e651af", "github_url": "https://github.com/torvalds/linux/commit/35bc1883733c81ff307c9c73bd00191313e651af", "lore_url": "https://lore.kernel.org/r/20250213003849.147358-2-inochiama@gmail.com", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: zfbfmin" },
           { "extension": "Zvfbfmin", "commit_id": "35bc1883733c81ff307c9c73bd00191313e651af", "github_url": "https://github.com/torvalds/linux/commit/35bc1883733c81ff307c9c73bd00191313e651af", "lore_url": "https://lore.kernel.org/r/20250213003849.147358-2-inochiama@gmail.com", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: zvfbfmin" },
@@ -520,26 +520,26 @@ config RISCV_ISA_SUPM
           { "extension": "Svbare", "commit_id": "7ef71c719eb462edaa6078405654d2447c7a5488", "github_url": "https://github.com/torvalds/linux/commit/7ef71c719eb462edaa6078405654d2447c7a5488", "lore_url": null, "file_found": "Documentation/devicetree/bindings/riscv/cpus.yaml", "term_found": "- riscv,none" },
           { "extension": "Sv39", "commit_id": "4fd669a8c4873b6ad54e77bc45aa37b03edc5587", "github_url": "https://github.com/torvalds/linux/commit/4fd669a8c4873b6ad54e77bc45aa37b03edc5587", "lore_url": null, "file_found": "Documentation/devicetree/bindings/riscv/cpus.yaml", "term_found": "riscv,sv39" },
           { "extension": "Svade", "commit_id": "b8d481671703c4ba24bb250a99225e0e3d8aedac", "github_url": "https://github.com/torvalds/linux/commit/b8d481671703c4ba24bb250a99225e0e3d8aedac", "lore_url": "https://lore.kernel.org/r/20240726084931.28924-3-yongxuan.wang@sifive.com", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: svade" },
-          { "extension": "Ssccptr", "commit_id": "c712413333f87cd6ab4b14d90e86cc0eff61eed3", "github_url": "https://github.com/torvalds/linux/commit/c712413333f87cd6ab4b14d90e86cc0eff61eed3", "lore_url": "https://lore.kernel.org/r/20260110-k3-basic-dt-v4-8-d492f3a30ffa@riscstar.com", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: ssccptr" },
-          { "extension": "Sstvecd", "commit_id": "c712413333f87cd6ab4b14d90e86cc0eff61eed3", "github_url": "https://github.com/torvalds/linux/commit/c712413333f87cd6ab4b14d90e86cc0eff61eed3", "lore_url": "https://lore.kernel.org/r/20260110-k3-basic-dt-v4-8-d492f3a30ffa@riscstar.com", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: sstvecd" },
-          { "extension": "Sstvala", "commit_id": "c712413333f87cd6ab4b14d90e86cc0eff61eed3", "github_url": "https://github.com/torvalds/linux/commit/c712413333f87cd6ab4b14d90e86cc0eff61eed3", "lore_url": "https://lore.kernel.org/r/20260110-k3-basic-dt-v4-8-d492f3a30ffa@riscstar.com", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: sstvala" },
-          { "extension": "Sscounterenw", "commit_id": "c712413333f87cd6ab4b14d90e86cc0eff61eed3", "github_url": "https://github.com/torvalds/linux/commit/c712413333f87cd6ab4b14d90e86cc0eff61eed3", "lore_url": "https://lore.kernel.org/r/20260110-k3-basic-dt-v4-8-d492f3a30ffa@riscstar.com", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: sscounterenw" },
+          { "extension": "Ssccptr", "error": "Not found" },
+          { "extension": "Sstvecd", "error": "Not found" },
+          { "extension": "Sstvala", "error": "Not found" },
+          { "extension": "Sscounterenw", "error": "Not found" },
           { "extension": "Svpbmt", "commit_id": "aeb71e42caae2031ec849a858080d81462cacca9", "github_url": "https://github.com/torvalds/linux/commit/aeb71e42caae2031ec849a858080d81462cacca9", "lore_url": "https://lore.kernel.org/r/20230702-eats-scorebook-c951f170d29f@spud", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: svpbmt" },
           { "extension": "Svinval", "commit_id": "aeb71e42caae2031ec849a858080d81462cacca9", "github_url": "https://github.com/torvalds/linux/commit/aeb71e42caae2031ec849a858080d81462cacca9", "lore_url": "https://lore.kernel.org/r/20230702-eats-scorebook-c951f170d29f@spud", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: svinval" },
           { "extension": "Svnapot", "commit_id": "aeb71e42caae2031ec849a858080d81462cacca9", "github_url": "https://github.com/torvalds/linux/commit/aeb71e42caae2031ec849a858080d81462cacca9", "lore_url": "https://lore.kernel.org/r/20230702-eats-scorebook-c951f170d29f@spud", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: svnapot" },
           { "extension": "Sstc", "commit_id": "aeb71e42caae2031ec849a858080d81462cacca9", "github_url": "https://github.com/torvalds/linux/commit/aeb71e42caae2031ec849a858080d81462cacca9", "lore_url": "https://lore.kernel.org/r/20230702-eats-scorebook-c951f170d29f@spud", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: sstc" },
           { "extension": "Sscofpmf", "commit_id": "aeb71e42caae2031ec849a858080d81462cacca9", "github_url": "https://github.com/torvalds/linux/commit/aeb71e42caae2031ec849a858080d81462cacca9", "lore_url": "https://lore.kernel.org/r/20230702-eats-scorebook-c951f170d29f@spud", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: sscofpmf" },
           { "extension": "Ssnpm", "commit_id": "8727163a1ae304b5b4ac5952f593936ab9024d37", "github_url": "https://github.com/torvalds/linux/commit/8727163a1ae304b5b4ac5952f593936ab9024d37", "lore_url": "https://lore.kernel.org/r/20241016202814.4061541-2-samuel.holland@sifive.com", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: ssnpm" },
-          { "extension": "Ssu64xl", "commit_id": "c712413333f87cd6ab4b14d90e86cc0eff61eed3", "github_url": "https://github.com/torvalds/linux/commit/c712413333f87cd6ab4b14d90e86cc0eff61eed3", "lore_url": "https://lore.kernel.org/r/20260110-k3-basic-dt-v4-8-d492f3a30ffa@riscstar.com", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: ssu64xl" },
-          { "extension": "Sha", "commit_id": "89febd6a0276076137a46a69ad1e0c53f9b2e5e0", "github_url": "https://github.com/torvalds/linux/commit/89febd6a0276076137a46a69ad1e0c53f9b2e5e0", "lore_url": "https://lore.kernel.org/r/20260110-k3-basic-dt-v4-9-d492f3a30ffa@riscstar.com", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: sha" },
+          { "extension": "Ssu64xl", "error": "Not found" },
+          { "extension": "Sha", "error": "Not found" },
           { "extension": "H", "commit_id": "aeb71e42caae2031ec849a858080d81462cacca9", "github_url": "https://github.com/torvalds/linux/commit/aeb71e42caae2031ec849a858080d81462cacca9", "lore_url": "https://lore.kernel.org/r/20230702-eats-scorebook-c951f170d29f@spud", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: h" },
           { "extension": "Ssstateen", "commit_id": "a4f5f39849f39f62f5d4e88cbb600f95f927003d", "github_url": "https://github.com/torvalds/linux/commit/a4f5f39849f39f62f5d4e88cbb600f95f927003d", "lore_url": "https://lore.kernel.org/all/20230913163905.480819-1-mchitale@ventanamicro.com/", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: smstateen" },
-          { "extension": "Shcounterenw", "commit_id": "89febd6a0276076137a46a69ad1e0c53f9b2e5e0", "github_url": "https://github.com/torvalds/linux/commit/89febd6a0276076137a46a69ad1e0c53f9b2e5e0", "lore_url": "https://lore.kernel.org/r/20260110-k3-basic-dt-v4-9-d492f3a30ffa@riscstar.com", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: shcounterenw" },
-          { "extension": "Shvstvala", "commit_id": "89febd6a0276076137a46a69ad1e0c53f9b2e5e0", "github_url": "https://github.com/torvalds/linux/commit/89febd6a0276076137a46a69ad1e0c53f9b2e5e0", "lore_url": "https://lore.kernel.org/r/20260110-k3-basic-dt-v4-9-d492f3a30ffa@riscstar.com", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: shvstvala" },
-          { "extension": "Shtvala", "commit_id": "89febd6a0276076137a46a69ad1e0c53f9b2e5e0", "github_url": "https://github.com/torvalds/linux/commit/89febd6a0276076137a46a69ad1e0c53f9b2e5e0", "lore_url": "https://lore.kernel.org/r/20260110-k3-basic-dt-v4-9-d492f3a30ffa@riscstar.com", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: shtvala" },
-          { "extension": "Shvstvecd", "commit_id": "89febd6a0276076137a46a69ad1e0c53f9b2e5e0", "github_url": "https://github.com/torvalds/linux/commit/89febd6a0276076137a46a69ad1e0c53f9b2e5e0", "lore_url": "https://lore.kernel.org/r/20260110-k3-basic-dt-v4-9-d492f3a30ffa@riscstar.com", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: shvstvecd" },
-          { "extension": "Shvsatpa", "commit_id": "89febd6a0276076137a46a69ad1e0c53f9b2e5e0", "github_url": "https://github.com/torvalds/linux/commit/89febd6a0276076137a46a69ad1e0c53f9b2e5e0", "lore_url": "https://lore.kernel.org/r/20260110-k3-basic-dt-v4-9-d492f3a30ffa@riscstar.com", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: shvsatpa" },
-          { "extension": "Shgatpa", "commit_id": "89febd6a0276076137a46a69ad1e0c53f9b2e5e0", "github_url": "https://github.com/torvalds/linux/commit/89febd6a0276076137a46a69ad1e0c53f9b2e5e0", "lore_url": "https://lore.kernel.org/r/20260110-k3-basic-dt-v4-9-d492f3a30ffa@riscstar.com", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: shgatpa" },
+          { "extension": "Shcounterenw", "error": "Not found" },
+          { "extension": "Shvstvala", "error": "Not found" },
+          { "extension": "Shtvala", "error": "Not found" },
+          { "extension": "Shvstvecd", "error": "Not found" },
+          { "extension": "Shvsatpa", "error": "Not found" },
+          { "extension": "Shgatpa", "error": "Not found" },
           { "extension": "Sv48", "commit_id": "4fd669a8c4873b6ad54e77bc45aa37b03edc5587", "github_url": "https://github.com/torvalds/linux/commit/4fd669a8c4873b6ad54e77bc45aa37b03edc5587", "lore_url": null, "file_found": "Documentation/devicetree/bindings/riscv/cpus.yaml", "term_found": "riscv,sv48" },
           { "extension": "Sv57", "commit_id": "d4dda690b44a5e36b4bf108c48177cef40c80d24", "github_url": "https://github.com/torvalds/linux/commit/d4dda690b44a5e36b4bf108c48177cef40c80d24", "lore_url": "https://lore.kernel.org/r/20230424-rival-habitual-478567c516f0@spud", "file_found": "Documentation/devicetree/bindings/riscv/cpus.yaml", "term_found": "riscv,sv57" },
           { "extension": "Zkr", "commit_id": "9376396251c8a927018d465b4cc396af4b25b8d0", "github_url": "https://github.com/torvalds/linux/commit/9376396251c8a927018d465b4cc396af4b25b8d0", "lore_url": "https://lore.kernel.org/r/20231114141256.126749-6-cleger@rivosinc.com", "file_found": "Documentation/devicetree/bindings/riscv/extensions.yaml", "term_found": "const: zkr" },
@@ -611,25 +611,7 @@ config RISCV_ISA_SUPM
           "Ssnpm": "6.13",
           "Zfbfmin": "6.15",
           "Zvfbfwma": "6.15",
-          "Zvfbfmin": "6.15",
-          "Ziccif": "7.0",
-          "Ziccamoa": "7.0",
-          "Zicclsm": "7.0",
-          "Za64rs": "7.0",
-          "Ssccptr": "7.0",
-          "Sstvecd": "7.0",
-          "Sstvala": "7.0",
-          "Sscounterenw": "7.0",
-          "Ssu64xl": "7.0",
-          "Sha": "7.0",
-          "Shcounterenw": "7.0",
-          "Shvstvala": "7.0",
-          "Shtvala": "7.0",
-          "Shvstvecd": "7.0",
-          "Shvsatpa": "7.0",
-          "Shgatpa": "7.0",
-          "Zicfilp": "7.0",
-          "Zicfiss": "7.0"
+          "Zvfbfmin": "6.15"
         };
 
         extensionsData.forEach(ext => {
@@ -744,7 +726,7 @@ config RISCV_ISA_SUPM
                             borderRadius: 4
                         },
                         {
-                            label: 'Linux v7.0-rc1 DT Coverage',
+                            label: 'Linux v6.18 DT Coverage',
                             data: coverageData,
                             backgroundColor: '#38bdf8',
                             borderRadius: 4
