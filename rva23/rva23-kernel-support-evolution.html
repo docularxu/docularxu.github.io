@@ -161,7 +161,7 @@
 									class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-stone-300 bg-stone-50 text-stone-500 text-sm">v</span>
 								<select id="kernelVersion3"
 									class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border-stone-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border">
-									<option value="6.18" selected>6.18</option>
+									<option value="7.0-rc1" selected>7.0-rc1</option>
 									<option disabled>Loading tags...</option>
 								</select>
 							</div>
@@ -179,7 +179,7 @@
 							</button>
 						</div>
 					</div>
-					<p class="mt-2 text-xs text-stone-400">Default: v6.6 & v6.12 (LTS), v6.18 (Latest).
+					<p class="mt-2 text-xs text-stone-400">Default: v6.6 & v6.12 (LTS), v7.0-rc1 (Latest).
 						<span id="tagLoadStatus" class="text-indigo-600"></span>
 					</p>
 
@@ -552,6 +552,29 @@
 
 		// --- Tag Fetching Logic ---
 
+		function getFallbackVersionsFromDatabase() {
+			// Derive fallback versions from the local database instead of hardcoding
+			if (kernelDatabase && kernelDatabase.versions) {
+				const allVersions = Object.keys(kernelDatabase.versions);
+				// Sort ascending by version
+				allVersions.sort((a, b) => {
+					const pa = a.split('.').map(Number);
+					const pb = b.split('.').map(Number);
+					for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+						const na = pa[i] || 0;
+						const nb = pb[i] || 0;
+						if (na !== nb) return na - nb;
+					}
+					return 0;
+				});
+				console.log(`Database fallback: ${allVersions.length} versions available`);
+				return allVersions;
+			}
+			// Ultimate fallback if database also failed
+			return ['6.5', '6.6', '6.7', '6.8', '6.9', '6.10', '6.11', '6.12',
+				'6.13', '6.14', '6.15', '6.16', '6.17', '6.18', '6.19'];
+		}
+
 		async function fetchTags() {
 			const select1 = document.getElementById('kernelVersion1');
 			const select2 = document.getElementById('kernelVersion2');
@@ -569,11 +592,11 @@
 
 			// Only try if proxy is enabled
 			if (!useProxy) {
-				console.log("Proxy disabled, using fallback versions.");
-				const fallbackVersions = ['6.6', '6.12', '6.18'];
+				console.log("Proxy disabled, using database versions.");
+				const fallbackVersions = getFallbackVersionsFromDatabase();
 				populateComparisonDropdowns(fallbackVersions);
 				populateEvolutionDropdowns(fallbackVersions);
-				if (statusEl) statusEl.textContent = '(Proxy disabled - using fallback versions)';
+				if (statusEl) statusEl.textContent = `(Proxy disabled - using ${fallbackVersions.length} database versions)`;
 				return;
 			}
 
@@ -601,29 +624,37 @@
 				const tags = [];
 
 				for (const line of lines) {
-					// Match lines like: 1234abcd refs/tags/v6.12.4
-					const match = line.match(/refs\/tags\/v(6\.\d+(?:\.\d+)?)\s*$/);
+					// Match lines like: 1234abcd refs/tags/v6.12.4 or refs/tags/v7.0-rc1
+					const match = line.match(/refs\/tags\/v(\d+\.\d+(?:\.\d+)?(?:-rc\d+)?)\s*$/);
 					if (match) {
 						tags.push(match[1]);
 					}
 				}
 
-				console.log("Found", tags.length, "v6.x tags");
+				console.log("Found", tags.length, "tags");
 
-				// Filter: only versions > 6.4 (6.5+)
+				// Filter: only versions >= 6.5
 				const validTags = tags.filter(t => {
-					const parts = t.split('.').map(Number);
+					const clean = t.replace(/-rc\d+$/, '');
+					const parts = clean.split('.').map(Number);
+					if (parts[0] > 6) return true;
 					if (parts[0] < 6) return false;
-					if (parts[0] === 6 && parts[1] <= 4) return false;
-					return true;
+					if (parts[0] === 6 && parts[1] >= 5) return true;
+					return false;
 				});
 
-				console.log("Valid tags (>6.4):", validTags.length);
+				console.log("Valid tags (>=6.5):", validTags.length);
 
-				// Sort: Descending Semver
+				// Sort: Descending Semver (rc versions sort before release)
 				validTags.sort((a, b) => {
-					const pa = a.split('.').map(Number);
-					const pb = b.split('.').map(Number);
+					const parseVer = v => {
+						const rcMatch = v.match(/^(.+)-rc(\d+)$/);
+						const base = rcMatch ? rcMatch[1] : v;
+						const rc = rcMatch ? parseInt(rcMatch[2]) : Infinity; // release > rc
+						return [...base.split('.').map(Number), rc];
+					};
+					const pa = parseVer(a);
+					const pb = parseVer(b);
 					for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
 						const na = pa[i] || 0;
 						const nb = pb[i] || 0;
@@ -635,11 +666,11 @@
 
 				// Populate Select
 				if (validTags.length === 0) {
-					console.warn("No valid tags found, using fallback");
-					const fallbackVersions = ['6.6', '6.12', '6.18'];
+					console.warn("No valid tags found, using database versions");
+					const fallbackVersions = getFallbackVersionsFromDatabase();
 					populateComparisonDropdowns(fallbackVersions);
 					populateEvolutionDropdowns(fallbackVersions);
-					if (statusEl) statusEl.textContent = '⚠️ No tags found - check console';
+					if (statusEl) statusEl.textContent = `⚠️ No tags from kernel.org - using ${fallbackVersions.length} database versions`;
 					return;
 				}
 
@@ -656,11 +687,11 @@
 
 			} catch (e) {
 				console.error("Tag fetch error:", e);
-				// Fallback to common versions
-				const fallbackVersions = ['6.6', '6.12', '6.18'];
+				// Fallback to database versions
+				const fallbackVersions = getFallbackVersionsFromDatabase();
 				populateComparisonDropdowns(fallbackVersions);
 				populateEvolutionDropdowns(fallbackVersions);
-				if (statusEl) statusEl.innerHTML = `⚠️ Fetch failed: ${e.message} - <a href="#" onclick="alert('Check browser console (F12) for details'); return false;" class="underline">see console</a>`;
+				if (statusEl) statusEl.innerHTML = `Using ${fallbackVersions.length} versions from local database`;
 			}
 		}
 
@@ -690,11 +721,11 @@
 				if (t === '6.12') opt2.selected = true;
 				select2.appendChild(opt2);
 
-				// Version 3 (default to 6.18 or latest)
+				// Version 3 (default to 7.0 or 7.0-rcX, fallback to latest)
 				const opt3 = document.createElement('option');
 				opt3.value = t;
 				opt3.textContent = t;
-				if (t === '6.18') opt3.selected = true;
+				if (t === '7.0' || t.match(/^7\.0-rc\d+$/)) opt3.selected = true;
 				select3.appendChild(opt3);
 			});
 
@@ -705,7 +736,9 @@
 			if (!tags.includes('6.12') && tags.length > 1) {
 				select2.value = tags[Math.min(1, tags.length - 1)];
 			}
-			if (!tags.includes('6.18') && tags.length > 2) {
+			// For version 3: prefer 7.0, then 7.0-rcX, then latest
+			const v3Match = tags.find(t => t === '7.0') || tags.find(t => t.match(/^7\.0-rc\d+$/));
+			if (!v3Match && tags.length > 2) {
 				select3.value = tags[tags.length - 1]; // Default to latest
 			}
 
