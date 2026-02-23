@@ -1464,6 +1464,96 @@
 
 		// --- Evolution Analysis Functions ---
 
+		// Approximate release dates for major kernel versions
+		const kernelReleaseDates = {
+			'6.5': '2023-08', '6.6': '2023-10',
+			'6.7': '2024-01', '6.8': '2024-03', '6.9': '2024-05', '6.10': '2024-07',
+			'6.11': '2024-09', '6.12': '2024-11',
+			'6.13': '2025-01', '6.14': '2025-03', '6.15': '2025-05', '6.16': '2025-07',
+			'6.17': '2025-09', '6.18': '2025-11',
+			'6.19': '2026-01', '7.0-rc1': '2026-02',
+		};
+
+		const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+		function getKernelReleaseInfo(version) {
+			const date = kernelReleaseDates[version];
+			if (date) {
+				const year = parseInt(date.substring(0, 4));
+				const month = parseInt(date.substring(5, 7));
+				return { year, month, label: `${monthNames[month - 1]}'${String(year).slice(2)}` };
+			}
+			// Point releases: derive from base version
+			const base = version.replace(/-rc\d+$/, '').split('.').slice(0, 2).join('.');
+			const baseDate = kernelReleaseDates[base];
+			if (baseDate) {
+				const year = parseInt(baseDate.substring(0, 4));
+				const month = parseInt(baseDate.substring(5, 7));
+				return { year, month, label: `${monthNames[month - 1]}'${String(year).slice(2)}` };
+			}
+			return null;
+		}
+
+		// Custom Chart.js plugin: draws colored background bands per calendar year
+		const yearBandPlugin = {
+			id: 'yearBands',
+			beforeDraw(chart) {
+				const yearData = chart.options.plugins.yearBands;
+				if (!yearData || !yearData.enabled) return;
+
+				const ctx = chart.ctx;
+				const xAxis = chart.scales.x;
+				const yAxis = chart.scales.y;
+				const dataYears = yearData.years;
+
+				if (!dataYears || dataYears.length === 0) return;
+
+				// Group consecutive indices by year
+				const bands = [];
+				let current = { year: dataYears[0], start: 0 };
+				for (let i = 1; i < dataYears.length; i++) {
+					if (dataYears[i] !== current.year) {
+						current.end = i - 1;
+						bands.push(current);
+						current = { year: dataYears[i], start: i };
+					}
+				}
+				current.end = dataYears.length - 1;
+				bands.push(current);
+
+				// Alternating subtle colors per year
+				const yearColors = {
+					2023: 'rgba(219, 234, 254, 0.35)',  // blue
+					2024: 'rgba(220, 252, 231, 0.35)',  // green
+					2025: 'rgba(243, 232, 255, 0.35)',  // purple
+					2026: 'rgba(254, 243, 199, 0.35)',  // amber
+				};
+
+				ctx.save();
+				bands.forEach(band => {
+					if (band.year === null) return;
+
+					const x1 = band.start === 0
+						? xAxis.left
+						: (xAxis.getPixelForTick(band.start) + xAxis.getPixelForTick(band.start - 1)) / 2;
+					const x2 = band.end === dataYears.length - 1
+						? xAxis.right
+						: (xAxis.getPixelForTick(band.end) + xAxis.getPixelForTick(band.end + 1)) / 2;
+
+					// Draw band rectangle
+					ctx.fillStyle = yearColors[band.year] || 'rgba(200, 200, 200, 0.2)';
+					ctx.fillRect(x1, yAxis.top, x2 - x1, yAxis.bottom - yAxis.top);
+
+					// Year label at top of band
+					ctx.fillStyle = 'rgba(100, 100, 100, 0.55)';
+					ctx.font = 'bold 13px Inter, sans-serif';
+					ctx.textAlign = 'center';
+					ctx.fillText(String(band.year), (x1 + x2) / 2, yAxis.top + 18);
+				});
+				ctx.restore();
+			}
+		};
+
 		let evolutionChart = null;
 		let optionalChart = null;
 		let logsManuallyHidden = false;
@@ -1833,9 +1923,17 @@
 				evolutionChart.destroy();
 			}
 
-			// Generate labels with version + extensions (multi-line)
+			// Compute year for each data point (for background bands)
+			const years = validData.map(d => {
+				const info = getKernelReleaseInfo(d.version);
+				return info ? info.year : null;
+			});
+
+			// Generate labels with version + release date + extensions (multi-line)
 			const labels = validData.map((d, idx) => {
+				const info = getKernelReleaseInfo(d.version);
 				const lines = [`v${d.version}`];
+				if (info) lines.push(`(${info.label})`);
 
 				if (idx === 0) {
 					// First version: show ALL supported extensions (baseline)
@@ -1865,6 +1963,7 @@
 
 			evolutionChart = new Chart(ctx, {
 				type: 'line',
+				plugins: [yearBandPlugin],
 				data: {
 					labels: labels,
 					datasets: [
@@ -1917,6 +2016,10 @@
 						}
 					},
 					plugins: {
+						yearBands: {
+							enabled: true,
+							years: years
+						},
 						title: {
 							display: true,
 							text: 'RVA23 Mandatory Extension Support Evolution',
@@ -2143,9 +2246,17 @@
 				optionalChart.destroy();
 			}
 
-			// Generate labels with version + new optional extensions
+			// Compute year for each data point (for background bands)
+			const years = validData.map(d => {
+				const info = getKernelReleaseInfo(d.version);
+				return info ? info.year : null;
+			});
+
+			// Generate labels with version + release date + new optional extensions
 			const labels = validData.map((d, idx) => {
+				const info = getKernelReleaseInfo(d.version);
 				const lines = [`v${d.version}`];
+				if (info) lines.push(`(${info.label})`);
 
 				if (idx === 0) {
 					// First version: show ALL supported optional extensions
@@ -2178,6 +2289,7 @@
 
 			optionalChart = new Chart(ctx, {
 				type: 'line',
+				plugins: [yearBandPlugin],
 				data: {
 					labels: labels,
 					datasets: [
@@ -2230,6 +2342,10 @@
 						}
 					},
 					plugins: {
+						yearBands: {
+							enabled: true,
+							years: years
+						},
 						title: {
 							display: true,
 							text: 'RVA23 Optional Extension Support Evolution',
