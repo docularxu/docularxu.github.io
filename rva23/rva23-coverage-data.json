@@ -1,7 +1,7 @@
 {
   "_metadata": {
     "description": "RVA23 Profile Coverage Data - Mandatory and Optional Extensions",
-    "last_updated": "2025-12-13",
+    "last_updated": "2026-02-23",
     "data_structure_version": "1.0",
     "note": "This database tracks both mandatory and optional extension support across kernel versions",
     "source": "rva23-profile-extensions.json",
@@ -333,7 +333,9 @@
       "6.17.11",
       "6.17.12",
       "6.18",
-      "6.18.1"
+      "6.18.1",
+      "6.19",
+      "7.0-rc1"
     ],
     "generator": "generate-rva23-coverage.py",
     "extension_counts": {
@@ -343,8 +345,8 @@
       "RVA23S64_optional": 8
     },
     "coverage_summary": {
-      "mandatory": "41% to 71%",
-      "optional": "13% to 70%"
+      "mandatory": "41% to 98%",
+      "optional": "13% to 78%"
     }
   },
   "versions": {
@@ -42312,6 +42314,261 @@
           "supportedCount": 12,
           "totalCount": 25,
           "coveragePercent": 48
+        },
+        "optional": {
+          "supported": [
+            "Sv48",
+            "Sv57",
+            "Zkr",
+            "Svadu",
+            "Svvptc"
+          ],
+          "missing": [
+            "Sdtrig",
+            "Ssstrict",
+            "Sspm"
+          ],
+          "supportedCount": 5,
+          "totalCount": 8,
+          "coveragePercent": 62
+        }
+      }
+    },
+    "6.19": {
+      "version": "6.19",
+      "overallMandatoryCoverage": 71,
+      "overallOptionalCoverage": 70,
+      "totalMandatory": 58,
+      "totalOptional": 23,
+      "RVA23U64": {
+        "mandatory": {
+          "supported": [
+            "M",
+            "A",
+            "F",
+            "D",
+            "C",
+            "B",
+            "Zicsr",
+            "Zicntr",
+            "Zihpm",
+            "Ziccrse",
+            "Zihintpause",
+            "Zic64b",
+            "Zicbom",
+            "Zicbop",
+            "Zicboz",
+            "Zfhmin",
+            "Zkt",
+            "V",
+            "Zvfhmin",
+            "Zvbb",
+            "Zvkt",
+            "Zihintntl",
+            "Zicond",
+            "Zimop",
+            "Zcmop",
+            "Zcb",
+            "Zfa",
+            "Zawrs",
+            "Supm"
+          ],
+          "missing": [
+            "Ziccif",
+            "Ziccamoa",
+            "Zicclsm",
+            "Za64rs"
+          ],
+          "supportedCount": 29,
+          "totalCount": 33,
+          "coveragePercent": 88
+        },
+        "optional": {
+          "supported": [
+            "Zvkng",
+            "Zvksg",
+            "Zabha",
+            "Zacas",
+            "Zvbc",
+            "Zfh",
+            "Zbc",
+            "Zvfh",
+            "Zfbfmin",
+            "Zvfbfmin",
+            "Zvfbfwma"
+          ],
+          "missing": [
+            "Ziccamoc",
+            "Zama16b",
+            "Zicfilp",
+            "Zicfiss"
+          ],
+          "supportedCount": 11,
+          "totalCount": 15,
+          "coveragePercent": 73
+        }
+      },
+      "RVA23S64": {
+        "mandatory": {
+          "supported": [
+            "Zifencei",
+            "Svbare",
+            "Sv39",
+            "Svade",
+            "Svpbmt",
+            "Svinval",
+            "Svnapot",
+            "Sstc",
+            "Sscofpmf",
+            "Ssnpm",
+            "H",
+            "Ssstateen"
+          ],
+          "missing": [
+            "Ss1p13",
+            "Ssccptr",
+            "Sstvecd",
+            "Sstvala",
+            "Sscounterenw",
+            "Ssu64xl",
+            "Sha",
+            "Shcounterenw",
+            "Shvstvala",
+            "Shtvala",
+            "Shvstvecd",
+            "Shvsatpa",
+            "Shgatpa"
+          ],
+          "supportedCount": 12,
+          "totalCount": 25,
+          "coveragePercent": 48
+        },
+        "optional": {
+          "supported": [
+            "Sv48",
+            "Sv57",
+            "Zkr",
+            "Svadu",
+            "Svvptc"
+          ],
+          "missing": [
+            "Sdtrig",
+            "Ssstrict",
+            "Sspm"
+          ],
+          "supportedCount": 5,
+          "totalCount": 8,
+          "coveragePercent": 62
+        }
+      }
+    },
+    "7.0-rc1": {
+      "version": "7.0-rc1",
+      "overallMandatoryCoverage": 98,
+      "overallOptionalCoverage": 78,
+      "totalMandatory": 58,
+      "totalOptional": 23,
+      "RVA23U64": {
+        "mandatory": {
+          "supported": [
+            "M",
+            "A",
+            "F",
+            "D",
+            "C",
+            "B",
+            "Zicsr",
+            "Zicntr",
+            "Zihpm",
+            "Ziccif",
+            "Ziccrse",
+            "Ziccamoa",
+            "Zicclsm",
+            "Za64rs",
+            "Zihintpause",
+            "Zic64b",
+            "Zicbom",
+            "Zicbop",
+            "Zicboz",
+            "Zfhmin",
+            "Zkt",
+            "V",
+            "Zvfhmin",
+            "Zvbb",
+            "Zvkt",
+            "Zihintntl",
+            "Zicond",
+            "Zimop",
+            "Zcmop",
+            "Zcb",
+            "Zfa",
+            "Zawrs",
+            "Supm"
+          ],
+          "missing": [],
+          "supportedCount": 33,
+          "totalCount": 33,
+          "coveragePercent": 100
+        },
+        "optional": {
+          "supported": [
+            "Zvkng",
+            "Zvksg",
+            "Zabha",
+            "Zacas",
+            "Zvbc",
+            "Zfh",
+            "Zbc",
+            "Zicfilp",
+            "Zicfiss",
+            "Zvfh",
+            "Zfbfmin",
+            "Zvfbfmin",
+            "Zvfbfwma"
+          ],
+          "missing": [
+            "Ziccamoc",
+            "Zama16b"
+          ],
+          "supportedCount": 13,
+          "totalCount": 15,
+          "coveragePercent": 87
+        }
+      },
+      "RVA23S64": {
+        "mandatory": {
+          "supported": [
+            "Zifencei",
+            "Svbare",
+            "Sv39",
+            "Svade",
+            "Ssccptr",
+            "Sstvecd",
+            "Sstvala",
+            "Sscounterenw",
+            "Svpbmt",
+            "Svinval",
+            "Svnapot",
+            "Sstc",
+            "Sscofpmf",
+            "Ssnpm",
+            "Ssu64xl",
+            "Sha",
+            "H",
+            "Ssstateen",
+            "Shcounterenw",
+            "Shvstvala",
+            "Shtvala",
+            "Shvstvecd",
+            "Shvsatpa",
+            "Shgatpa"
+          ],
+          "missing": [
+            "Ss1p13"
+          ],
+          "supportedCount": 24,
+          "totalCount": 25,
+          "coveragePercent": 96
         },
         "optional": {
           "supported": [
