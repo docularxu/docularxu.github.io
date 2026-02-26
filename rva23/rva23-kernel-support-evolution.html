@@ -10,6 +10,7 @@
 	<meta property="og:description" content="Track RVA23 extension support across Linux kernel versions. Built by Guodong Xu, upstream RISC-V contributor at RISCstar.">
 	<meta property="og:type" content="website">
 	<meta property="og:url" content="https://docularxu.github.io/rva23/rva23-kernel-support-evolution.html">
+	<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet">
 	<script src="https://cdn.tailwindcss.com"></script>
 	<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 	<!-- JS-YAML for parsing the kernel files -->
@@ -1506,6 +1507,21 @@
 			return null;
 		}
 
+		// Custom Chart.js plugin: draws source watermark in the bottom-right corner
+		const sourceWatermarkPlugin = {
+			id: 'sourceWatermark',
+			afterDraw(chart) {
+				const ctx = chart.ctx;
+				ctx.save();
+				ctx.font = '11px "Space Grotesk", sans-serif';
+				ctx.fillStyle = 'rgba(120, 113, 108, 0.5)';
+				ctx.textAlign = 'right';
+				ctx.textBaseline = 'bottom';
+				ctx.fillText('Source: Guodong Xu, RISCstar Solutions', chart.width - 15, chart.height - 8);
+				ctx.restore();
+			}
+		};
+
 		// Custom Chart.js plugin: draws colored background bands per calendar year
 		const yearBandPlugin = {
 			id: 'yearBands',
@@ -1975,7 +1991,7 @@
 
 			evolutionChart = new Chart(ctx, {
 				type: 'line',
-				plugins: [yearBandPlugin],
+				plugins: [yearBandPlugin, sourceWatermarkPlugin],
 				data: {
 					labels: labels,
 					datasets: [
@@ -2301,7 +2317,7 @@
 
 			optionalChart = new Chart(ctx, {
 				type: 'line',
-				plugins: [yearBandPlugin],
+				plugins: [yearBandPlugin, sourceWatermarkPlugin],
 				data: {
 					labels: labels,
 					datasets: [
