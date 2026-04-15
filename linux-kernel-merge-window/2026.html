@@ -398,8 +398,9 @@
 
 			container.appendChild(axis);
 
-			// 2. Add ticks and dates
+			// 2. Add ticks and dates (aligned to Sundays)
 			let currentDate = new Date(startDate);
+			currentDate.setDate(currentDate.getDate() + ((7 - currentDate.getDay()) % 7));
 			while (currentDate <= endDate) {
 				const diffWeeks = getWeeksDiff(startDate, currentDate);
 				const leftPos = diffWeeks * PIXELS_PER_WEEK;
