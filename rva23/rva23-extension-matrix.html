@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RVA23U64 Extension Software Stack Matrix</title>
+<style>
+  :root {
+    --bg: #0d1117; --surface: #161b22; --border: #30363d;
+    --text: #c9d1d9; --text-muted: #8b949e; --text-bright: #f0f6fc;
+    --accent: #58a6ff; --green: #3fb950; --yellow: #d29922;
+    --orange: #db6d28; --red: #f85149; --purple: #bc8cff;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.6;
+    max-width: 1400px; margin: 0 auto; padding: 24px;
+  }
+  h1 { color: var(--text-bright); font-size: 1.6rem; margin-bottom: 4px; }
+  h2 { color: var(--accent); font-size: 1.2rem; margin: 28px 0 12px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+  .subtitle { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; font-size: 0.85rem; }
+  .legend-item { display: flex; align-items: center; gap: 5px; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .dot-none { background: var(--text-muted); }
+  .dot-compiler { background: var(--green); }
+  .dot-kernel { background: var(--accent); }
+  .dot-userspace { background: var(--yellow); }
+  .dot-full_stack { background: var(--red); }
+  .filter-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; align-items: center; }
+  .filter-bar label { color: var(--text-muted); font-size: 0.85rem; }
+  .filter-btn {
+    padding: 4px 12px; border: 1px solid var(--border); border-radius: 6px;
+    background: var(--surface); color: var(--text); cursor: pointer;
+    font-size: 0.8rem; transition: all 0.15s;
+  }
+  .filter-btn:hover { border-color: var(--accent); }
+  .filter-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  th {
+    background: var(--surface); color: var(--text-muted); font-weight: 600;
+    text-align: left; padding: 8px 10px; border-bottom: 2px solid var(--border);
+    position: sticky; top: 0; z-index: 10; font-size: 0.78rem;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  td { padding: 7px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:hover td { background: rgba(88, 166, 255, 0.04); }
+  .ext-name { font-family: 'SF Mono', 'Fira Code', monospace; font-weight: 600; color: var(--text-bright); white-space: nowrap; }
+  .ext-desc { color: var(--text-muted); font-size: 0.8rem; }
+  .tag {
+    display: inline-block; padding: 1px 7px; border-radius: 4px;
+    font-size: 0.72rem; font-weight: 600; white-space: nowrap;
+  }
+  .tag-yes { background: rgba(63,185,80,0.15); color: var(--green); }
+  .tag-asm { background: rgba(210,153,34,0.15); color: var(--yellow); }
+  .tag-exp { background: rgba(219,109,40,0.15); color: var(--orange); }
+  .tag-no { background: rgba(248,81,73,0.15); color: var(--red); }
+  .tag-prop { background: rgba(139,148,158,0.15); color: var(--text-muted); }
+  .tag-new { background: rgba(188,140,255,0.15); color: var(--purple); font-size: 0.68rem; }
+  .layer-badge {
+    display: inline-block; padding: 2px 8px; border-radius: 4px;
+    font-size: 0.72rem; font-weight: 600;
+  }
+  .layer-none { background: rgba(139,148,158,0.12); color: var(--text-muted); }
+  .layer-compiler { background: rgba(63,185,80,0.12); color: var(--green); }
+  .layer-kernel { background: rgba(88,166,255,0.12); color: var(--accent); }
+  .layer-userspace { background: rgba(210,153,34,0.12); color: var(--yellow); }
+  .layer-full_stack { background: rgba(248,81,73,0.12); color: var(--red); }
+  .note { color: var(--text-muted); font-size: 0.78rem; margin-top: 2px; }
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px; }
+  .summary-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px; text-align: center;
+  }
+  .summary-card .num { font-size: 1.8rem; font-weight: 700; }
+  .summary-card .label { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+  .mandatory-badge { color: var(--accent); font-size: 0.72rem; font-weight: 600; }
+  .optional-badge { color: var(--text-muted); font-size: 0.72rem; font-weight: 600; }
+  .has-inst { font-size: 0.72rem; }
+  .has-inst-yes { color: var(--green); }
+  .has-inst-no { color: var(--text-muted); }
+  .sources { margin-top: 24px; font-size: 0.78rem; color: var(--text-muted); }
+  .sources a { color: var(--accent); text-decoration: none; }
+  .sources a:hover { text-decoration: underline; }
+  @media (max-width: 900px) {
+    table { font-size: 0.75rem; }
+    th, td { padding: 5px 6px; }
+    .ext-desc { display: none; }
+  }
+</style>
+</head>
+<body>
+<h1>RVA23U64 Extension Software Stack Matrix</h1>
+<p class="subtitle">Which software layer needs to change to support each RVA23 extension?</p>
+
+<div class="summary-grid" id="summary"></div>
+
+<div class="legend">
+  <div class="legend-item"><span class="dot dot-none"></span> None (transparent)</div>
+  <div class="legend-item"><span class="dot dot-compiler"></span> Compiler</div>
+  <div class="legend-item"><span class="dot dot-kernel"></span> Kernel</div>
+  <div class="legend-item"><span class="dot dot-userspace"></span> Userspace libs</div>
+  <div class="legend-item"><span class="dot dot-full_stack"></span> Full stack</div>
+</div>
+
+<div class="filter-bar">
+  <label>Filter layer:</label>
+  <button class="filter-btn active" data-filter="all">All</button>
+  <button class="filter-btn" data-filter="none">None</button>
+  <button class="filter-btn" data-filter="compiler">Compiler</button>
+  <button class="filter-btn" data-filter="kernel">Kernel</button>
+  <button class="filter-btn" data-filter="userspace">Userspace</button>
+  <button class="filter-btn" data-filter="full_stack">Full stack</button>
+  <span style="margin-left: 12px">
+    <label><input type="checkbox" id="mandatory-only"> Mandatory only</label>
+  </span>
+</div>
+
+<h2>Mandatory Extensions</h2>
+<table id="mandatory-table">
+  <thead>
+    <tr>
+      <th>Extension</th>
+      <th>Description</th>
+      <th>Instructions?</th>
+      <th>GCC march</th>
+      <th>LLVM march</th>
+      <th>Linux kernel</th>
+      <th>Layer</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<h2>Optional Extensions</h2>
+<table id="optional-table">
+  <thead>
+    <tr>
+      <th>Extension</th>
+      <th>Description</th>
+      <th>Instructions?</th>
+      <th>GCC march</th>
+      <th>LLVM march</th>
+      <th>Linux kernel</th>
+      <th>Layer</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<div class="sources">
+  <strong>Sources:</strong>
+  GCC: <a href="https://gcc.gnu.org/onlinedocs/gcc/RISC-V-Options.html" target="_blank">RISC-V Options (GCC manual)</a> |
+  LLVM: <a href="https://llvm.org/docs/RISCVUsage.html" target="_blank">RISCVUsage (LLVM docs)</a> |
+  Linux kernel: <a href="linux-kernel-coverage.html">Kernel coverage tracker</a> (v7.0-rc1) |
+  UDB: <a href="https://github.com/riscv/riscv-unified-db" target="_blank">riscv-unified-db</a> RVA23U64 profile<br>
+  Generated: 2026-05-08 | <a href="rva23-extension-matrix.json">JSON data</a>
+</div>
+
+<script>
+const LAYER_LABELS = {
+  none: 'None',
+  compiler: 'Compiler',
+  kernel: 'Kernel',
+  userspace: 'Userspace libs',
+  full_stack: 'Full stack'
+};
+const LAYER_DESC = {
+  none: 'Platform property or NOP. Software-transparent.',
+  compiler: 'Compiler auto-generates instructions. No kernel/userspace changes.',
+  kernel: 'Kernel adaptation needed. Userspace largely transparent.',
+  userspace: 'Userspace runtime libraries (glibc, OpenSSL) need changes.',
+  full_stack: 'Kernel + compiler + userspace libraries all need work.'
+};
+
+function gccTag(e) {
+  if (!e.gcc_march) return '<span class="tag tag-no">No</span>';
+  if (e.gcc_status.includes('profile property')) return '<span class="tag tag-prop">Prop</span>';
+  return '<span class="tag tag-yes">Yes</span>';
+}
+function llvmTag(e) {
+  if (!e.llvm_march) return '<span class="tag tag-no">No</span>';
+  if (e.llvm_status.includes('Experimental')) return '<span class="tag tag-exp">Exp</span>';
+  if (e.llvm_status.includes('profile property')) return '<span class="tag tag-prop">Prop</span>';
+  if (e.llvm_status.includes('Assembly')) return '<span class="tag tag-asm">ASM</span>';
+  return '<span class="tag tag-yes">Yes</span>';
+}
+function kernelTag(e) {
+  return e.linux_kernel
+    ? '<span class="tag tag-yes">Yes</span>'
+    : '<span class="tag tag-no">No</span>';
+}
+function layerBadge(layer) {
+  return `<span class="layer-badge layer-${layer}">${LAYER_LABELS[layer]}</span>`;
+}
+
+function renderRow(e) {
+  return `<tr data-layer="${e.layer}">
+    <td>
+      <span class="ext-name">${e.name}</span>
+      ${e.rva23_new ? ' <span class="tag tag-new">NEW in RVA23</span>' : ''}
+    </td>
+    <td class="ext-desc">${e.description}</td>
+    <td><span class="has-inst ${e.has_instructions ? 'has-inst-yes' : 'has-inst-no'}">${e.has_instructions ? 'Yes' : 'No'}</span></td>
+    <td>${gccTag(e)}${e.gcc_status && !e.gcc_status.includes('profile property') ? `<div class="note">${e.gcc_status}</div>` : ''}</td>
+    <td>${llvmTag(e)}${e.llvm_status && !e.llvm_status.includes('profile property') ? `<div class="note">${e.llvm_status}</div>` : ''}</td>
+    <td>${kernelTag(e)}</td>
+    <td>${layerBadge(e.layer)}</td>
+    <td class="note">${e.layer_note}</td>
+  </tr>`;
+}
+
+fetch('rva23-extension-matrix.json')
+  .then(r => r.json())
+  .then(data => {
+    const mand = data.mandatory;
+    const opt = data.optional;
+    const all = [...mand, ...opt];
+
+    // Summary
+    const layerCounts = {};
+    const layerKernel = {};
+    for (const l of ['none','compiler','kernel','userspace','full_stack']) {
+      layerCounts[l] = all.filter(e => e.layer === l).length;
+      layerKernel[l] = mand.filter(e => e.layer === l).length;
+    }
+    document.getElementById('summary').innerHTML = `
+      <div class="summary-card"><div class="num">${mand.length}</div><div class="label">Mandatory extensions</div></div>
+      <div class="summary-card"><div class="num">${opt.length}</div><div class="label">Optional extensions</div></div>
+      <div class="summary-card"><div class="num">${layerCounts.none}</div><div class="label">Transparent (no changes)</div></div>
+      <div class="summary-card"><div class="num">${layerCounts.full_stack}</div><div class="label">Full stack impact</div></div>
+      <div class="summary-card"><div class="num">${layerCounts.compiler}</div><div class="label">Compiler only</div></div>
+      <div class="summary-card"><div class="num">${layerCounts.kernel}</div><div class="label">Kernel needed</div></div>
+      <div class="summary-card"><div class="num">${layerCounts.userspace}</div><div class="label">Userspace libs needed</div></div>
+    `;
+
+    document.querySelector('#mandatory-table tbody').innerHTML = mand.map(renderRow).join('');
+    document.querySelector('#optional-table tbody').innerHTML = opt.map(renderRow).join('');
+
+    // Filters
+    let currentFilter = 'all';
+    let mandatoryOnly = false;
+
+    function applyFilters() {
+      const tables = [document.querySelector('#mandatory-table tbody'),
+                      document.querySelector('#optional-table tbody')];
+      const headings = [document.querySelector('#mandatory-table'),
+                        document.querySelector('#optional-table')];
+      tables.forEach((tbody, i) => {
+        const rows = tbody.querySelectorAll('tr');
+        let visible = 0;
+        rows.forEach(row => {
+          const layer = row.dataset.layer;
+          const show = (currentFilter === 'all' || layer === currentFilter);
+          row.style.display = show ? '' : 'none';
+          if (show) visible++;
+        });
+        headings[i].style.display = (i === 1 && mandatoryOnly) ? 'none' : '';
+        if (i === 1 && mandatoryOnly) return;
+        headings[i].querySelector('h2')?.closest('h2')?.style;
+      });
+      // Hide optional heading if mandatory-only
+      const optHeading = document.querySelectorAll('h2')[1];
+      if (optHeading) optHeading.style.display = mandatoryOnly ? 'none' : '';
+    }
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.dataset.filter;
+        applyFilters();
+      });
+    });
+
+    document.getElementById('mandatory-only').addEventListener('change', (e) => {
+      mandatoryOnly = e.target.checked;
+      applyFilters();
+    });
+  });
+</script>
+</body>
+</html>
