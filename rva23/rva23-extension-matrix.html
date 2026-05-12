@@ -125,6 +125,135 @@
     th, td { padding: 5px 6px; }
     .ext-desc { display: none; }
   }
+  /* Privileged Architecture Reference tab */
+  .ref-meta {
+    background: rgba(88,166,255,0.04); border: 1px solid var(--border);
+    border-left: 3px solid var(--accent); border-radius: 0 6px 6px 0;
+    padding: 10px 14px; margin-bottom: 18px; font-size: 0.85rem;
+  }
+  .ref-meta a { color: var(--accent); text-decoration: none; }
+  .ref-meta a:hover { text-decoration: underline; }
+  .ref-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 16px 20px; margin-bottom: 16px;
+  }
+  .ref-card h3 {
+    color: var(--text-bright); font-size: 1.05rem; margin: 0 0 4px;
+    display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+  }
+  .ref-card h3 .ext-name { font-size: 1.05rem; }
+  .ref-card h3 .ref-long { color: var(--text-muted); font-weight: 500; font-size: 0.88rem; }
+  .ref-card .ref-version {
+    font-size: 0.72rem; color: var(--text-muted); font-family: 'SF Mono', 'Fira Code', monospace;
+  }
+  .ref-card .ref-desc { font-size: 0.88rem; color: var(--text); margin: 8px 0 10px; }
+  .ref-card .ref-spec {
+    font-size: 0.78rem; color: var(--text-muted); margin: 6px 0 10px;
+    padding: 6px 10px; background: rgba(255,255,255,0.02); border-radius: 4px;
+  }
+  .ref-card .ref-spec a { color: var(--accent); text-decoration: none; }
+  .ref-card .ref-spec a:hover { text-decoration: underline; }
+  .ref-deps { font-size: 0.78rem; color: var(--text-muted); margin: 6px 0; }
+  .ref-deps strong { color: var(--text); }
+  .ref-deps .dep-tag {
+    display: inline-block; padding: 1px 7px; margin: 0 3px;
+    background: rgba(139,148,158,0.12); color: var(--text);
+    border-radius: 4px; font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.75rem;
+  }
+  .ref-section { margin-top: 12px; }
+  .ref-section-title {
+    font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase;
+    letter-spacing: 0.5px; font-weight: 600; margin-bottom: 6px;
+  }
+  .ref-section-title .count {
+    background: rgba(88,166,255,0.12); color: var(--accent);
+    padding: 1px 7px; border-radius: 10px; font-size: 0.72rem;
+    margin-left: 6px; text-transform: none; letter-spacing: 0;
+  }
+  .ref-list { list-style: none; padding: 0; margin: 0; }
+  .ref-list li {
+    padding: 5px 0; border-bottom: 1px solid rgba(48,54,61,0.5);
+    font-size: 0.85rem; display: grid; grid-template-columns: minmax(160px, 260px) 1fr; gap: 12px;
+    align-items: baseline;
+  }
+  .ref-list li code { word-break: break-word; }
+  .ref-list li:last-child { border-bottom: none; }
+  .ref-list code {
+    font-family: 'SF Mono', 'Fira Code', monospace; color: var(--text-bright);
+    font-size: 0.85rem;
+  }
+  .ref-list .ref-summary { color: var(--text-muted); font-size: 0.82rem; }
+  .ref-group { margin-bottom: 10px; }
+  .ref-group-label {
+    font-size: 0.78rem; color: var(--yellow); font-weight: 600; margin-bottom: 4px;
+  }
+  .ref-group-csrs {
+    font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.78rem;
+    color: var(--text); padding-left: 12px;
+  }
+  .ref-empty { color: var(--text-muted); font-size: 0.82rem; font-style: italic; padding: 4px 0; }
+  .ref-note {
+    background: rgba(210,153,34,0.06); border-left: 2px solid var(--yellow);
+    padding: 6px 10px; font-size: 0.78rem; color: var(--text);
+    border-radius: 0 4px 4px 0; margin-top: 8px;
+  }
+  @media (max-width: 700px) {
+    .ref-list li { grid-template-columns: 1fr; gap: 2px; }
+  }
+  /* Server Platform Spec tab */
+  .sp-tree {
+    background: rgba(88,166,255,0.04); border: 1px solid var(--border);
+    border-left: 3px solid var(--accent); border-radius: 0 6px 6px 0;
+    padding: 14px 18px; margin-bottom: 18px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.82rem; color: var(--text); line-height: 1.75;
+    overflow-x: auto; white-space: pre;
+  }
+  .sp-tree code { color: var(--text-bright); background: rgba(255,255,255,0.04); padding: 0 4px; border-radius: 3px; }
+  .sp-tree .sp-t-rva23 { color: var(--text-bright); font-weight: 700; }
+  .sp-tree .sp-t-must { color: var(--accent); font-weight: 600; }
+  .sp-tree .sp-t-should { color: var(--yellow); font-weight: 600; }
+  .sp-tree .sp-t-cond { color: var(--orange); font-weight: 600; }
+  .sp-tree .sp-t-kind { color: var(--text-muted); font-style: italic; }
+  .sp-section {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 14px 18px; margin-bottom: 16px;
+  }
+  .sp-section h3 {
+    color: var(--text-bright); font-size: 1.02rem; margin: 0 0 10px;
+    display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+  }
+  .sp-section h3 .sp-section-sub { color: var(--text-muted); font-weight: 500; font-size: 0.82rem; }
+  .sp-rule-group { margin: 12px 0; }
+  .sp-rule-group:first-child { margin-top: 4px; }
+  .sp-rule-header { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 4px; }
+  .sp-rule-id {
+    display: inline-block; font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.74rem; padding: 1px 7px; border-radius: 4px;
+    background: rgba(88,166,255,0.12); color: var(--accent);
+    margin-right: 8px; font-weight: 600;
+  }
+  .sp-rule-id.sp-rule-should { background: rgba(210,153,34,0.12); color: var(--yellow); }
+  .sp-rule-id.sp-rule-cond   { background: rgba(219,109,40,0.12); color: var(--orange); }
+  .sp-rule-id.sp-rule-misc   { background: rgba(139,148,158,0.12); color: var(--text-muted); }
+  .sp-ext-list, .sp-non-ext { list-style: none; padding: 0; margin: 6px 0 0; }
+  .sp-ext-list li {
+    padding: 7px 0; border-bottom: 1px solid rgba(48,54,61,0.5);
+    display: grid; grid-template-columns: minmax(120px, 160px) 1fr; gap: 14px;
+    align-items: baseline; font-size: 0.88rem;
+  }
+  .sp-ext-list li:last-child, .sp-non-ext li:last-child { border-bottom: none; }
+  .sp-ext-list li code, .sp-non-ext li code {
+    font-family: 'SF Mono', 'Fira Code', monospace; color: var(--text-bright); font-size: 0.86rem;
+  }
+  .sp-ext-status { color: var(--text-muted); font-size: 0.78rem; display: block; margin-top: 3px; }
+  .sp-status-promoted { color: var(--yellow); }
+  .sp-status-new { color: var(--purple); }
+  .sp-non-ext li { padding: 6px 0; font-size: 0.86rem; border-bottom: 1px solid rgba(48,54,61,0.5); }
+  @media (max-width: 700px) {
+    .sp-ext-list li { grid-template-columns: 1fr; gap: 2px; }
+  }
 </style>
 </head>
 <body>
@@ -147,6 +276,8 @@
 <div class="tabs" role="tablist">
   <button class="tab-btn active" data-profile="u64" role="tab">RVA23U64<span class="tab-sub">User mode</span></button>
   <button class="tab-btn" data-profile="s64" role="tab">RVA23S64<span class="tab-sub">Supervisor / Hypervisor additions</span></button>
+  <button class="tab-btn" data-profile="priv-ref" role="tab">Privileged Arch Reference<span class="tab-sub">Ss1p13 / Sm1p13 / H / Sv*</span></button>
+  <button class="tab-btn" data-profile="server-platform" role="tab">Server Platform v1.0<span class="tab-sub">RVA23 + AIA + IOMMU + ...</span></button>
 </div>
 
 <div class="scope-note" id="scope-note" style="display: none;"></div>
@@ -177,7 +308,128 @@
   </span>
 </div>
 
-<h2>Mandatory Extensions</h2>
+<div id="priv-ref-container" style="display: none;"></div>
+
+<div id="server-platform-container" style="display: none;">
+  <div class="ref-meta">
+    <strong>Spec:</strong> <a href="https://github.com/riscv-non-isa/riscv-server-platform/releases/download/v1.0/riscv-server-platform.pdf" target="_blank">riscv-server-platform.pdf v1.0</a>
+    &middot; <strong>Source:</strong> <a href="https://github.com/riscv-non-isa/riscv-server-platform" target="_blank">riscv-non-isa/riscv-server-platform</a>
+    &middot; <a href="https://github.com/riscv-non-isa/riscv-server-platform/blob/main/server_platform_requirements.adoc" target="_blank">requirements.adoc</a>
+  </div>
+
+<pre class="sp-tree"><span class="sp-t-rva23">RVA23S64</span>   <span class="sp-t-kind">(78 mandatory ISA extensions, fully inherited via <code>RVA_010</code>)</span>
+    &#9474;
+    &#9492;&#9472;&#9472;&#9658; <strong>Server Platform Spec v1.0</strong> adds on top:
+         &#9500;&#9472; <span class="sp-t-must">MUST</span>     <code>RVA_020</code>          Sv48, Sdtrig, Sdext, Zkr, Ssccfg, Ssstrict, Ssaia   <span class="sp-t-kind">(7 ISA exts)</span>
+         &#9500;&#9472; <span class="sp-t-should">SHOULD</span>   <code>RVA_030 / 040</code>    Svadu, Ssctr                                        <span class="sp-t-kind">(2 recommended ISA)</span>
+         &#9500;&#9472; <span class="sp-t-must">MUST</span>     <code>FIRM_020 / 030</code>   SBI v3.0 DBTR  &middot;  conditional: SBI v3.0 SSE          <span class="sp-t-kind">(firmware ABI)</span>
+         &#9500;&#9472; <span class="sp-t-must">MUST</span>     <code>HSOC / HPER / FIRM_140</code>   APLIC, IOMMU, Server SoC v1.0, TPM 2.0, UART, ...   <span class="sp-t-kind">(platform HW)</span>
+         &#9492;&#9472; <span class="sp-t-must">MUST</span>     <code>SEC_010..110</code>     UEFI Secure Boot, hardware RoT, signed FW updates   <span class="sp-t-kind">(security)</span></pre>
+
+  <div class="sp-section">
+    <h3>ISA extensions added on top of RVA23S64 <span class="sp-section-sub">&mdash; Server Platform Hardware Rules &sect; RISC-V Harts</span></h3>
+
+    <div class="sp-rule-group">
+      <div class="sp-rule-header"><span class="sp-rule-id">RVA_020 MUST</span>7 mandatory ISA additions</div>
+      <ul class="sp-ext-list">
+        <li><code>Sv48</code>
+          <div>48-bit virtual addressing.
+            <span class="sp-ext-status sp-status-promoted">RVA23S64: optional &rarr; promoted to MUST.</span>
+          </div></li>
+        <li><code>Sdtrig</code>
+          <div>Debug triggers. <code>SEE_020</code> further mandates &ge;4 instruction-address and &ge;4 load/store-address match triggers.
+            <span class="sp-ext-status sp-status-promoted">RVA23S64: optional &rarr; promoted to MUST.</span>
+          </div></li>
+        <li><code>Sdext</code>
+          <div>External debug extension.
+            <span class="sp-ext-status sp-status-new">NEW &mdash; not in RVA23S64.</span>
+          </div></li>
+        <li><code>Zkr</code>
+          <div>Entropy-source CSR (<code>seed</code>) &mdash; servers need entropy at boot.
+            <span class="sp-ext-status sp-status-promoted">RVA23S64: optional &rarr; promoted to MUST.</span>
+          </div></li>
+        <li><code>Ssccfg</code>
+          <div>Counter configuration extension.
+            <span class="sp-ext-status sp-status-new">NEW &mdash; not in RVA23S64.</span>
+          </div></li>
+        <li><code>Ssstrict</code>
+          <div>Implementation must not include non-standard extensions or use reserved encodings.
+            <span class="sp-ext-status sp-status-promoted">RVA23S64: optional &rarr; promoted to MUST.</span>
+          </div></li>
+        <li><code>Ssaia</code>
+          <div>S-mode part of the <strong>Advanced Interrupt Architecture</strong> &mdash; the ISA-level CSRs paired with platform-level APLIC/IMSIC. This is the "AIA piece" that RVA23 itself does not require.
+            <span class="sp-ext-status sp-status-new">NEW &mdash; not in RVA23S64. Spec note: "These mandates may be moved into a new ISA profile specification."</span>
+          </div></li>
+      </ul>
+    </div>
+
+    <div class="sp-rule-group">
+      <div class="sp-rule-header"><span class="sp-rule-id sp-rule-should">RVA_030 / 040 SHOULD</span>2 recommended ISA additions</div>
+      <ul class="sp-ext-list">
+        <li><code>Svadu</code>
+          <div>Hardware A/D-bit updating in page-table entries.
+            <span class="sp-ext-status sp-status-promoted">RVA23S64: optional &rarr; still optional. "Expected to become mandatory in a future version."</span>
+          </div></li>
+        <li><code>Ssctr</code>
+          <div>Control Transfer Records. If implemented, a CTR depth of <strong>32</strong> is mandatory (uniform depth aids VM migration; useful for profile-guided optimisation).
+            <span class="sp-ext-status sp-status-new">NEW &mdash; not in RVA23S64. "Expected to become mandatory in a future version."</span>
+          </div></li>
+      </ul>
+    </div>
+
+    <div class="sp-rule-group">
+      <div class="sp-rule-header"><span class="sp-rule-id sp-rule-misc">RVA_060 MUST</span>Sizing constraint on an already-mandatory extension</div>
+      <ul class="sp-ext-list">
+        <li><code>Zihpm &ge; 6</code>
+          <div>At least 6 hardware performance counters, on top of the three defined by Zicntr.
+            <span class="sp-ext-status">Not a new extension &mdash; a minimum-instance count on one RVA23 already mandates.</span>
+          </div></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sp-section">
+    <h3>Firmware / SBI <span class="sp-section-sub">&mdash; Server Platform Firmware Rules</span></h3>
+    <ul class="sp-non-ext">
+      <li><span class="sp-rule-id">FIRM_010 MUST</span>BRS-I recipe from <a href="https://github.com/riscv-non-isa/riscv-brs" target="_blank">Boot &amp; Runtime Services v1.0</a></li>
+      <li><span class="sp-rule-id">FIRM_020 MUST</span>SBI v3.0 <code>DBTR</code> (Debug Triggers) &mdash; required so S-mode can drive <code>Sdtrig</code></li>
+      <li><span class="sp-rule-id sp-rule-cond">FIRM_030 if-RAS</span>SBI v3.0 <code>SSE</code> (Supervisor Software Events) &mdash; required when any RISC-V RAS support is present</li>
+      <li><span class="sp-rule-id">FIRM_140 MUST</span><strong>IOMMU</strong> described via <code>RIMT</code> ACPI table</li>
+      <li><span class="sp-rule-id">FIRM_150..170</span>Forward-edge CFI in UEFI runtime services (signaled via EFI memory-attribute flag; entry must be <code>lpad 0</code>)</li>
+    </ul>
+  </div>
+
+  <div class="sp-section">
+    <h3>Platform hardware <span class="sp-section-sub">&mdash; SoC, peripherals, interrupt controller, IOMMU</span></h3>
+    <ul class="sp-non-ext">
+      <li><span class="sp-rule-id">HSOC_010 MUST</span>SoC complies with <a href="https://github.com/riscv-non-isa/server-soc" target="_blank">Server SoC v1.0</a> (a separate spec)</li>
+      <li><span class="sp-rule-id">HSOC_020 MUST</span>VM-assignable / userspace-driver peripherals must be PCIe (or SoC-integrated PCIe). APLIC, IOMMU, debug, RoT explicitly excluded.</li>
+      <li><span class="sp-rule-id sp-rule-misc">implicit</span>Interrupt controller (typically <strong>APLIC</strong> per the <a href="https://github.com/riscv/riscv-aia" target="_blank">AIA spec</a>) &mdash; required via <code>Ssaia</code> + HSOC rules</li>
+      <li><span class="sp-rule-id sp-rule-misc">implicit</span><strong>IOMMU</strong> per the <a href="https://github.com/riscv-non-isa/riscv-iommu" target="_blank">RISC-V IOMMU spec</a> &mdash; required for PCIe device assignment to VMs</li>
+      <li><span class="sp-rule-id">HPER_010 MUST</span>16550- or PL011-compatible UART (115200 baud, flow control, IRQ-driven)</li>
+      <li><span class="sp-rule-id sp-rule-cond">HPER_030..040</span>If USB present: XHCI 1.2+; if SATA present: AHCI 1.3.1+ (both with 64-bit addressing)</li>
+      <li><span class="sp-rule-id">HPER_070 MUST</span>Battery-backed RTC for UEFI certificate validity</li>
+      <li><span class="sp-rule-id">HPER_090 MUST</span><strong>TPM 2.0</strong> (TPM 2.0 Library spec)</li>
+    </ul>
+  </div>
+
+  <div class="sp-section">
+    <h3>Security <span class="sp-section-sub">&mdash; Server Platform Security Rules</span></h3>
+    <ul class="sp-non-ext">
+      <li><span class="sp-rule-id">SEC_010 MUST</span>Hardware <strong>Root of Trust</strong>, isolated from the application processor (examples: OpenTitan, Caliptra)</li>
+      <li><span class="sp-rule-id">SEC_020 MUST</span>RoT manages a security lifecycle: Manufacture &rarr; Provisioning &rarr; Secured &rarr; Recoverable Debug &rarr; Terminated</li>
+      <li><span class="sp-rule-id sp-rule-should">SEC_030 SHOULD</span>RoT-rooted secure identity + platform attestation (TCG DICE / SPDM)</li>
+      <li><span class="sp-rule-id">SEC_040 MUST</span><strong>UEFI Secure Boot</strong> + driver signing</li>
+      <li><span class="sp-rule-id">SEC_080..100 MUST</span>In-band firmware updates with signed payloads + signature validation before applying</li>
+    </ul>
+  </div>
+
+  <p class="note" style="margin-top: 16px;">
+    Structural summary only. For exact rule wording, cite references, and conformance details, read the source <a href="https://github.com/riscv-non-isa/riscv-server-platform/blob/main/server_platform_requirements.adoc" target="_blank">server_platform_requirements.adoc</a>.
+  </p>
+</div>
+
+<h2 id="mandatory-heading">Mandatory Extensions</h2>
 <table id="mandatory-table">
   <thead>
     <tr>
@@ -215,7 +467,7 @@
 
 <div class="sources" id="platform-not-covered">
   <strong>Platform-layer items not covered:</strong>
-  RVA23 is a CPU-ISA-only profile. The following components are required by RISC-V platform specs (Server Platform, BRS / EBBR / SBBR) but are not part of any RVA profile and so do not appear in this matrix:
+  RVA23 is a CPU-ISA-only profile. The following components are required by RISC-V platform specs (Server Platform, BRS / EBBR / SBBR) but are not part of any RVA profile and so do not appear in this matrix. For a structured view of what the server platform spec adds on top of RVA23, see the <a href="#server-platform" data-profile-link="server-platform"><strong>Server Platform v1.0</strong> tab</a> above.
   <ul style="margin: 6px 0 10px 22px; padding: 0;">
     <li><strong>IOMMU</strong> &mdash; DMA address translation. Spec: <em>RISC-V IOMMU Architecture Specification</em> (ratified 2024). Reuses CPU PTE formats (Sv39x4 / Sv48x4 / Sv57x4) and inter-operates with <code>H</code>-extension G-stage translation. Linux: <code>drivers/iommu/riscv/</code> (v6.13+).</li>
     <li><strong>AIA / IMSIC / APLIC</strong> &mdash; Advanced Interrupt Architecture. Specs: <code>Ssaia</code> / <code>Smaia</code> extensions, optional and not listed in RVA23. Linux: <code>drivers/irqchip/irq-riscv-{imsic,aplic}-*.c</code>.</li>
@@ -297,12 +549,26 @@ const PROFILES = {
   u64: {
     json: 'rva23-u64-extension-matrix.json',
     subtitle: 'Which software layer needs to change to support each RVA23U64 extension?',
-    scopeNote: null
+    scopeNote: null,
+    kind: 'matrix'
   },
   s64: {
     json: 'rva23-s64-extension-matrix.json',
     subtitle: 'Supervisor / hypervisor extensions added by RVA23S64 (on top of RVA23U64).',
-    scopeNote: '<strong>Scope:</strong> RVA23S64 fully inherits RVA23U64 - every extension in the U64 tab is also mandatory or optional here. This matrix lists only the additional S-mode / H-mode / page-table extensions. Switch to the <a href="#u64" data-profile-link="u64">RVA23U64 tab</a> for the inherited user-mode set.'
+    scopeNote: '<strong>Scope:</strong> RVA23S64 fully inherits RVA23U64 - every extension in the U64 tab is also mandatory or optional here. This matrix lists only the additional S-mode / H-mode / page-table extensions. Switch to the <a href="#u64" data-profile-link="u64">RVA23U64 tab</a> for the inherited user-mode set.',
+    kind: 'matrix'
+  },
+  'priv-ref': {
+    json: 'rva23-privileged-arch-reference.json',
+    subtitle: 'What each privileged-architecture extension actually contains (instructions, CSRs, dependencies, spec source).',
+    scopeNote: '<strong>Scope:</strong> Inventory view, not a support-status matrix. Shows the instructions and CSRs introduced by Ss1p13 (Supervisor v1.13), Sm1p13 (Machine v1.13), H (Hypervisor) and the Sv* page-table extensions. Use the <a href="#u64" data-profile-link="u64">RVA23U64</a> / <a href="#s64" data-profile-link="s64">RVA23S64</a> tabs for kernel/compiler/userspace support status.',
+    kind: 'reference'
+  },
+  'server-platform': {
+    json: null,
+    subtitle: 'Extensions and platform requirements added by the RISC-V Server Platform Spec v1.0 on top of RVA23S64.',
+    scopeNote: '<strong>Scope:</strong> This view summarises what the <a href="https://github.com/riscv-non-isa/riscv-server-platform" target="_blank">RISC-V Server Platform Spec v1.0</a> requires that goes <em>beyond</em> the RVA23 ISA profile. RVA23S64 is fully required by rule <code>RVA_010</code>; this tab shows everything stacked on top &mdash; ISA additions (including <strong>Ssaia</strong>), SBI/firmware, platform hardware (including <strong>APLIC</strong> and <strong>IOMMU</strong>), and security.',
+    kind: 'server-platform'
   }
 };
 
@@ -366,6 +632,23 @@ function applyFilters() {
   if (optHeading) optHeading.style.display = mandatoryOnly ? 'none' : '';
 }
 
+function setViewMode(kind) {
+  const matrixOnly = (kind === 'matrix');
+  const isReference = (kind === 'reference');
+  const isServer = (kind === 'server-platform');
+  document.getElementById('summary').style.display = matrixOnly ? '' : 'none';
+  document.querySelector('.legend').style.display = matrixOnly ? '' : 'none';
+  document.querySelector('.filter-bar').style.display = matrixOnly ? '' : 'none';
+  document.getElementById('mandatory-heading').style.display = matrixOnly ? '' : 'none';
+  document.getElementById('mandatory-table').style.display = matrixOnly ? '' : 'none';
+  // optional table h2 sibling
+  const optHeading = document.querySelectorAll('h2')[1];
+  if (optHeading) optHeading.style.display = matrixOnly && !mandatoryOnly ? '' : 'none';
+  document.getElementById('optional-table').style.display = matrixOnly ? '' : 'none';
+  document.getElementById('priv-ref-container').style.display = isReference ? '' : 'none';
+  document.getElementById('server-platform-container').style.display = isServer ? '' : 'none';
+}
+
 function loadProfile(name) {
   const p = PROFILES[name];
   document.getElementById('subtitle').textContent = p.subtitle;
@@ -376,14 +659,120 @@ function loadProfile(name) {
   } else {
     note.style.display = 'none';
   }
+  setViewMode(p.kind);
+  if (!p.json) return Promise.resolve(); // inline view (e.g. server-platform)
+  const renderFn = p.kind === 'reference' ? renderReference : renderProfile;
   if (p.data) {
-    renderProfile(p.data);
+    renderFn(p.data);
     return Promise.resolve();
   }
   return fetch(p.json).then(r => r.json()).then(data => {
     p.data = data;
-    renderProfile(data);
+    renderFn(data);
   });
+}
+
+function renderReference(data) {
+  const meta = data._meta || {};
+  const exts = data.extensions || [];
+  const metaHtml = `
+    <div class="ref-meta">
+      <strong>Spec release:</strong> <a href="${meta.spec_pdf}" target="_blank">riscv-spec.pdf</a>
+      &middot; <a href="${meta.spec_html}" target="_blank">HTML</a>
+      &middot; tag <code>${meta.spec_release || ''}</code>
+      <br><strong>Source repos:</strong>
+      <a href="${meta.source_repo}" target="_blank">riscv-isa-manual</a> (prose) &middot;
+      <a href="${meta.udb_repo}" target="_blank">riscv-unified-db</a> (machine-readable)
+    </div>
+  `;
+  const cards = exts.map(renderRefCard).join('');
+  document.getElementById('priv-ref-container').innerHTML = metaHtml + cards;
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+}
+
+function renderRefCard(e) {
+  const deps = (e.depends_on && e.depends_on.length)
+    ? `<div class="ref-deps"><strong>Requires:</strong> ${e.depends_on.map(d => `<span class="dep-tag">${escapeHtml(d)}</span>`).join('')}</div>`
+    : '';
+  const specBlock = e.spec
+    ? `<div class="ref-spec">
+        <strong>Spec:</strong> ${escapeHtml(e.spec.chapter)} &middot;
+        <a href="${e.spec.adoc_url}" target="_blank">source (adoc)</a>
+        ${e.spec.pdf_pages ? ` &middot; PDF ${escapeHtml(e.spec.pdf_pages)}` : ''}
+       </div>`
+    : '';
+
+  let instSection = '';
+  if (e.instructions !== undefined) {
+    const n = e.inst_count !== undefined ? e.inst_count : e.instructions.length;
+    instSection = `
+      <div class="ref-section">
+        <div class="ref-section-title">Instructions <span class="count">${n}</span></div>
+        ${n === 0
+          ? '<div class="ref-empty">None &mdash; this extension adds no new instructions.</div>'
+          : `<ul class="ref-list">${e.instructions.map(i =>
+              `<li><code>${escapeHtml(i.name)}</code><span class="ref-summary">${escapeHtml(i.summary)}</span></li>`
+            ).join('')}</ul>`}
+      </div>`;
+  }
+
+  let csrSection = '';
+  if (e.csrs !== undefined && e.csrs.length) {
+    csrSection = `
+      <div class="ref-section">
+        <div class="ref-section-title">CSRs <span class="count">${e.csrs.length}</span></div>
+        <ul class="ref-list">${e.csrs.map(c =>
+          `<li><code>${escapeHtml(c.name)}</code><span class="ref-summary">${escapeHtml(c.summary)}</span></li>`
+        ).join('')}</ul>
+      </div>`;
+  } else if (e.csr_groups && e.csr_groups.length) {
+    const total = e.csr_count || e.csr_groups.reduce((s, g) => s + g.csrs.length, 0);
+    csrSection = `
+      <div class="ref-section">
+        <div class="ref-section-title">CSRs <span class="count">${total}</span></div>
+        ${e.csr_groups.map(g => `
+          <div class="ref-group">
+            <div class="ref-group-label">${escapeHtml(g.label)}</div>
+            <div class="ref-group-csrs">${g.csrs.map(escapeHtml).join(', ')}</div>
+          </div>`).join('')}
+      </div>`;
+  } else if (e.csrs !== undefined) {
+    csrSection = `
+      <div class="ref-section">
+        <div class="ref-section-title">CSRs <span class="count">0</span></div>
+        <div class="ref-empty">None &mdash; this extension adds no new CSRs.</div>
+      </div>`;
+  }
+
+  const note = e.adds_note
+    ? `<div class="ref-note">${escapeHtml(e.adds_note)}</div>`
+    : '';
+
+  const udbRef = e.udb_name && e.udb_name !== e.name
+    ? ` <span class="ref-version">(UDB: ${escapeHtml(e.udb_name)} v${escapeHtml(e.version || '')})</span>`
+    : '';
+
+  return `
+    <div class="ref-card">
+      <h3>
+        <span class="ext-name">${escapeHtml(e.name)}</span>
+        <span class="ref-long">${escapeHtml(e.long_name || '')}</span>
+        ${udbRef}
+      </h3>
+      <div class="ref-version">Version ${escapeHtml(e.version || '')} &middot; Ratified ${escapeHtml(e.ratification_date || '—')}</div>
+      <div class="ref-desc">${escapeHtml(e.description || '')}</div>
+      ${specBlock}
+      ${deps}
+      ${instSection}
+      ${csrSection}
+      ${note}
+    </div>
+  `;
 }
 
 function switchTab(name, pushHash) {

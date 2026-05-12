@@ -17,9 +17,9 @@
   },
   "mandatory": [
     {
-      "name": "S",
-      "long_name": "Supervisor Mode",
-      "description": "Supervisor-mode privilege architecture (sret, sstatus/sepc/stvec/scause/satp CSRs)",
+      "name": "Ss1p13",
+      "long_name": "Supervisor Architecture v1.13",
+      "description": "Supervisor-mode privilege architecture v1.13 (sret, sfence.vma; sstatus/sepc/scause/stval/stvec/sscratch/sie/sip/satp/senvcfg/scounteren CSRs). Supersedes Ss1p12.",
       "has_instructions": true,
       "csr_state": "new",
       "gcc_march": true,

@@ -1,0 +1,303 @@
+{
+  "_meta": {
+    "spec_release": "riscv-isa-release-2668138-2026-05-12",
+    "spec_pdf": "https://github.com/riscv/riscv-isa-manual/releases/download/riscv-isa-release-2668138-2026-05-12/riscv-spec.pdf",
+    "spec_html": "https://github.com/riscv/riscv-isa-manual/releases/download/riscv-isa-release-2668138-2026-05-12/riscv-spec.html",
+    "source_repo": "https://github.com/riscv/riscv-isa-manual",
+    "udb_repo": "https://github.com/riscv/riscv-unified-db",
+    "note": "Inventory of what each privileged-architecture extension contributes (instructions + CSRs). RVA23 names the version-pinned forms (e.g. Ss1p13, Sm1p13); UDB models them as <name> + <version> field. Both are listed in the udb_name field."
+  },
+  "extensions": [
+    {
+      "name": "Ss1p13",
+      "long_name": "Supervisor Architecture v1.13",
+      "udb_name": "S",
+      "version": "1.13.0",
+      "ratification_date": "2024-10",
+      "description": "Supervisor-mode privilege architecture: trap entry/exit, interrupt delegation, virtual-memory base CSR (satp), supervisor-mode environment configuration. Foundation that all Ss*/Sh*/Sv* extensions build on. Supersedes Ss1p12.",
+      "depends_on": ["Sm1p13", "U"],
+      "spec": {
+        "chapter": "Chapter 4. Supervisor-Level ISA, Version 1.13",
+        "adoc_url": "https://github.com/riscv/riscv-isa-manual/blob/main/src/priv/supervisor.adoc",
+        "pdf_pages": "729-756 (28 pages)"
+      },
+      "instructions": [
+        { "name": "sret", "summary": "Return from supervisor-mode trap (restores PC from sepc, privilege from sstatus.SPP)" },
+        { "name": "sfence.vma", "summary": "Supervisor memory-management fence (synchronize page-table updates, flush TLB)" }
+      ],
+      "csrs": [
+        { "name": "sstatus",     "summary": "Supervisor status (SIE/SPIE/SPP/SUM/MXR/UBE/UXL/SDT/SPELP, ...)" },
+        { "name": "stvec",       "summary": "Trap-vector base address + MODE (Direct/Vectored)" },
+        { "name": "sip",         "summary": "Supervisor interrupt pending (SSIP/STIP/SEIP, LCOFIP)" },
+        { "name": "sie",         "summary": "Supervisor interrupt enable (SSIE/STIE/SEIE, LCOFIE)" },
+        { "name": "scounteren",  "summary": "Counter enable: which hpmcounter/cycle/time/instret are accessible from U-mode" },
+        { "name": "sscratch",    "summary": "Scratch register for trap-handler context save area pointer" },
+        { "name": "sepc",        "summary": "Supervisor exception program counter (PC at trap)" },
+        { "name": "scause",      "summary": "Supervisor trap cause (interrupt bit + cause code)" },
+        { "name": "stval",       "summary": "Supervisor trap value (faulting address / instruction bits)" },
+        { "name": "senvcfg",     "summary": "Supervisor environment configuration: FIOM, CBIE/CBCFE/CBZE, PMM, ..." },
+        { "name": "satp",        "summary": "Supervisor address translation & protection (MODE selects Bare/Sv39/Sv48/Sv57; ASID; root PPN)" }
+      ]
+    },
+    {
+      "name": "Sm1p13",
+      "long_name": "Machine Architecture v1.13",
+      "udb_name": "Sm",
+      "version": "1.13.0",
+      "ratification_date": "2024-10",
+      "description": "Machine-mode privilege architecture: machine-mode trap handling, ISA discovery (misa), interrupt delegation to S-mode, physical-memory protection (PMP), performance counters, environment configuration. Companion to Ss1p13 (paired version 1.13). The Sm extension is implicit in any conformant RISC-V system; Ss1p13 explicitly requires Sm1p13.",
+      "depends_on": [],
+      "spec": {
+        "chapter": "Chapter 3. Machine-Level ISA, Version 1.13 + Chapter 6. Sm Machine Extensions",
+        "adoc_url": "https://github.com/riscv/riscv-isa-manual/blob/main/src/priv/machine.adoc",
+        "pdf_pages": "Chapter 3: pages ~600-728 (~129 pages); Chapter 6: ~743-757"
+      },
+      "instructions": [
+        { "name": "mret", "summary": "Return from machine-mode trap (restores PC from mepc, privilege from mstatus.MPP)" },
+        { "name": "wfi",  "summary": "Wait for interrupt hint (low-power stall until pending interrupt)" }
+      ],
+      "csr_count": 215,
+      "csr_groups": [
+        {
+          "label": "Core trap/state",
+          "csrs": ["mstatus", "mstatush", "misa", "mie", "mip", "mtvec", "mepc", "mcause", "mtval", "mtinst", "mtval2", "mscratch", "medeleg", "medelegh", "mideleg", "menvcfg", "menvcfgh", "mseccfg", "mseccfgh", "mcountinhibit", "mconfigptr"]
+        },
+        {
+          "label": "Identification (read-only)",
+          "csrs": ["mvendorid", "marchid", "mimpid", "mhartid"]
+        },
+        {
+          "label": "Counters",
+          "csrs": ["mcycle / mcycleh", "minstret / minstreth", "mhpmcounter3-31 / mhpmcounter3h-31h (58 CSRs)"]
+        },
+        {
+          "label": "Counter events",
+          "csrs": ["mhpmevent3-31 / mhpmevent3h-31h (58 CSRs)"]
+        },
+        {
+          "label": "Physical Memory Protection",
+          "csrs": ["pmpcfg0-15 (16 CSRs)", "pmpaddr0-63 (64 CSRs)"]
+        }
+      ]
+    },
+    {
+      "name": "H",
+      "long_name": "Hypervisor Extension",
+      "udb_name": "H",
+      "version": "1.0.0",
+      "ratification_date": "2019-12",
+      "description": "Virtualizes the supervisor-level architecture: introduces HS-mode (hypervisor-extended S-mode) and VS/VU guest modes, adds a second stage of address translation (guest physical → supervisor physical) via hgatp + Sv*x4 page-table formats. Required for KVM/RISC-V, pKVM, Android protected VMs. Mandated by RVA23S64 via the Sha umbrella extension.",
+      "depends_on": ["S (>= 1.12)"],
+      "spec": {
+        "chapter": "Chapter 5. H Extension for Hypervisor Support",
+        "adoc_url": "https://github.com/riscv/riscv-isa-manual/blob/main/src/priv/hypervisor.adoc",
+        "pdf_pages": "757-~810"
+      },
+      "inst_count": 15,
+      "instructions": [
+        { "name": "hfence.vvma", "summary": "Hypervisor fence: invalidate VS-stage TLB entries" },
+        { "name": "hfence.gvma", "summary": "Hypervisor fence: invalidate G-stage (guest-physical) TLB entries" },
+        { "name": "hlv.b / hlv.bu",  "summary": "Hypervisor load byte (signed/unsigned) from VS/VU virtual address (2 insns)" },
+        { "name": "hlv.h / hlv.hu",  "summary": "Hypervisor load halfword (signed/unsigned) (2 insns)" },
+        { "name": "hlv.w / hlv.wu",  "summary": "Hypervisor load word (signed/unsigned) (2 insns)" },
+        { "name": "hlv.d",           "summary": "Hypervisor load doubleword (RV64)" },
+        { "name": "hlvx.hu / hlvx.wu","summary": "Hypervisor load with execute permission check, instruction-fetch semantics (2 insns)" },
+        { "name": "hsv.b / hsv.h / hsv.w / hsv.d", "summary": "Hypervisor store byte/half/word/double to VS/VU virtual address (4 insns)" }
+      ],
+      "csr_count": 28,
+      "csr_groups": [
+        {
+          "label": "HS-mode trap / state",
+          "csrs": ["hstatus", "hedeleg", "hedelegh", "hcounteren", "htimedelta", "htimedeltah", "htval", "htinst", "hgatp", "henvcfg", "henvcfgh", "hcontext"]
+        },
+        {
+          "label": "VS-mode shadow CSRs (active when V=1)",
+          "csrs": ["vsstatus", "vstvec", "vsepc", "vscause", "vstval", "vsatp"]
+        },
+        {
+          "label": "M-mode additions for guest trap",
+          "csrs": ["mtinst", "mtval2"]
+        },
+        {
+          "label": "State-enable (H-side, with Smstateen)",
+          "csrs": ["hstateen0 / hstateen0h", "hstateen1 / hstateen1h", "hstateen2 / hstateen2h", "hstateen3 / hstateen3h"]
+        }
+      ]
+    },
+    {
+      "name": "Sv39",
+      "long_name": "39-bit Page-Based Virtual Memory",
+      "udb_name": "Sv39",
+      "version": "1.0",
+      "ratification_date": "—",
+      "description": "Page-based virtual memory with 39-bit virtual addresses, 3-level page tables, 4 KiB / 2 MiB / 1 GiB page sizes. Selected via satp.MODE = 8 (RV64). The de-facto baseline for Linux on RV64. Mandatory in RVA22S64 and RVA23S64.",
+      "depends_on": ["Ss1p13"],
+      "spec": {
+        "chapter": "§4.4 Sv39: Page-Based 39-bit Virtual-Memory System (within Supervisor chapter)",
+        "adoc_url": "https://github.com/riscv/riscv-isa-manual/blob/main/src/priv/supervisor.adoc",
+        "pdf_pages": "within page 729-756"
+      },
+      "instructions": [],
+      "csrs": [],
+      "adds_note": "No new instructions or CSRs of its own. Defines satp.MODE encoding 8 + Sv39 PTE/VA bit layout. Coexists with H-extension G-stage as Sv39x4 (41-bit GPA)."
+    },
+    {
+      "name": "Sv48",
+      "long_name": "48-bit Page-Based Virtual Memory",
+      "udb_name": "Sv48",
+      "version": "1.0",
+      "ratification_date": "—",
+      "description": "48-bit virtual addresses, 4-level page tables, adds a 512 GiB page size. satp.MODE = 9 (RV64). Optional in RVA23S64.",
+      "depends_on": ["Ss1p13", "Sv39"],
+      "spec": {
+        "chapter": "§4.5 Sv48: Page-Based 48-bit Virtual-Memory System",
+        "adoc_url": "https://github.com/riscv/riscv-isa-manual/blob/main/src/priv/supervisor.adoc",
+        "pdf_pages": "within page 729-756"
+      },
+      "instructions": [],
+      "csrs": [],
+      "adds_note": "No new instructions or CSRs. Defines satp.MODE encoding 9 + Sv48 PTE/VA bit layout. Implies Sv39 must also be supported."
+    },
+    {
+      "name": "Sv57",
+      "long_name": "57-bit Page-Based Virtual Memory",
+      "udb_name": "Sv57",
+      "version": "1.0",
+      "ratification_date": "—",
+      "description": "57-bit virtual addresses, 5-level page tables, adds a 256 TiB page size. satp.MODE = 10 (RV64). Optional in RVA23S64.",
+      "depends_on": ["Ss1p13", "Sv48"],
+      "spec": {
+        "chapter": "§4.6 Sv57: Page-Based 57-bit Virtual-Memory System",
+        "adoc_url": "https://github.com/riscv/riscv-isa-manual/blob/main/src/priv/supervisor.adoc",
+        "pdf_pages": "within page 729-756"
+      },
+      "instructions": [],
+      "csrs": [],
+      "adds_note": "No new instructions or CSRs. Defines satp.MODE encoding 10. Implies Sv48 + Sv39."
+    },
+    {
+      "name": "Svbare",
+      "long_name": "Bare Mode Virtual Addressing",
+      "udb_name": "Svbare",
+      "version": "1.0",
+      "ratification_date": "—",
+      "description": "satp.MODE = 0 (Bare) must be supported: virtual address used as physical without translation. Needed during early boot and for software that does not require paging. Mandatory in RVA23S64.",
+      "depends_on": ["Ss1p13"],
+      "spec": {
+        "chapter": "§ Supervisor Address Translation and Protection (satp)",
+        "adoc_url": "https://github.com/riscv/riscv-isa-manual/blob/main/src/priv/supervisor.adoc",
+        "pdf_pages": "within page 729-756"
+      },
+      "instructions": [],
+      "csrs": [],
+      "adds_note": "Pure satp.MODE=0 conformance requirement. No new state."
+    },
+    {
+      "name": "Svinval",
+      "long_name": "Fine-grained Address-Translation Cache Invalidation",
+      "udb_name": "Svinval",
+      "version": "1.0",
+      "ratification_date": "2021-11",
+      "description": "Decomposes sfence.vma/hfence.* into separate invalidation + ordering steps so a batch of TLB invalidations can be coalesced. Mandatory in RVA23S64.",
+      "depends_on": ["Ss1p13"],
+      "spec": {
+        "chapter": "Chapter 7. Sv Supervisor Virtual-Memory Extensions",
+        "adoc_url": "https://github.com/riscv/riscv-isa-manual/blob/main/src/priv/svinval.adoc",
+        "pdf_pages": "see Vol II (Privileged), Sv* chapter"
+      },
+      "instructions": [
+        { "name": "sinval.vma",       "summary": "Invalidate VA→PA mapping without ordering guarantees" },
+        { "name": "sfence.w.inval",   "summary": "Order prior writes to page tables before subsequent sinval.vma" },
+        { "name": "sfence.inval.ir",  "summary": "Order prior sinval.vma before subsequent implicit reference" },
+        { "name": "hinval.vvma",      "summary": "Hypervisor variant of sinval.vma for VS-stage" },
+        { "name": "hinval.gvma",      "summary": "Hypervisor variant for G-stage" }
+      ],
+      "csrs": []
+    },
+    {
+      "name": "Svnapot",
+      "long_name": "NAPOT Translation Contiguity",
+      "udb_name": "Svnapot",
+      "version": "1.0",
+      "ratification_date": "2021-11",
+      "description": "Naturally Aligned Power-of-Two contiguous translations: PTE bit 63 marks a set of contiguous PTEs as a single TLB entry covering a larger page. Mandatory in RVA23S64.",
+      "depends_on": ["Ss1p13"],
+      "spec": {
+        "chapter": "Chapter 7. Sv Supervisor Virtual-Memory Extensions",
+        "adoc_url": "https://github.com/riscv/riscv-isa-manual/blob/main/src/priv/svnapot.adoc",
+        "pdf_pages": "see Vol II (Privileged), Sv* chapter"
+      },
+      "instructions": [],
+      "csrs": [],
+      "adds_note": "PTE bit 63 (N) is repurposed. No new instructions or CSRs."
+    },
+    {
+      "name": "Svpbmt",
+      "long_name": "Page-Based Memory Types",
+      "udb_name": "Svpbmt",
+      "version": "1.0",
+      "ratification_date": "2021-11",
+      "description": "Per-page memory attribute override via PTE bits 62:61 (PBMT field): PMA / NC (non-cacheable, idempotent) / IO (non-cacheable, non-idempotent). Mandatory in RVA23S64.",
+      "depends_on": ["Ss1p13"],
+      "spec": {
+        "chapter": "Svpbmt",
+        "adoc_url": "https://github.com/riscv/riscv-isa-manual/blob/main/src/priv/svpbmt.adoc",
+        "pdf_pages": "see Vol II (Privileged), Sv* chapter"
+      },
+      "instructions": [],
+      "csrs": [],
+      "adds_note": "PTE bits 62:61 (PBMT) become writable. No new instructions or CSRs."
+    },
+    {
+      "name": "Svade",
+      "long_name": "Exception on PTE A/D Bits",
+      "udb_name": "Svade",
+      "version": "1.0",
+      "ratification_date": "—",
+      "description": "Page-fault exceptions are raised when a page is accessed with the A (Accessed) bit clear, or written with the D (Dirty) bit clear. Hardware does NOT update A/D — software must. Mandatory in RVA23S64 (alternative: Svadu).",
+      "depends_on": ["Ss1p13"],
+      "spec": {
+        "chapter": "Svade",
+        "adoc_url": "https://github.com/riscv/riscv-isa-manual/blob/main/src/priv/supervisor.adoc",
+        "pdf_pages": "within page 729-756"
+      },
+      "instructions": [],
+      "csrs": [],
+      "adds_note": "Behavioral profile requirement. Mutually exclusive with Svadu (RVA23 mandates Svade)."
+    },
+    {
+      "name": "Svadu",
+      "long_name": "Hardware Updating of PTE A/D Bits",
+      "udb_name": "Svadu",
+      "version": "1.0",
+      "ratification_date": "2024",
+      "description": "Hardware updates the A (Accessed) and D (Dirty) bits in page tables instead of raising a page-fault. Controlled by menvcfg.ADUE / henvcfg.ADUE. Optional in RVA23S64.",
+      "depends_on": ["Ss1p13"],
+      "spec": {
+        "chapter": "Svadu",
+        "adoc_url": "https://github.com/riscv/riscv-isa-manual/blob/main/src/priv/svadu.adoc",
+        "pdf_pages": "see Vol II (Privileged), Sv* chapter"
+      },
+      "instructions": [],
+      "csrs": [],
+      "adds_note": "Adds menvcfg.ADUE / henvcfg.ADUE bits but no new CSRs. Hardware A/D update behavior."
+    },
+    {
+      "name": "Svvptc",
+      "long_name": "Visible PTE Invalid→Valid Transitions",
+      "udb_name": "Svvptc",
+      "version": "1.0",
+      "ratification_date": "2024",
+      "description": "Transitions from invalid to valid PTEs become visible to subsequent translations without requiring sfence.vma. Eliminates the need for software to fence on lazy page-table population. Optional in RVA23S64.",
+      "depends_on": ["Ss1p13"],
+      "spec": {
+        "chapter": "Svvptc",
+        "adoc_url": "https://github.com/riscv/riscv-isa-manual/blob/main/src/priv/svvptc.adoc",
+        "pdf_pages": "see Vol II (Privileged), Sv* chapter"
+      },
+      "instructions": [],
+      "csrs": [],
+      "adds_note": "Hardware ordering guarantee. No new instructions or CSRs."
+    }
+  ]
+}
