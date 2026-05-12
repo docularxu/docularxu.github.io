@@ -184,6 +184,15 @@
 </table>
 
 <div class="sources">
+  <strong>Platform-layer items not covered:</strong>
+  RVA23 is a CPU-ISA-only profile. The following components are required by RISC-V platform specs (Server Platform, BRS / EBBR / SBBR) but are not part of any RVA profile and so do not appear in this matrix:
+  <ul style="margin: 6px 0 10px 22px; padding: 0;">
+    <li><strong>IOMMU</strong> &mdash; DMA address translation. Spec: <em>RISC-V IOMMU Architecture Specification</em> (ratified 2024). Reuses CPU PTE formats (Sv39x4 / Sv48x4 / Sv57x4) and inter-operates with <code>H</code>-extension G-stage translation. Linux: <code>drivers/iommu/riscv/</code> (v6.13+).</li>
+    <li><strong>AIA / IMSIC / APLIC</strong> &mdash; Advanced Interrupt Architecture. Specs: <code>Ssaia</code> / <code>Smaia</code> extensions, optional and not listed in RVA23. Linux: <code>drivers/irqchip/irq-riscv-{imsic,aplic}-*.c</code>.</li>
+    <li><strong>RAS</strong> &mdash; Reliability / Availability / Serviceability. Spec: <em>RERI</em> (RISC-V Error Reporting Interface).</li>
+    <li><strong>ACPI / Device Tree bindings</strong> &mdash; Extension discovery via <code>ACPI RHCT</code> or DT <code>riscv,isa-extensions</code>; SBI capability probing.</li>
+    <li><strong>Firmware interfaces</strong> &mdash; SBI (Supervisor Binary Interface) versions, UEFI requirements (SBBR-RV / EBBR-RV), secure-boot chain.</li>
+  </ul>
   <strong>Sources:</strong>
   GCC: <a href="https://gcc.gnu.org/onlinedocs/gcc/RISC-V-Options.html" target="_blank">RISC-V Options (GCC manual)</a> |
   LLVM: <a href="https://llvm.org/docs/RISCVUsage.html" target="_blank">RISCVUsage (LLVM docs)</a> |
