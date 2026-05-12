@@ -299,15 +299,15 @@
     {
       "name": "Zfhmin",
       "long_name": "Minimal Half-Precision Float",
-      "description": "Minimal support: conversions between half (bf16) and single precision",
+      "description": "Minimal IEEE 754 half-precision: load/store and conversions to/from single (and double if D present)",
       "has_instructions": true,
       "gcc_march": true,
       "gcc_status": "Supported",
       "llvm_march": true,
       "llvm_status": "Supported",
       "linux_kernel": true,
-      "layer": "none",
-      "layer_note": "Subset of Zfh. Only conversion instructions. No half-precision arithmetic state to manage.",
+      "layer": "compiler",
+      "layer_note": "Compiler emits flh/fsh/fmv.x.h/fmv.h.x/fcvt.{s,d}.h/fcvt.h.{s,d} when -march enables Zfhmin. Uses existing F-register file: no new architectural state, so no kernel signal-frame or glibc ABI changes beyond what F already requires.",
       "rva23_new": false
     },
     {
