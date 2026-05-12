@@ -1,11 +1,12 @@
 {
   "_metadata": {
     "description": "RVA23U64 Extension Software Stack Coverage Matrix",
-    "last_updated": "2026-05-08",
+    "last_updated": "2026-05-12",
     "gcc_source": "https://gcc.gnu.org/onlinedocs/gcc/RISC-V-Options.html (GCC trunk, 2026-05)",
     "llvm_source": "https://llvm.org/docs/RISCVUsage.html (LLVM 23.0.0git, 2026-05)",
     "kernel_source": "linux-kernel-coverage.html (Linux 7.0-rc1)",
-    "udb_source": "riscv-unified-db cfgs/profile/RVA23U64.yaml",
+    "udb_source": "riscv-unified-db spec/std/isa/profile/RVA23U64.yaml (inheritance chain: RVA20U64 -> RVA22U64 -> RVB23U64 -> RVA23U64)",
+    "editorial_note": "Sub-extensions implicitly required by a mandatory umbrella extension are omitted: Zaamo/Zalrsc (subsets of A); Zca/Zcd (subsets of C); Zve32f, Zve32x, Zve64d, Zve64f, Zve64x, Zvl32b, Zvl64b, Zvl128b (subsets of V); Zvkb (implied by Zvbb). They appear in the UDB-generated cfg flat list but do not drive distinct software-stack work beyond their umbrella. Zcf is similarly a sub-component of compressed FP and is not separately optional in the profile source.",
     "layer_definitions": {
       "none": "No new instructions. Platform property guarantee only - hardware must meet this constraint, but software (compiler, kernel, userspace) needs no changes.",
       "compiler": "Has ISA instructions that the compiler can auto-generate when -march enables the extension. No kernel or userspace library changes needed.",
@@ -620,48 +621,6 @@
       "rva23_new": true
     },
     {
-      "name": "Zca",
-      "long_name": "Integer Compressed Instructions",
-      "description": "Subset of C extension for integer-only code",
-      "has_instructions": true,
-      "gcc_march": true,
-      "gcc_status": "Supported",
-      "llvm_march": true,
-      "llvm_status": "Supported",
-      "linux_kernel": true,
-      "layer": "compiler",
-      "layer_note": "Subset of C. Compiler auto-generates.",
-      "rva23_new": false
-    },
-    {
-      "name": "Zcd",
-      "long_name": "Compressed Double-Precision Float",
-      "description": "16-bit encoding for double-precision FP loads/stores",
-      "has_instructions": true,
-      "gcc_march": true,
-      "gcc_status": "Supported",
-      "llvm_march": true,
-      "llvm_status": "Supported",
-      "linux_kernel": true,
-      "layer": "compiler",
-      "layer_note": "Code size optimization for FP code. Compiler auto-generates.",
-      "rva23_new": false
-    },
-    {
-      "name": "Zcf",
-      "long_name": "Compressed Single-Precision Float",
-      "description": "16-bit encoding for single-precision FP loads/stores",
-      "has_instructions": true,
-      "gcc_march": true,
-      "gcc_status": "Supported",
-      "llvm_march": true,
-      "llvm_status": "Supported",
-      "linux_kernel": true,
-      "layer": "compiler",
-      "layer_note": "Code size optimization for FP code. Compiler auto-generates.",
-      "rva23_new": false
-    },
-    {
       "name": "Zfbfmin",
       "long_name": "Minimal BF16 Support",
       "description": "BF16 conversions and loads",
@@ -817,8 +776,8 @@
     }
   ],
   "summary": {
-    "mandatory_count": 38,
-    "optional_count": 18,
+    "mandatory_count": 39,
+    "optional_count": 15,
     "by_layer": {
       "none": "Platform property or NOP - software-transparent",
       "compiler": "Compiler auto-generates - march enables, no other changes",
