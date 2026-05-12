@@ -161,7 +161,7 @@
   LLVM: <a href="https://llvm.org/docs/RISCVUsage.html" target="_blank">RISCVUsage (LLVM docs)</a> |
   Linux kernel: <a href="linux-kernel-coverage.html">Kernel coverage tracker</a> (v7.0-rc1) |
   UDB: <a href="https://github.com/riscv/riscv-unified-db" target="_blank">riscv-unified-db</a> RVA23U64 profile<br>
-  Generated: 2026-05-08 | <a href="rva23-extension-matrix.json">JSON data</a>
+  Generated: 2026-05-12 | <a href="rva23-u64-extension-matrix.json">U64 JSON data</a>
 </div>
 
 <script>
@@ -217,7 +217,7 @@ function renderRow(e) {
   </tr>`;
 }
 
-fetch('rva23-extension-matrix.json')
+fetch('rva23-u64-extension-matrix.json')
   .then(r => r.json())
   .then(data => {
     const mand = data.mandatory;
