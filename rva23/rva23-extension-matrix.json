@@ -145,15 +145,15 @@
     {
       "name": "Supm",
       "long_name": "User-mode Pointer Masking",
-      "description": "Pointer masking support available in user mode",
+      "description": "Pointer masking available in user mode (per UDB: 'execution environment' announcement; the underlying CSR control lives in Smnpm/Ssnpm)",
       "has_instructions": false,
       "gcc_march": true,
       "gcc_status": "Supported",
       "llvm_march": true,
       "llvm_status": "Supported",
       "linux_kernel": true,
-      "layer": "kernel",
-      "layer_note": "Kernel manages pointer masking CSR access for U-mode. Application execution environment provides control.",
+      "layer": "full_stack",
+      "layer_note": "Kernel side: configures S/Smnpm/Ssnpm CSR fields, exposes opt-in to userspace via prctl(PR_SET_TAGGED_ADDR_CTRL) (mirroring Arm TBI/MTE), saves/restores PMLEN across context switch, plumbs ptrace. Userspace side: pointer-tagging libraries (HWASan, MTE-style allocators, GC-style runtimes) consume tagged pointers; glibc must honor the masked-pointer ABI on syscalls. Analogous to Arm's TBI/MTE, which is universally treated as full-stack rather than kernel-only.",
       "rva23_new": true
     },
     {
