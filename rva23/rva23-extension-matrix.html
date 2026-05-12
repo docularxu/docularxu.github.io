@@ -95,6 +95,23 @@
     border-radius: 0 4px 4px 0;
   }
   .scope-note strong { color: var(--yellow); }
+  .intro-callout {
+    background: rgba(88,166,255,0.05); border-left: 3px solid var(--accent);
+    padding: 10px 16px; margin: 14px 0 20px; font-size: 0.88rem; color: var(--text);
+    border-radius: 0 4px 4px 0;
+  }
+  .intro-callout summary {
+    cursor: pointer; font-weight: 600; color: var(--accent); font-size: 0.95rem;
+    padding: 4px 0; list-style: none; user-select: none;
+  }
+  .intro-callout summary::before { content: "\25BC"; display: inline-block; margin-right: 8px; transition: transform 0.15s; font-size: 0.75rem; }
+  .intro-callout:not([open]) summary::before { transform: rotate(-90deg); }
+  .intro-callout summary:hover { color: var(--text-bright); }
+  .intro-callout ul { margin: 10px 0 4px 22px; padding: 0; }
+  .intro-callout li { margin: 5px 0; }
+  .intro-callout li strong { color: var(--text-bright); }
+  .intro-callout code { background: rgba(255,255,255,0.06); padding: 1px 5px; border-radius: 3px; font-size: 0.86em; }
+  .intro-callout .footnote-ref { color: var(--text-muted); font-size: 0.82rem; margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--border); }
   .mandatory-badge { color: var(--accent); font-size: 0.72rem; font-weight: 600; }
   .optional-badge { color: var(--text-muted); font-size: 0.72rem; font-weight: 600; }
   .has-inst { font-size: 0.72rem; }
@@ -113,6 +130,19 @@
 <body>
 <h1>RVA23 Extension Software Stack Matrix</h1>
 <p class="subtitle" id="subtitle">Which software layer needs to change to support each RVA23 extension?</p>
+
+<details class="intro-callout" open>
+  <summary>Why RVA23 matters &mdash; the ISA milestones at a glance</summary>
+  <p>RVA23 is the release where the RISC-V Application Profile reaches <strong>Armv8.0&ndash;v8.4 baseline parity</strong> for phones and servers. Inside the ISA profile itself, the headline upgrades are:</p>
+  <ul>
+    <li><strong>Vector (<code>V</code>) becomes mandatory in U64</strong> &mdash; every conformant chip ships RVV 1.0. SIMD is no longer optional. <em>New in RVA23.</em></li>
+    <li><strong>Hypervisor (<code>H</code>) becomes mandatory in S64</strong> via the <code>Sha</code> umbrella &mdash; KVM-RISCV, pKVM, Android protected VMs. Was <em>optional</em> in RVA22S64. The biggest single change for system silicon.</li>
+    <li><strong>Vector-crypto base mandatory</strong>: <code>Zvbb</code> + <code>Zvkt</code> (vector bit-manipulation + data-independent timing). AES-GCM via optional <code>Zvkng</code> / SM4-GCM via <code>Zvksg</code>. Closes the ~13-year gap to Arm's AESE/AESD/PMULL.</li>
+    <li><strong>Pointer masking (<code>Supm</code>) mandatory in U64</strong> &mdash; tagged-pointer ABI for HWASan, GC-style runtimes, plus parity with Arm TBI / MTE's userspace control surface.</li>
+    <li><strong>Scalar quality-of-life</strong>: <code>Zicond</code> (conditional move), <code>Zfa</code> (FP additions / immediate loads), <code>Zicboz</code> + <code>Zicbom</code> (cache-block ops), <code>Zawrs</code> (low-power spin) &mdash; closes long-standing scalar performance gaps with Arm and x86.</li>
+  </ul>
+  <div class="footnote-ref">Several adjacent features that vendors typically bundle with "RVA23-class" products are <em>not</em> in the ISA profile and so do not appear in this matrix &mdash; in particular <strong>AIA</strong> (<code>Ssaia</code>/<code>Smaia</code> for scalable interrupts and PCIe MSI), <strong>IOMMU</strong>, RAS, ACPI / DT bindings, SBI v2.0+. See the <a href="#platform-not-covered">Platform-layer items not covered</a> block at the bottom of the page.</div>
+</details>
 
 <div class="tabs" role="tablist">
   <button class="tab-btn active" data-profile="u64" role="tab">RVA23U64<span class="tab-sub">User mode</span></button>
@@ -183,7 +213,7 @@
   <tbody></tbody>
 </table>
 
-<div class="sources">
+<div class="sources" id="platform-not-covered">
   <strong>Platform-layer items not covered:</strong>
   RVA23 is a CPU-ISA-only profile. The following components are required by RISC-V platform specs (Server Platform, BRS / EBBR / SBBR) but are not part of any RVA profile and so do not appear in this matrix:
   <ul style="margin: 6px 0 10px 22px; padding: 0;">
