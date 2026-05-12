@@ -115,6 +115,9 @@
   <span style="margin-left: 12px">
     <label><input type="checkbox" id="mandatory-only"> Mandatory only</label>
   </span>
+  <span style="margin-left: 12px">
+    <label><input type="checkbox" id="new-only"> New in RVA23 only</label>
+  </span>
 </div>
 
 <h2>Mandatory Extensions</h2>
@@ -198,7 +201,7 @@ function layerBadge(layer) {
 }
 
 function renderRow(e) {
-  return `<tr data-layer="${e.layer}">
+  return `<tr data-layer="${e.layer}" data-new="${e.rva23_new ? '1' : '0'}">
     <td>
       <span class="ext-name">${e.name}</span>
       ${e.rva23_new ? ' <span class="tag tag-new">NEW in RVA23</span>' : ''}
@@ -243,6 +246,7 @@ fetch('rva23-extension-matrix.json')
     // Filters
     let currentFilter = 'all';
     let mandatoryOnly = false;
+    let newOnly = false;
 
     function applyFilters() {
       const tables = [document.querySelector('#mandatory-table tbody'),
@@ -251,16 +255,14 @@ fetch('rva23-extension-matrix.json')
                         document.querySelector('#optional-table')];
       tables.forEach((tbody, i) => {
         const rows = tbody.querySelectorAll('tr');
-        let visible = 0;
         rows.forEach(row => {
           const layer = row.dataset.layer;
-          const show = (currentFilter === 'all' || layer === currentFilter);
-          row.style.display = show ? '' : 'none';
-          if (show) visible++;
+          const isNew = row.dataset.new === '1';
+          const layerOk = (currentFilter === 'all' || layer === currentFilter);
+          const newOk = !newOnly || isNew;
+          row.style.display = (layerOk && newOk) ? '' : 'none';
         });
         headings[i].style.display = (i === 1 && mandatoryOnly) ? 'none' : '';
-        if (i === 1 && mandatoryOnly) return;
-        headings[i].querySelector('h2')?.closest('h2')?.style;
       });
       // Hide optional heading if mandatory-only
       const optHeading = document.querySelectorAll('h2')[1];
@@ -278,6 +280,11 @@ fetch('rva23-extension-matrix.json')
 
     document.getElementById('mandatory-only').addEventListener('change', (e) => {
       mandatoryOnly = e.target.checked;
+      applyFilters();
+    });
+
+    document.getElementById('new-only').addEventListener('change', (e) => {
+      newOnly = e.target.checked;
       applyFilters();
     });
   });
