@@ -270,13 +270,14 @@
     <li><strong>Pointer masking (<code>Supm</code>) mandatory in U64</strong> &mdash; tagged-pointer ABI for HWASan, GC-style runtimes, plus parity with Arm TBI / MTE's userspace control surface.</li>
     <li><strong>Scalar quality-of-life</strong>: <code>Zicond</code> (conditional move), <code>Zfa</code> (FP additions / immediate loads), <code>Zicboz</code> + <code>Zicbom</code> (cache-block ops), <code>Zawrs</code> (low-power spin) &mdash; closes long-standing scalar performance gaps with Arm and x86.</li>
   </ul>
-  <div class="footnote-ref">Several adjacent features that vendors typically bundle with "RVA23-class" products are <em>not</em> in the ISA profile and so do not appear in this matrix &mdash; in particular <strong>AIA</strong> (<code>Ssaia</code>/<code>Smaia</code> for scalable interrupts and PCIe MSI), <strong>IOMMU</strong>, RAS, ACPI / DT bindings, SBI v2.0+. See the <a href="#platform-not-covered">Platform-layer items not covered</a> block at the bottom of the page.</div>
+  <div class="footnote-ref">Several adjacent features that vendors typically bundle with "RVA23-class" products are <em>not</em> in the ISA profile and so do not appear in the U64 / S64 matrix &mdash; in particular <strong>AIA</strong> (see the dedicated <a href="#aia" data-profile-link="aia">AIA tab</a> for <code>Smaia</code>/<code>Ssaia</code>/IMSIC/APLIC breakdown), <strong>IOMMU</strong>, RAS, ACPI / DT bindings, SBI v2.0+. See also the <a href="#platform-not-covered">Platform-layer items not covered</a> block at the bottom.</div>
 </details>
 
 <div class="tabs" role="tablist">
   <button class="tab-btn active" data-profile="u64" role="tab">RVA23U64<span class="tab-sub">User mode</span></button>
   <button class="tab-btn" data-profile="s64" role="tab">RVA23S64<span class="tab-sub">Supervisor / Hypervisor additions</span></button>
   <button class="tab-btn" data-profile="priv-ref" role="tab">Privileged Arch Reference<span class="tab-sub">Ss1p13 / Sm1p13 / H / Sv*</span></button>
+  <button class="tab-btn" data-profile="aia" role="tab">AIA<span class="tab-sub">Smaia / Ssaia / IMSIC / APLIC</span></button>
   <button class="tab-btn" data-profile="server-platform" role="tab">Server Platform v1.0<span class="tab-sub">RVA23 + AIA + IOMMU + ...</span></button>
 </div>
 
@@ -309,6 +310,73 @@
 </div>
 
 <div id="priv-ref-container" style="display: none;"></div>
+
+<div id="aia-container" style="display: none;">
+  <div class="ref-meta">
+    <strong>Spec:</strong> <a href="https://github.com/riscv/riscv-aia/releases/download/1.0/riscv-interrupts-1.0.pdf" target="_blank">RISC-V Advanced Interrupt Architecture v1.0</a> (PDF) &middot;
+    <strong>Source:</strong> <a href="https://github.com/riscv/riscv-aia" target="_blank">riscv/riscv-aia</a> &middot;
+    <strong>Ratified:</strong> 2023-07-01
+    <br><span style="color: var(--text-muted)">This tab inventories what the AIA v1.0 specification defines. Content is restricted to what the spec itself states; no editorial commentary on schedule or future profiles.</span>
+  </div>
+
+  <div class="sp-section">
+    <h3>ISA-level extensions <span class="sp-section-sub">&mdash; hart-resident, indexed by UDB</span></h3>
+    <ul class="sp-ext-list">
+      <li><code>Smaia</code>
+        <div>Machine-mode AIA. AIA spec defines new M-level CSRs: <code>miselect</code>, <code>mireg</code>, <code>mtopei</code>, <code>mtopi</code>, <code>mvien</code>, <code>mvip</code>, <code>midelegh</code>, <code>mieh</code>, <code>miph</code>.
+          <span class="sp-ext-status">UDB: <code>spec/std/isa/ext/Smaia.yaml</code> &middot; ratified 2023-07-01.</span>
+        </div></li>
+      <li><code>Ssaia</code>
+        <div>Supervisor-mode AIA. AIA spec defines new S-level CSRs: <code>siselect</code>, <code>sireg</code>, <code>stopei</code>, <code>stopi</code>, <code>sieh</code>, <code>siph</code>. With <code>H</code>: <code>hvien</code>, <code>hvictl</code>, <code>hviprio1</code>, <code>hviprio2</code>, <code>vsiselect</code>, <code>vsireg</code>, <code>vstopei</code>, <code>vstopi</code>, <code>vsieh</code>, <code>vsiph</code>. Requires <code>S</code> &ge; 1.12.
+          <span class="sp-ext-status">UDB: <code>spec/std/isa/ext/Ssaia.yaml</code> &middot; ratified 2023-07-01.</span>
+        </div></li>
+      <li><code>Smcsrind</code> / <code>Sscsrind</code>
+        <div>Indirect CSR access mechanism (<code>m/siselect</code> + <code>m/sireg*</code>). UDB places <code>miselect</code> and <code>siselect</code> under the <code>Smcsrind</code> directory; AIA uses this window to expose its CSRs.
+          <span class="sp-ext-status">UDB: <code>spec/std/isa/ext/Smcsrind.yaml</code> / <code>Sscsrind.yaml</code>.</span>
+        </div></li>
+    </ul>
+  </div>
+
+  <div class="sp-section">
+    <h3>Hardware components <span class="sp-section-sub">&mdash; defined by the AIA spec, not ISA extensions</span></h3>
+    <ul class="sp-ext-list">
+      <li><code>IMSIC</code>
+        <div>Incoming MSI Controller. Per-hart memory-mapped block. AIA spec specifies one interrupt file per privilege level (M, S, and one per VS guest under <code>H</code>). Devices deliver interrupts by writing to a hart's IMSIC; the corresponding <code>*topei</code> CSR reports the highest-priority pending identity.
+          <span class="sp-ext-status">Spec: AIA v1.0 chapters 3 (IMSIC) and 6 (interrupts for virtual machines).</span>
+        </div></li>
+      <li><code>APLIC</code>
+        <div>Advanced Platform-Level Interrupt Controller. AIA spec defines two delivery modes: <em>direct delivery</em> (interrupt asserted to a hart as an external interrupt) and <em>MSI delivery</em> (interrupt converted into an MSI write targeted at an IMSIC). A system may contain multiple APLICs in a hierarchy.
+          <span class="sp-ext-status">Spec: AIA v1.0 chapters 4 (APLIC) and 5 (duties of machine-mode software).</span>
+        </div></li>
+    </ul>
+  </div>
+
+  <div class="sp-section">
+    <h3>Related extensions referenced by the AIA spec</h3>
+    <ul class="sp-ext-list">
+      <li><code>Ssstateen</code> / <code>Smstateen</code>
+        <div>The state-enable CSRs include an AIA bit (<code>*stateen0.AIA</code>) controlling lower-privilege access to AIA state. <strong>Mandatory in RVA23S64.</strong>
+          <span class="sp-ext-status">UDB: <code>spec/std/isa/ext/Ssstateen.yaml</code> / <code>Smstateen.yaml</code> &middot; RVA23S64.yaml lists Ssstateen as mandatory.</span>
+        </div></li>
+      <li><code>H</code>
+        <div>AIA spec chapter 6 defines per-VS-guest IMSIC interrupt files and the <code>hvien</code> / <code>hvictl</code> / <code>hviprio*</code> CSR set, all gated by the hypervisor extension. <strong>Mandatory in RVA23S64 (via the Sha umbrella).</strong>
+          <span class="sp-ext-status">UDB: <code>spec/std/isa/ext/H.yaml</code>.</span>
+        </div></li>
+      <li><code>S</code> &ge; 1.12
+        <div>Ssaia declares this as its required Supervisor version. The Supervisor v1.13 update (in RVA23S64 as <code>Ss1p13</code>) is a superset.
+          <span class="sp-ext-status">UDB: <code>spec/std/isa/ext/Ssaia.yaml</code> <code>requirements.extension.name: S</code>.</span>
+        </div></li>
+    </ul>
+  </div>
+
+  <div class="sp-section">
+    <h3>Status in RVA profiles</h3>
+    <ul class="sp-non-ext">
+      <li><code>Smaia</code> and <code>Ssaia</code> do not appear in the mandatory or non-mandatory extension lists of <strong>RVA20</strong>, <strong>RVA22</strong>, or <strong>RVA23</strong> (U64 or S64).</li>
+      <li><strong>Server Platform v1.0</strong> (riscv-non-isa/riscv-server-platform) mandates <code>Ssaia</code> under rule <code>RVA_020</code> and <code>APLIC</code> under the hardware rules. See the <a href="#server-platform" data-profile-link="server-platform">Server Platform v1.0 tab</a>. The Server Platform spec itself notes: "<em>These mandates may be moved into a new ISA profile specification.</em>"</li>
+    </ul>
+  </div>
+</div>
 
 <div id="server-platform-container" style="display: none;">
   <div class="ref-meta">
@@ -564,6 +632,12 @@ const PROFILES = {
     scopeNote: '<strong>Scope:</strong> Inventory view, not a support-status matrix. Shows the instructions and CSRs introduced by Ss1p13 (Supervisor v1.13), Sm1p13 (Machine v1.13), H (Hypervisor) and the Sv* page-table extensions. Use the <a href="#u64" data-profile-link="u64">RVA23U64</a> / <a href="#s64" data-profile-link="s64">RVA23S64</a> tabs for kernel/compiler/userspace support status.',
     kind: 'reference'
   },
+  'aia': {
+    json: null,
+    subtitle: 'Advanced Interrupt Architecture v1.0 - inventory of what the spec defines.',
+    scopeNote: '<strong>Scope:</strong> Spec-defined facts only. AIA is <em>not</em> part of any RVA profile (RVA20 / RVA22 / RVA23). It is a separately ratified spec at <a href="https://github.com/riscv/riscv-aia" target="_blank">riscv/riscv-aia</a>, and is mandated by downstream platform specs &mdash; see the <a href="#server-platform" data-profile-link="server-platform">Server Platform v1.0</a> tab.',
+    kind: 'aia'
+  },
   'server-platform': {
     json: null,
     subtitle: 'Extensions and platform requirements added by the RISC-V Server Platform Spec v1.0 on top of RVA23S64.',
@@ -636,6 +710,7 @@ function setViewMode(kind) {
   const matrixOnly = (kind === 'matrix');
   const isReference = (kind === 'reference');
   const isServer = (kind === 'server-platform');
+  const isAia = (kind === 'aia');
   document.getElementById('summary').style.display = matrixOnly ? '' : 'none';
   document.querySelector('.legend').style.display = matrixOnly ? '' : 'none';
   document.querySelector('.filter-bar').style.display = matrixOnly ? '' : 'none';
@@ -646,6 +721,7 @@ function setViewMode(kind) {
   if (optHeading) optHeading.style.display = matrixOnly && !mandatoryOnly ? '' : 'none';
   document.getElementById('optional-table').style.display = matrixOnly ? '' : 'none';
   document.getElementById('priv-ref-container').style.display = isReference ? '' : 'none';
+  document.getElementById('aia-container').style.display = isAia ? '' : 'none';
   document.getElementById('server-platform-container').style.display = isServer ? '' : 'none';
 }
 
