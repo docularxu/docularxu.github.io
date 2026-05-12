@@ -58,6 +58,8 @@
   .tag-no { background: rgba(248,81,73,0.15); color: var(--red); }
   .tag-prop { background: rgba(139,148,158,0.15); color: var(--text-muted); }
   .tag-new { background: rgba(188,140,255,0.15); color: var(--purple); font-size: 0.68rem; }
+  .tag-bits { background: rgba(210,153,34,0.15); color: var(--yellow); }
+  .tag-csr  { background: rgba(63,185,80,0.15); color: var(--green); }
   .layer-badge {
     display: inline-block; padding: 2px 8px; border-radius: 4px;
     font-size: 0.72rem; font-weight: 600;
@@ -152,6 +154,7 @@
       <th>Extension</th>
       <th>Description</th>
       <th>Instructions?</th>
+      <th>CSRs?</th>
       <th>GCC march</th>
       <th>LLVM march</th>
       <th>Linux kernel</th>
@@ -169,6 +172,7 @@
       <th>Extension</th>
       <th>Description</th>
       <th>Instructions?</th>
+      <th>CSRs?</th>
       <th>GCC march</th>
       <th>LLVM march</th>
       <th>Linux kernel</th>
@@ -223,6 +227,12 @@ function kernelTag(e) {
     ? '<span class="tag tag-yes">Yes</span>'
     : '<span class="tag tag-no">No</span>';
 }
+function csrTag(e) {
+  const v = e.csr_state || 'none';
+  if (v === 'new')  return '<span class="tag tag-csr" title="New CSR register(s) defined by this extension">New</span>';
+  if (v === 'bits') return '<span class="tag tag-bits" title="New bitfield(s) in existing CSRs">Bits</span>';
+  return '<span class="tag tag-no">No</span>';
+}
 function layerBadge(layer) {
   return `<span class="layer-badge layer-${layer}">${LAYER_LABELS[layer]}</span>`;
 }
@@ -235,6 +245,7 @@ function renderRow(e) {
     </td>
     <td class="ext-desc">${e.description}</td>
     <td><span class="has-inst ${e.has_instructions ? 'has-inst-yes' : 'has-inst-no'}">${e.has_instructions ? 'Yes' : 'No'}</span></td>
+    <td>${csrTag(e)}</td>
     <td>${gccTag(e)}${e.gcc_status && !e.gcc_status.includes('profile property') ? `<div class="note">${e.gcc_status}</div>` : ''}</td>
     <td>${llvmTag(e)}${e.llvm_status && !e.llvm_status.includes('profile property') ? `<div class="note">${e.llvm_status}</div>` : ''}</td>
     <td>${kernelTag(e)}</td>
