@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RVA23U64 Extension Software Stack Matrix</title>
+<title>RVA23 Extension Software Stack Matrix</title>
 <style>
   :root {
     --bg: #0d1117; --surface: #161b22; --border: #30363d;
@@ -76,6 +76,23 @@
   .summary-card .num { font-size: 1.8rem; font-weight: 700; }
   .summary-card .label { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
   .summary-card .sublabel { font-size: 0.68rem; color: var(--text-muted); opacity: 0.7; margin-top: 4px; font-family: 'SF Mono', 'Fira Code', monospace; }
+  .tabs { display: flex; gap: 4px; margin: 14px 0 20px; border-bottom: 1px solid var(--border); }
+  .tab-btn {
+    padding: 8px 18px; border: none; background: transparent; color: var(--text-muted);
+    cursor: pointer; font-size: 0.92rem; font-weight: 600; letter-spacing: 0.2px;
+    border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.15s;
+    font-family: inherit;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab-btn .tab-sub { font-size: 0.72rem; color: var(--text-muted); font-weight: 400; margin-left: 6px; }
+  .tab-btn.active .tab-sub { color: var(--text-muted); }
+  .scope-note {
+    background: rgba(210,153,34,0.08); border-left: 3px solid var(--yellow);
+    padding: 10px 14px; margin-bottom: 16px; font-size: 0.85rem; color: var(--text);
+    border-radius: 0 4px 4px 0;
+  }
+  .scope-note strong { color: var(--yellow); }
   .mandatory-badge { color: var(--accent); font-size: 0.72rem; font-weight: 600; }
   .optional-badge { color: var(--text-muted); font-size: 0.72rem; font-weight: 600; }
   .has-inst { font-size: 0.72rem; }
@@ -92,8 +109,15 @@
 </style>
 </head>
 <body>
-<h1>RVA23U64 Extension Software Stack Matrix</h1>
-<p class="subtitle">Which software layer needs to change to support each RVA23 extension?</p>
+<h1>RVA23 Extension Software Stack Matrix</h1>
+<p class="subtitle" id="subtitle">Which software layer needs to change to support each RVA23 extension?</p>
+
+<div class="tabs" role="tablist">
+  <button class="tab-btn active" data-profile="u64" role="tab">RVA23U64<span class="tab-sub">User mode</span></button>
+  <button class="tab-btn" data-profile="s64" role="tab">RVA23S64<span class="tab-sub">Supervisor / Hypervisor additions</span></button>
+</div>
+
+<div class="scope-note" id="scope-note" style="display: none;"></div>
 
 <div class="summary-grid" id="summary"></div>
 
@@ -160,8 +184,10 @@
   GCC: <a href="https://gcc.gnu.org/onlinedocs/gcc/RISC-V-Options.html" target="_blank">RISC-V Options (GCC manual)</a> |
   LLVM: <a href="https://llvm.org/docs/RISCVUsage.html" target="_blank">RISCVUsage (LLVM docs)</a> |
   Linux kernel: <a href="linux-kernel-coverage.html">Kernel coverage tracker</a> (v7.0-rc1) |
-  UDB: <a href="https://github.com/riscv/riscv-unified-db" target="_blank">riscv-unified-db</a> RVA23U64 profile<br>
-  Generated: 2026-05-12 | <a href="rva23-u64-extension-matrix.json">U64 JSON data</a>
+  UDB: <a href="https://github.com/riscv/riscv-unified-db" target="_blank">riscv-unified-db</a> RVA23U64 + RVA23S64 profiles<br>
+  Generated: 2026-05-12 |
+  <a href="rva23-u64-extension-matrix.json">U64 JSON data</a> |
+  <a href="rva23-s64-extension-matrix.json">S64 JSON data</a>
 </div>
 
 <script>
@@ -217,85 +243,151 @@ function renderRow(e) {
   </tr>`;
 }
 
-fetch('rva23-u64-extension-matrix.json')
-  .then(r => r.json())
-  .then(data => {
-    const mand = data.mandatory;
-    const opt = data.optional;
-    const all = [...mand, ...opt];
+const PROFILES = {
+  u64: {
+    json: 'rva23-u64-extension-matrix.json',
+    subtitle: 'Which software layer needs to change to support each RVA23U64 extension?',
+    scopeNote: null
+  },
+  s64: {
+    json: 'rva23-s64-extension-matrix.json',
+    subtitle: 'Supervisor / hypervisor extensions added by RVA23S64 (on top of RVA23U64).',
+    scopeNote: '<strong>Scope:</strong> RVA23S64 fully inherits RVA23U64 - every extension in the U64 tab is also mandatory or optional here. This matrix lists only the additional S-mode / H-mode / page-table extensions. Switch to the <a href="#u64" data-profile-link="u64">RVA23U64 tab</a> for the inherited user-mode set.'
+  }
+};
 
-    // Summary: each layer card shows mandatory count prominently, with total in small text.
-    // 'Mandatory full-stack' is the long pole for distros - the count to watch.
-    const layerCounts = {};
-    const layerMand = {};
-    for (const l of ['none','compiler','kernel','userspace','full_stack']) {
-      layerCounts[l] = all.filter(e => e.layer === l).length;
-      layerMand[l] = mand.filter(e => e.layer === l).length;
-    }
-    const layerCard = (label, layer) => `
-      <div class="summary-card">
-        <div class="num">${layerMand[layer]}</div>
-        <div class="label">${label}</div>
-        <div class="sublabel">${layerMand[layer]} mandatory / ${layerCounts[layer]} total</div>
-      </div>`;
-    document.getElementById('summary').innerHTML = `
-      <div class="summary-card"><div class="num">${mand.length}</div><div class="label">Mandatory extensions</div></div>
-      <div class="summary-card"><div class="num">${opt.length}</div><div class="label">Optional extensions</div></div>
-      ${layerCard('Transparent (no changes)', 'none')}
-      ${layerCard('Full stack impact', 'full_stack')}
-      ${layerCard('Compiler only', 'compiler')}
-      ${layerCard('Kernel needed', 'kernel')}
-      ${layerCard('Userspace libs needed', 'userspace')}
-    `;
+// View state shared across profiles
+let currentFilter = 'all';
+let mandatoryOnly = false;
+let newOnly = false;
+let currentProfile = 'u64';
 
-    document.querySelector('#mandatory-table tbody').innerHTML = mand.map(renderRow).join('');
-    document.querySelector('#optional-table tbody').innerHTML = opt.map(renderRow).join('');
+function renderProfile(data) {
+  const mand = data.mandatory;
+  const opt = data.optional;
+  const all = [...mand, ...opt];
 
-    // Filters
-    let currentFilter = 'all';
-    let mandatoryOnly = false;
-    let newOnly = false;
+  // Summary: each layer card shows mandatory count prominently, with total in small text.
+  // 'Mandatory full-stack' is the long pole for distros - the count to watch.
+  const layerCounts = {};
+  const layerMand = {};
+  for (const l of ['none','compiler','kernel','userspace','full_stack']) {
+    layerCounts[l] = all.filter(e => e.layer === l).length;
+    layerMand[l] = mand.filter(e => e.layer === l).length;
+  }
+  const layerCard = (label, layer) => `
+    <div class="summary-card">
+      <div class="num">${layerMand[layer]}</div>
+      <div class="label">${label}</div>
+      <div class="sublabel">${layerMand[layer]} mandatory / ${layerCounts[layer]} total</div>
+    </div>`;
+  document.getElementById('summary').innerHTML = `
+    <div class="summary-card"><div class="num">${mand.length}</div><div class="label">Mandatory extensions</div></div>
+    <div class="summary-card"><div class="num">${opt.length}</div><div class="label">Optional extensions</div></div>
+    ${layerCard('Transparent (no changes)', 'none')}
+    ${layerCard('Full stack impact', 'full_stack')}
+    ${layerCard('Compiler only', 'compiler')}
+    ${layerCard('Kernel needed', 'kernel')}
+    ${layerCard('Userspace libs needed', 'userspace')}
+  `;
 
-    function applyFilters() {
-      const tables = [document.querySelector('#mandatory-table tbody'),
-                      document.querySelector('#optional-table tbody')];
-      const headings = [document.querySelector('#mandatory-table'),
-                        document.querySelector('#optional-table')];
-      tables.forEach((tbody, i) => {
-        const rows = tbody.querySelectorAll('tr');
-        rows.forEach(row => {
-          const layer = row.dataset.layer;
-          const isNew = row.dataset.new === '1';
-          const layerOk = (currentFilter === 'all' || layer === currentFilter);
-          const newOk = !newOnly || isNew;
-          row.style.display = (layerOk && newOk) ? '' : 'none';
-        });
-        headings[i].style.display = (i === 1 && mandatoryOnly) ? 'none' : '';
-      });
-      // Hide optional heading if mandatory-only
-      const optHeading = document.querySelectorAll('h2')[1];
-      if (optHeading) optHeading.style.display = mandatoryOnly ? 'none' : '';
-    }
+  document.querySelector('#mandatory-table tbody').innerHTML = mand.map(renderRow).join('');
+  document.querySelector('#optional-table tbody').innerHTML = opt.map(renderRow).join('');
+  applyFilters();
+}
 
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        currentFilter = btn.dataset.filter;
-        applyFilters();
-      });
+function applyFilters() {
+  const tables = [document.querySelector('#mandatory-table tbody'),
+                  document.querySelector('#optional-table tbody')];
+  const headings = [document.querySelector('#mandatory-table'),
+                    document.querySelector('#optional-table')];
+  tables.forEach((tbody, i) => {
+    const rows = tbody.querySelectorAll('tr');
+    rows.forEach(row => {
+      const layer = row.dataset.layer;
+      const isNew = row.dataset.new === '1';
+      const layerOk = (currentFilter === 'all' || layer === currentFilter);
+      const newOk = !newOnly || isNew;
+      row.style.display = (layerOk && newOk) ? '' : 'none';
     });
-
-    document.getElementById('mandatory-only').addEventListener('change', (e) => {
-      mandatoryOnly = e.target.checked;
-      applyFilters();
-    });
-
-    document.getElementById('new-only').addEventListener('change', (e) => {
-      newOnly = e.target.checked;
-      applyFilters();
-    });
+    headings[i].style.display = (i === 1 && mandatoryOnly) ? 'none' : '';
   });
+  const optHeading = document.querySelectorAll('h2')[1];
+  if (optHeading) optHeading.style.display = mandatoryOnly ? 'none' : '';
+}
+
+function loadProfile(name) {
+  const p = PROFILES[name];
+  document.getElementById('subtitle').textContent = p.subtitle;
+  const note = document.getElementById('scope-note');
+  if (p.scopeNote) {
+    note.innerHTML = p.scopeNote;
+    note.style.display = '';
+  } else {
+    note.style.display = 'none';
+  }
+  if (p.data) {
+    renderProfile(p.data);
+    return Promise.resolve();
+  }
+  return fetch(p.json).then(r => r.json()).then(data => {
+    p.data = data;
+    renderProfile(data);
+  });
+}
+
+function switchTab(name, pushHash) {
+  if (!PROFILES[name]) name = 'u64';
+  currentProfile = name;
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.profile === name);
+  });
+  if (pushHash) {
+    history.replaceState(null, '', '#' + name);
+  }
+  loadProfile(name);
+}
+
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => switchTab(btn.dataset.profile, true));
+});
+
+// Intra-page profile-link clicks (e.g., the link inside the S64 scope note)
+document.addEventListener('click', (e) => {
+  const link = e.target.closest('[data-profile-link]');
+  if (link) {
+    e.preventDefault();
+    switchTab(link.dataset.profileLink, true);
+  }
+});
+
+window.addEventListener('hashchange', () => {
+  const name = window.location.hash.replace('#', '');
+  if (PROFILES[name] && name !== currentProfile) switchTab(name, false);
+});
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = btn.dataset.filter;
+    applyFilters();
+  });
+});
+
+document.getElementById('mandatory-only').addEventListener('change', (e) => {
+  mandatoryOnly = e.target.checked;
+  applyFilters();
+});
+
+document.getElementById('new-only').addEventListener('change', (e) => {
+  newOnly = e.target.checked;
+  applyFilters();
+});
+
+// Initial load from URL hash, defaulting to u64
+const initialProfile = window.location.hash.replace('#', '');
+switchTab(PROFILES[initialProfile] ? initialProfile : 'u64', false);
 </script>
 </body>
 </html>
