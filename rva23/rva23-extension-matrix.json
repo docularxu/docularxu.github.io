@@ -362,8 +362,8 @@
       "llvm_march": true,
       "llvm_status": "Assembly Support",
       "linux_kernel": true,
-      "layer": "kernel",
-      "layer_note": "Kernel uses for page clearing (faster than store-zero). LLVM only has assembly support.",
+      "layer": "full_stack",
+      "layer_note": "Kernel uses cbo.zero for fast page clearing AND must set senvcfg.CBZE to authorize U-mode execution (cbo.zero traps as illegal in U-mode while the bit is 0). Once enabled, userspace runtime (glibc memset, libc clear primitives) can issue cbo.zero directly. LLVM has assembly support only - no auto-generation. Linux exposes the capability via the riscv_hwprobe vDSO/syscall (block size in RISCV_HWPROBE_KEY_ZICBOZ_BLOCK_SIZE).",
       "rva23_new": false
     },
     {
