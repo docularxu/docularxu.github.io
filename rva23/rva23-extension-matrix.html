@@ -75,6 +75,7 @@
   }
   .summary-card .num { font-size: 1.8rem; font-weight: 700; }
   .summary-card .label { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+  .summary-card .sublabel { font-size: 0.68rem; color: var(--text-muted); opacity: 0.7; margin-top: 4px; font-family: 'SF Mono', 'Fira Code', monospace; }
   .mandatory-badge { color: var(--accent); font-size: 0.72rem; font-weight: 600; }
   .optional-badge { color: var(--text-muted); font-size: 0.72rem; font-weight: 600; }
   .has-inst { font-size: 0.72rem; }
@@ -223,21 +224,28 @@ fetch('rva23-extension-matrix.json')
     const opt = data.optional;
     const all = [...mand, ...opt];
 
-    // Summary
+    // Summary: each layer card shows mandatory count prominently, with total in small text.
+    // 'Mandatory full-stack' is the long pole for distros - the count to watch.
     const layerCounts = {};
-    const layerKernel = {};
+    const layerMand = {};
     for (const l of ['none','compiler','kernel','userspace','full_stack']) {
       layerCounts[l] = all.filter(e => e.layer === l).length;
-      layerKernel[l] = mand.filter(e => e.layer === l).length;
+      layerMand[l] = mand.filter(e => e.layer === l).length;
     }
+    const layerCard = (label, layer) => `
+      <div class="summary-card">
+        <div class="num">${layerMand[layer]}</div>
+        <div class="label">${label}</div>
+        <div class="sublabel">${layerMand[layer]} mandatory / ${layerCounts[layer]} total</div>
+      </div>`;
     document.getElementById('summary').innerHTML = `
       <div class="summary-card"><div class="num">${mand.length}</div><div class="label">Mandatory extensions</div></div>
       <div class="summary-card"><div class="num">${opt.length}</div><div class="label">Optional extensions</div></div>
-      <div class="summary-card"><div class="num">${layerCounts.none}</div><div class="label">Transparent (no changes)</div></div>
-      <div class="summary-card"><div class="num">${layerCounts.full_stack}</div><div class="label">Full stack impact</div></div>
-      <div class="summary-card"><div class="num">${layerCounts.compiler}</div><div class="label">Compiler only</div></div>
-      <div class="summary-card"><div class="num">${layerCounts.kernel}</div><div class="label">Kernel needed</div></div>
-      <div class="summary-card"><div class="num">${layerCounts.userspace}</div><div class="label">Userspace libs needed</div></div>
+      ${layerCard('Transparent (no changes)', 'none')}
+      ${layerCard('Full stack impact', 'full_stack')}
+      ${layerCard('Compiler only', 'compiler')}
+      ${layerCard('Kernel needed', 'kernel')}
+      ${layerCard('Userspace libs needed', 'userspace')}
     `;
 
     document.querySelector('#mandatory-table tbody').innerHTML = mand.map(renderRow).join('');
