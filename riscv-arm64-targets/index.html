@@ -19,6 +19,17 @@
 				the author</a>
 		</header>
 
+		<div style="background:#f0f4ff;border-bottom:1px solid #c7d2fe;padding:8px 0;">
+			<div style="max-width:1200px;margin:0 auto;padding:0 24px;">
+				<p style="margin:0;font-size:0.85rem;color:#4b5563;">By <a href="https://docularxu.github.io/" style="font-weight:600;color:#374151;">Guodong Xu</a> (docularxu) | Upstream RISC-V contributor | RISC-V International Advocate | <a href="https://lore.kernel.org/all/?q=f:guodong.xu+riscv" target="_blank" rel="noopener" style="color:#4f46e5;">Patches</a> | <a href="https://docularxu.github.io/" target="_blank" rel="noopener" style="color:#4f46e5;">About</a></p>
+			</div>
+		</div>
+		<div style="background:#fffbeb;border-bottom:1px solid #fde68a;padding:10px 0;">
+			<div style="max-width:1200px;margin:0 auto;padding:0 24px;">
+				<p style="margin:0;font-size:0.85rem;color:#92400e;">Interested in which RISC-V ISA extensions are supported in Linux? See the <a href="../rva23/linux-kernel-coverage.html" style="font-weight:600;color:#b45309;">RVA23 Linux v7.0 Coverage Analysis</a> and <a href="../rva23/rva23-kernel-support-evolution.html" style="font-weight:600;color:#b45309;">RVA23 Extension Evolution</a>.</p>
+			</div>
+		</div>
+
 		<section class="chart-section">
 			<h2>ARM64 DTB Growth</h2>
 			<div class="chart-container">
@@ -57,8 +68,8 @@
 						<li><strong>Growth Slope (1 Year Later):</strong>
 							<br><strong>ARM64:</strong> Surged to 65 (v4.9), then expedited
 							growth (135 in v4.14).
-							<br><strong>RISC-V:</strong> Grew to 35 (v6.12). Steady growth,
-							but significantly flatter slope.
+							<br><strong>RISC-V:</strong> Grew to 35 (v6.12), 48 (v6.18),
+							56 (v7.0). Steady growth, but significantly flatter slope.
 						</li>
 					</ul>
 				</div>
@@ -70,7 +81,7 @@
 				• ARM64 reached ~26 boards in v4.4 (Jan 2016).<br>
 				• RISC-V reached ~21 boards in v6.6 (Oct 2023).<br>
 				The chart shifts the ARM64 historical curve to align with this RISC-V milestone,
-				visualizing a potential growth path for RISC-V in the coming years (2025-2030).
+				visualizing a potential growth path for RISC-V in the coming years (2026-2030).
 			</div>
 
 			<div class="sub-charts-row">
@@ -104,8 +115,8 @@
 					Japan 2025</a>.
 			</p>
 			<p>
-				<strong>Kernel Versions:</strong> Focused primarily on LTS releases (v4.1 to v6.18) plus
-				the latest release candidates.
+				<strong>Kernel Versions:</strong> Focused primarily on LTS releases (v4.1 to v7.0) plus
+				the latest release candidate (v7.1-rc5).
 				Kernel version history data referenced from <a
 					href="https://en.wikipedia.org/wiki/Linux_kernel_version_history"
 					target="_blank">Wikipedia</a>.
@@ -141,6 +152,35 @@
 			'#d8b4fe'  // purple-300 (light)
 		];
 
+		// Convert "YYYY.MM" dates to numeric time values for proportional x-axis
+		const timeValues = KERNEL_DATA.labels.map((_, i) => {
+			const [y, m] = KERNEL_DATA.dates[i].split('.').map(Number);
+			return y + (m - 1) / 12;
+		});
+
+		// Build a linear time-proportional x-axis config with ticks at each version's date
+		function makeTimeAxis(tvs, labels, dates) {
+			return {
+				type: 'linear',
+				stacked: true,
+				min: tvs[0] - 0.6,
+				max: tvs[tvs.length - 1] + 0.6,
+				afterBuildTicks(axis) {
+					axis.ticks = tvs.map(v => ({ value: v }));
+				},
+				ticks: {
+					color: '#57534e',
+					maxRotation: 90,
+					minRotation: 45,
+					callback(value) {
+						const i = tvs.findIndex(v => Math.abs(v - value) < 1e-6);
+						return i >= 0 ? `${labels[i]} (${dates[i]})` : '';
+					}
+				},
+				grid: { color: '#e5e7eb' }
+			};
+		}
+
 		// Custom Plugin to draw text labels at the top of line points
 		const topLabelsPlugin = {
 			id: 'topLabels',
@@ -150,8 +190,8 @@
 					if (dataset.type === 'line' && dataset.label === 'Total Trend') {
 						const meta = chart.getDatasetMeta(i);
 						meta.data.forEach((point, index) => {
-							// Only draw if value > 0
-							const value = dataset.data[index];
+							const raw = dataset.data[index];
+							const value = (raw !== null && typeof raw === 'object') ? raw.y : raw;
 							if (value > 0) {
 								ctx.save();
 								ctx.fillStyle = '#292524'; // stone-800
@@ -172,7 +212,7 @@
 		// Process top N vendors, group rest as "Others"
 		const ARM64_TOP_N = 9;
 		const arm64Datasets = [];
-		const arm64TotalData = KERNEL_DATA.arm64.map(e => e ? e.total : 0);
+		const arm64TotalData = KERNEL_DATA.arm64.map((e, i) => ({ x: timeValues[i], y: e ? e.total : 0 }));
 
 		// Calculate total counts per vendor to find top ones
 		const vendorTotals = {};
@@ -193,7 +233,7 @@
 		topVendors.forEach((vendor, idx) => {
 			const data = KERNEL_DATA.labels.map((ver, i) => {
 				const entry = KERNEL_DATA.arm64[i];
-				return entry ? (entry.vendors[vendor] || 0) : 0;
+				return { x: timeValues[i], y: entry ? (entry.vendors[vendor] || 0) : 0 };
 			});
 
 			arm64Datasets.push({
@@ -207,12 +247,11 @@
 		// "Others" dataset
 		const othersData = KERNEL_DATA.labels.map((ver, i) => {
 			const entry = KERNEL_DATA.arm64[i];
-			if (!entry) return 0;
 			let sum = 0;
-			for (const [v, count] of Object.entries(entry.vendors)) {
+			if (entry) for (const [v, count] of Object.entries(entry.vendors)) {
 				if (!topVendors.includes(v)) sum += count;
 			}
-			return sum;
+			return { x: timeValues[i], y: sum };
 		});
 
 		arm64Datasets.push({
@@ -238,15 +277,13 @@
 
 		new Chart(document.getElementById('arm64Chart'), {
 			type: 'bar',
-			data: {
-				labels: KERNEL_DATA.labels.map((l, i) => `${l}\n(${KERNEL_DATA.dates[i]})`),
-				datasets: arm64Datasets
-			},
+			data: { datasets: arm64Datasets },
 			options: {
 				responsive: true,
 				maintainAspectRatio: false,
+				barThickness: 18,
 				scales: {
-					x: { stacked: true, grid: { color: '#e5e7eb' }, ticks: { color: '#57534e' } },
+					x: makeTimeAxis(timeValues, KERNEL_DATA.labels, KERNEL_DATA.dates),
 					y: { stacked: true, grid: { color: '#e5e7eb' }, ticks: { color: '#57534e' } }
 				},
 				plugins: {
@@ -267,7 +304,7 @@
 
 		const RISCV_TOP_N = 12; // Capture almost all current vendors
 		const riscvDatasets = [];
-		const riscvTotalData = riscvIndices.map(i => KERNEL_DATA.riscv[i].total);
+		const riscvTotalData = riscvIndices.map(i => ({ x: timeValues[i], y: KERNEL_DATA.riscv[i].total }));
 
 		// Calculate total counts per vendor
 		const riscvVendorTotals = {};
@@ -287,7 +324,7 @@
 		topRiscvVendors.forEach((vendor, idx) => {
 			const data = riscvIndices.map(i => {
 				const entry = KERNEL_DATA.riscv[i];
-				return entry ? (entry.vendors[vendor] || 0) : 0;
+				return { x: timeValues[i], y: entry ? (entry.vendors[vendor] || 0) : 0 };
 			});
 
 			riscvDatasets.push({
@@ -301,12 +338,11 @@
 		// Others for RISCV (if any)
 		const riscvOthersData = riscvIndices.map(i => {
 			const entry = KERNEL_DATA.riscv[i];
-			if (!entry) return 0;
 			let sum = 0;
-			for (const [v, count] of Object.entries(entry.vendors)) {
+			if (entry) for (const [v, count] of Object.entries(entry.vendors)) {
 				if (!topRiscvVendors.includes(v)) sum += count;
 			}
-			return sum;
+			return { x: timeValues[i], y: sum };
 		});
 
 		if (riscvOthersData.some(x => x > 0)) {
@@ -333,15 +369,17 @@
 
 		new Chart(document.getElementById('riscvChart'), {
 			type: 'bar',
-			data: {
-				labels: riscvLabels,
-				datasets: riscvDatasets
-			},
+			data: { datasets: riscvDatasets },
 			options: {
 				responsive: true,
 				maintainAspectRatio: false,
+				barThickness: 18,
 				scales: {
-					x: { stacked: true, grid: { color: '#e5e7eb' }, ticks: { color: '#57534e' } },
+					x: makeTimeAxis(
+						riscvIndices.map(i => timeValues[i]),
+						riscvIndices.map(i => KERNEL_DATA.labels[i]),
+						riscvIndices.map(i => KERNEL_DATA.dates[i])
+					),
 					y: { stacked: true, grid: { color: '#e5e7eb' }, ticks: { color: '#57534e' } }
 				},
 				plugins: {

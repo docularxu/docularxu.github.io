@@ -23,8 +23,14 @@ KERNEL_DATES = {
     'v6.6': '2023.10',
     'v6.12': '2024.11',
     'v6.18': '2025.11',
-    'v6.19-rc3': '2025.12'
+    'v6.19-rc3': '2025.12',
+    'v6.19': '2026.02',
+    'v7.0': '2026.04',
+    'v7.1-rc5': '2026.05',
 }
+
+# Versions to exclude from output (superseded by final releases)
+SKIP_VERSIONS = {'v6.19-rc3', 'v7.1-rc3'}
 
 # Regex to match filename versions
 # e.g., arm64.dtbs.v4.9 -> v4.9, riscv.dtbs.6.1 -> 6.1 (normalize to v6.1)
@@ -34,7 +40,7 @@ VERSION_REGEX = re.compile(r'.*\.dtbs(?:-check)?\.v?(\d+\.\d+(?:-rc\d+)?)')
 # Regex to parse DTB lines
 # DTC     arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dtb
 # Vendor is usually the directory after dts/
-DTC_REGEX = re.compile(r'\s*DTC\s+arch/(?:arm64|riscv)/boot/dts/([^/]+)/.*\.dtb')
+DTC_REGEX = re.compile(r'\s*(?:DTC|OVL)\s+arch/(?:arm64|riscv)/boot/dts/([^/]+)/.*\.dtb\b')
 
 def normalize_version(v_str):
     if not v_str.startswith('v'):
@@ -54,6 +60,8 @@ def parse_files(directory, arch):
             continue
             
         version = normalize_version(match.group(1))
+        if version in SKIP_VERSIONS:
+            continue
         filepath = os.path.join(directory, filename)
         
         counts = {}

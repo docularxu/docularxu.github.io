@@ -77,7 +77,14 @@
 	<!-- Author Context Banner -->
 	<div class="bg-stone-100 border-b border-stone-200">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
-			<p class="text-sm text-stone-500">By <a href="https://docularxu.github.io/" class="font-medium text-stone-700 hover:text-indigo-600">Guodong Xu</a> (docularxu) | Upstream RVA23 contributor | <a href="https://lore.kernel.org/all/?q=f:guodong.xu+riscv" target="_blank" rel="noopener" class="text-indigo-600 hover:underline">Patches</a> | <a href="https://docularxu.github.io/" target="_blank" rel="noopener" class="text-indigo-600 hover:underline">About</a></p>
+			<p class="text-sm text-stone-500">By <a href="https://docularxu.github.io/" class="font-medium text-stone-700 hover:text-indigo-600">Guodong Xu</a> (docularxu) | Upstream RVA23 contributor | RISC-V International Advocate | <a href="https://lore.kernel.org/all/?q=f:guodong.xu+riscv" target="_blank" rel="noopener" class="text-indigo-600 hover:underline">Patches</a> | <a href="https://docularxu.github.io/" target="_blank" rel="noopener" class="text-indigo-600 hover:underline">About</a></p>
+		</div>
+	</div>
+
+	<!-- Related Pages Banner -->
+	<div class="bg-indigo-50 border-b border-indigo-200">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+			<p class="text-sm text-indigo-800">For a deep-dive into Linux v7.0 — RVA23 extensions' status, lore links, and a searchable explorer — see <a href="linux-kernel-coverage.html" class="font-semibold text-indigo-700 hover:underline">RVA23 Linux v7.0 Coverage Analysis</a>.</p>
 		</div>
 	</div>
 
@@ -174,7 +181,7 @@
 									class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-stone-300 bg-stone-50 text-stone-500 text-sm">v</span>
 								<select id="kernelVersion3"
 									class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border-stone-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border">
-									<option value="7.0-rc1" selected>7.0-rc1</option>
+									<option value="7.1-rc5" selected>7.1-rc5</option>
 									<option disabled>Loading tags...</option>
 								</select>
 							</div>
@@ -192,7 +199,7 @@
 							</button>
 						</div>
 					</div>
-					<p class="mt-2 text-xs text-stone-400">Default: v6.6 & v6.12 (LTS), v7.0-rc1 (Latest).
+					<p class="mt-2 text-xs text-stone-400">Default: v6.6 & v6.12 (LTS), v7.1-rc5 (Latest).
 						<span id="tagLoadStatus" class="text-indigo-600"></span>
 					</p>
 
@@ -738,7 +745,7 @@
 				const opt3 = document.createElement('option');
 				opt3.value = t;
 				opt3.textContent = t;
-				if (t === '7.0' || t.match(/^7\.0-rc\d+$/)) opt3.selected = true;
+				if (t.match(/^7\.1-rc\d+$/) || t === '7.0') opt3.selected = true;
 				select3.appendChild(opt3);
 			});
 
@@ -750,7 +757,7 @@
 				select2.value = tags[Math.min(1, tags.length - 1)];
 			}
 			// For version 3: prefer 7.0, then 7.0-rcX, then latest
-			const v3Match = tags.find(t => t === '7.0') || tags.find(t => t.match(/^7\.0-rc\d+$/));
+			const v3Match = tags.find(t => t.match(/^7\.1-rc\d+$/)) || tags.find(t => t === '7.0') || tags.find(t => t.match(/^7\.0-rc\d+$/));
 			if (!v3Match && tags.length > 2) {
 				select3.value = tags[tags.length - 1]; // Default to latest
 			}
@@ -1484,7 +1491,7 @@
 			'6.11': '2024-09', '6.12': '2024-11',
 			'6.13': '2025-01', '6.14': '2025-03', '6.15': '2025-05', '6.16': '2025-07',
 			'6.17': '2025-09', '6.18': '2025-11',
-			'6.19': '2026-01', '7.0-rc1': '2026-02',
+			'6.19': '2026-01', '7.0': '2026-04', '7.1': '2026-06',
 		};
 
 		const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];

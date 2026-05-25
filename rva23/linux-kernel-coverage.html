@@ -6,12 +6,12 @@
     <title>RVA23 Profile Linux Kernel Coverage Analysis</title>
     <meta name="author" content="Guodong Xu">
     <meta property="og:title" content="RVA23 Linux Kernel Coverage Analysis - by Guodong Xu">
-    <meta property="og:description" content="Interactive RVA23 profile compliance analysis for Linux kernel v7.0-rc1. Built by Guodong Xu, upstream RISC-V contributor at RISCstar.">
+    <meta property="og:description" content="Interactive RVA23 profile compliance analysis for Linux kernel v7.0. Built by Guodong Xu, upstream RISC-V contributor at RISCstar.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://docularxu.github.io/rva23/linux-kernel-coverage.html">
     <!-- Chosen Palette: Warm Stone & Earth Tones (Stone, Amber, Emerald, Slate) -->
     <!-- Application Structure Plan:
-         1. Header & Context: Introduction to RVA23 profiles and the specific analysis scope (Linux 7.0-rc1 DT).
+         1. Header & Context: Introduction to RVA23 profiles and the specific analysis scope (Linux 7.0 DT).
          2. High-Level Dashboard: KPI Cards for quick stats and Chart.js visualizations for Profile Composition and Adoption Rates.
          3. Interactive Data Explorer: A powerful filterable table allowing deep dives into specific extensions, filtering by profile, status, and implementation support.
          4. Gap Analysis: A focused section highlighting 'At Risk' items—mandatory extensions missing in implementations.
@@ -20,7 +20,7 @@
     -->
     <!-- Visualization & Content Choices:
          1. Profile Composition (Doughnut Chart): Goal -> Inform. Shows the breakdown of Mandatory vs. Optional extensions. Justification -> Quickly visualizes the weight of the profile requirements.
-         2. Implementation Coverage (Bar Chart): Goal -> Compare. Tracks Linux 7.0-rc1 coverage of Mandatory extensions. Justification -> Assessing readiness.
+         2. Implementation Coverage (Bar Chart): Goal -> Compare. Tracks Linux 7.0 coverage of Mandatory extensions. Justification -> Assessing readiness.
          3. Interactive Explorer (Table): Goal -> Organize & Search. Main interaction point. Allows text search and multifaceted filtering.
          4. Gap Analysis (Cards): Goal -> Inform/Alert. Highlights missing mandatory extensions.
          Confirming NO SVG graphics used. NO Mermaid JS used.
@@ -87,7 +87,14 @@
     <!-- Author Context Banner -->
     <div class="bg-stone-100 border-b border-stone-200">
         <div class="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 py-2">
-            <p class="text-sm text-stone-500">By <a href="https://docularxu.github.io/" class="font-medium text-stone-700 hover:text-amber-600">Guodong Xu</a> (docularxu) | Upstream RVA23 contributor | <a href="https://lore.kernel.org/all/?q=f:guodong.xu+riscv" target="_blank" rel="noopener" class="text-amber-600 hover:underline">Patches</a> | <a href="https://docularxu.github.io/" target="_blank" rel="noopener" class="text-amber-600 hover:underline">About</a></p>
+            <p class="text-sm text-stone-500">By <a href="https://docularxu.github.io/" class="font-medium text-stone-700 hover:text-amber-600">Guodong Xu</a> (docularxu) | Upstream RVA23 contributor | RISC-V International Advocate | <a href="https://lore.kernel.org/all/?q=f:guodong.xu+riscv" target="_blank" rel="noopener" class="text-amber-600 hover:underline">Patches</a> | <a href="https://docularxu.github.io/" target="_blank" rel="noopener" class="text-amber-600 hover:underline">About</a></p>
+        </div>
+    </div>
+
+    <!-- Related Pages Banner -->
+    <div class="bg-amber-50 border-b border-amber-200">
+        <div class="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <p class="text-sm text-amber-800">Looking for kernel version-to-version coverage evolution? See <a href="rva23-kernel-support-evolution.html" class="font-semibold text-amber-700 hover:underline">RVA23 Kernel Support Evolution</a>.</p>
         </div>
     </div>
 
@@ -96,10 +103,10 @@
         <div class="max-w-[1920px] mx-auto py-12 px-4 sm:px-6 lg:px-8">
             <h1 class="text-3xl font-bold text-stone-900 mb-4">RISC-V RVA23 Profile Analysis</h1>
             <p class="text-lg text-stone-600 max-w-3xl">
-                This interactive tool breaks down the <strong>RVA23 Profile</strong> (User-mode and Supervisor-mode), tracking the status of standard extensions and their inclusion in the <strong>Linux Kernel v7.0-rc1 Device Tree</strong>. Use the dashboard to gauge compliance and the explorer to drill down into specific instruction set extensions.
+                This interactive tool breaks down the <strong>RVA23 Profile</strong> (User-mode and Supervisor-mode), tracking the status of standard extensions and their inclusion in the <strong>Linux Kernel v7.0 Device Tree</strong>. Use the dashboard to gauge compliance and the explorer to drill down into specific instruction set extensions.
             </p>
             <div class="mt-4 text-sm text-stone-500 space-y-1">
-                <p><strong>Note 1:</strong> Linux kernel v7.0-rc1 supports if the extension string exists in file <a href="https://github.com/torvalds/linux/blob/v7.0-rc1/Documentation/devicetree/bindings/riscv/extensions.yaml" class="text-amber-600 hover:underline" target="_blank">extensions.yaml</a> and <a href="https://github.com/torvalds/linux/blob/v7.0-rc1/Documentation/devicetree/bindings/riscv/cpus.yaml" class="text-amber-600 hover:underline" target="_blank">cpus.yaml</a>.</p>
+                <p><strong>Note 1:</strong> Linux kernel v7.0 supports if the extension string exists in file <a href="https://github.com/torvalds/linux/blob/v7.0/Documentation/devicetree/bindings/riscv/extensions.yaml" class="text-amber-600 hover:underline" target="_blank">extensions.yaml</a> and <a href="https://github.com/torvalds/linux/blob/v7.0/Documentation/devicetree/bindings/riscv/cpus.yaml" class="text-amber-600 hover:underline" target="_blank">cpus.yaml</a>.</p>
                 <p><strong>Note 2:</strong> QEMU rva23s64 is dumped from: <code>qemu-system-riscv64</code> version <span class="font-semibold text-stone-700">10.1.92</span> (<span class="text-stone-600">v10.2.0-rc2-7-g1053bb627c</span>), launched with <code>-machine virt,acpi=off -cpu rva23s64</code>.</p>
             </div>
         </div>
@@ -130,7 +137,7 @@
                     <div class="mt-2 text-3xl font-bold text-emerald-600" id="newExtensions">0</div>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
-                    <div class="text-sm font-medium text-stone-500 uppercase">Linux v7.0-rc1 Coverage</div>
+                    <div class="text-sm font-medium text-stone-500 uppercase">Linux v7.0 Coverage</div>
                     <div class="mt-2 flex items-baseline">
                         <span class="text-3xl font-bold text-sky-600" id="linuxCoverage">0%</span>
                         <span class="ml-2 text-sm text-stone-400" id="linuxCoverageDetail">of Mandatory</span>
@@ -155,13 +162,13 @@
                             <canvas id="coverageChart"></canvas>
                         </div>
                     </div>
-                    <p class="text-sm text-stone-500 mt-4 italic text-center">Linux v7.0-rc1 Device Tree coverage for Mandatory extensions.</p>
+                    <p class="text-sm text-stone-500 mt-4 italic text-center">Linux v7.0 Device Tree coverage for Mandatory extensions.</p>
                 </div>
 
                 <!-- Linux Gaps -->
                 <div class="bg-white rounded-lg shadow-sm border border-stone-200 overflow-hidden flex flex-col h-full">
                     <div class="bg-sky-50 px-6 py-4 border-b border-sky-100">
-                        <h3 class="font-bold text-sky-800">Missing in Linux v7.0-rc1 DT</h3>
+                        <h3 class="font-bold text-sky-800">Missing in Linux v7.0 DT</h3>
                         <p class="text-xs text-sky-600 mt-1">Mandatory extensions not explicitly found in standard DT bindings.</p>
                     </div>
                     <div class="p-6 flex-grow">
@@ -236,7 +243,7 @@
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider cursor-pointer hover:text-stone-700" onclick="sortData('commit_id')">Commit ID ↕</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider cursor-pointer hover:text-stone-700" onclick="sortData('lore_url')">Lore ↕</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider cursor-pointer hover:text-stone-700" onclick="sortData('merged_in')">Merged In ↕</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider cursor-pointer hover:text-stone-700" onclick="sortData('linux')">Linux v7.0-rc1 ↕</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider cursor-pointer hover:text-stone-700" onclick="sortData('linux')">Linux v7.0 ↕</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider cursor-pointer hover:text-stone-700 whitespace-nowrap w-64" onclick="sortData('qemu')">QEMU rva23s64 ↕</th>
                             </tr>
                         </thead>
@@ -273,7 +280,7 @@
                         <section class="bg-stone-50 border border-stone-200 rounded-lg p-4 space-y-3">
                             <div>
                                 <p class="text-xs font-semibold text-stone-500 uppercase tracking-wide">Kernel Config</p>
-                                <a href="https://github.com/torvalds/linux/blob/v7.0-rc1/arch/riscv/Kconfig" class="text-amber-600 hover:underline text-sm font-medium" target="_blank" rel="noopener">arch/riscv/Kconfig</a>
+                                <a href="https://github.com/torvalds/linux/blob/v7.0/arch/riscv/Kconfig" class="text-amber-600 hover:underline text-sm font-medium" target="_blank" rel="noopener">arch/riscv/Kconfig</a>
                             </div>
                             <pre class="bg-stone-900 text-stone-100 text-xs rounded-lg p-4 overflow-x-auto leading-5">
 config RISCV_ISA_SUPM
@@ -292,7 +299,7 @@ config RISCV_ISA_SUPM
                         <section class="bg-stone-50 border border-stone-200 rounded-lg p-4 space-y-3">
                             <div>
                                 <p class="text-xs font-semibold text-stone-500 uppercase tracking-wide">HWCAP Alias</p>
-                                <a href="https://github.com/torvalds/linux/blob/v7.0-rc1/arch/riscv/include/asm/hwcap.h" class="text-amber-600 hover:underline text-sm font-medium" target="_blank" rel="noopener">arch/riscv/include/asm/hwcap.h</a>
+                                <a href="https://github.com/torvalds/linux/blob/v7.0/arch/riscv/include/asm/hwcap.h" class="text-amber-600 hover:underline text-sm font-medium" target="_blank" rel="noopener">arch/riscv/include/asm/hwcap.h</a>
                             </div>
                             <pre class="bg-stone-900 text-stone-100 text-xs rounded-lg p-4 overflow-x-auto leading-5">
 #ifdef CONFIG_RISCV_M_MODE
@@ -322,7 +329,7 @@ config RISCV_ISA_SUPM
                         <section class="bg-stone-50 border border-stone-200 rounded-lg p-4 space-y-3">
                             <div>
                                 <p class="text-xs font-semibold text-stone-500 uppercase tracking-wide">Device Tree Binding</p>
-                                <a href="https://github.com/torvalds/linux/blob/v7.0-rc1/Documentation/devicetree/bindings/riscv/extensions.yaml" class="text-amber-600 hover:underline text-sm font-medium" target="_blank" rel="noopener">Documentation/devicetree/bindings/riscv/extensions.yaml</a>
+                                <a href="https://github.com/torvalds/linux/blob/v7.0/Documentation/devicetree/bindings/riscv/extensions.yaml" class="text-amber-600 hover:underline text-sm font-medium" target="_blank" rel="noopener">Documentation/devicetree/bindings/riscv/extensions.yaml</a>
                             </div>
                             <ul class="list-disc ml-5 text-sm text-stone-600 space-y-1">
                                 <li>'riscv,cbom-block-size', 'riscv,cbop-block-size', and 'riscv,cboz-block-size' must be provided per hart.</li>
@@ -348,7 +355,7 @@ config RISCV_ISA_SUPM
                         <section class="bg-stone-50 border border-stone-200 rounded-lg p-4 space-y-3">
                             <div>
                                 <p class="text-xs font-semibold text-stone-500 uppercase tracking-wide">Device Tree Binding</p>
-                                <a href="https://github.com/torvalds/linux/blob/v7.0-rc1/Documentation/devicetree/bindings/riscv/extensions.yaml" class="text-amber-600 hover:underline text-sm font-medium" target="_blank" rel="noopener">Documentation/devicetree/bindings/riscv/extensions.yaml</a>
+                                <a href="https://github.com/torvalds/linux/blob/v7.0/Documentation/devicetree/bindings/riscv/extensions.yaml" class="text-amber-600 hover:underline text-sm font-medium" target="_blank" rel="noopener">Documentation/devicetree/bindings/riscv/extensions.yaml</a>
                             </div>
                             <pre class="bg-stone-900 text-stone-100 text-xs rounded-lg p-4 overflow-x-auto leading-5">
         - const: smstateen
@@ -378,7 +385,7 @@ config RISCV_ISA_SUPM
         <div class="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center">
                 <p class="font-semibold text-lg text-white mb-2">RISC-V RVA23 Profile Analyzer</p>
-                <p class="text-sm text-stone-400">Generated based on RVA23 Profile Ratified Specs and Linux Kernel v7.0-rc1 documentation.</p>
+                <p class="text-sm text-stone-400">Generated based on RVA23 Profile Ratified Specs and Linux Kernel v7.0 documentation.</p>
                 <p class="text-xs text-stone-500 mt-4">&copy; 2025-2026 Analysis Tool. NO SVG/Mermaid JS used.</p>
                 <p class="text-xs text-stone-600 mt-2"><a href="linux-kernel-coverage-v6.18.html" class="text-amber-400 hover:text-amber-300 underline">Historical archive (v6.18)</a></p>
             </div>
@@ -756,7 +763,7 @@ config RISCV_ISA_SUPM
                             borderRadius: 4
                         },
                         {
-                            label: 'Linux v7.0-rc1 DT Coverage',
+                            label: 'Linux v7.0 DT Coverage',
                             data: coverageData,
                             backgroundColor: '#38bdf8',
                             borderRadius: 4
