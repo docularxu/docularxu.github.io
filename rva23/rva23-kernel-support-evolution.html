@@ -1650,17 +1650,49 @@
 						}
 					}
 				} else {
-					// Generate range from start to end
-					const endParts = endVersionInput.split('.').map(Number);
-
-					if (startParts[0] === endParts[0]) {
-						// Same major version
-						for (let minor = startParts[1]; minor <= endParts[1]; minor++) {
-							versions.push(`${startParts[0]}.${minor}`);
+					// Generate range from start to end, using available versions from the dropdown.
+					// Handles cross-major ranges (e.g. 6.5 -> 7.0) and -rcN suffixes
+					// (e.g. 7.1-rc3) — rc < release of same X.Y.
+					const parseVer = v => {
+						const rcMatch = v.match(/^(.+)-rc(\d+)$/);
+						const base = rcMatch ? rcMatch[1] : v;
+						const rc = rcMatch ? parseInt(rcMatch[2]) : Infinity;
+						return [...base.split('.').map(Number), rc];
+					};
+					const cmpVer = (a, b) => {
+						for (let i = 0; i < Math.max(a.length, b.length); i++) {
+							const na = a[i] ?? 0;
+							const nb = b[i] ?? 0;
+							if (na !== nb) return na - nb;
 						}
-					} else {
-						log('Cross-major version ranges not yet supported, using single major.', 'error');
-						versions.push(startVersion);
+						return 0;
+					};
+					const start = parseVer(startVersion);
+					const end = parseVer(endVersionInput);
+
+					const evolutionEndSelect = document.getElementById('evolutionEnd');
+					const availableVersions = Array.from(evolutionEndSelect.options)
+						.map(opt => opt.value)
+						.filter(v => v !== 'auto' && v && !v.includes('Loading'));
+
+					versions = availableVersions
+						.filter(v => {
+							const p = parseVer(v);
+							return cmpVer(p, start) >= 0 && cmpVer(p, end) <= 0;
+						})
+						.sort((a, b) => cmpVer(parseVer(a), parseVer(b)));
+
+					// Fallback if dropdown is empty: synthesize a same-major release range
+					if (versions.length === 0) {
+						const endParts = endVersionInput.split('.').map(Number);
+						if (startParts[0] === endParts[0] && Number.isFinite(endParts[1])) {
+							for (let minor = startParts[1]; minor <= endParts[1]; minor++) {
+								versions.push(`${startParts[0]}.${minor}`);
+							}
+						} else {
+							log('No versions available in the selected range.', 'error');
+							versions.push(startVersion);
+						}
 					}
 				}
 
