@@ -4,6 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RVA23 Extension Software Stack Matrix</title>
+<meta name="author" content="Guodong Xu">
+<meta property="og:title" content="RVA23 Extension Matrix - by Guodong Xu">
+<meta property="og:description" content="Which software layer needs to change to support each RVA23 extension? Mandatory vs optional, kernel/compiler/userspace status, architectural state class.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://docularxu.github.io/rva23/rva23-extension-matrix.html">
+<!-- Tailwind for the navigation header only — preflight disabled to preserve the dark-theme custom CSS below -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = { corePlugins: { preflight: false } };
+</script>
 <style>
   :root {
     --bg: #0d1117; --surface: #161b22; --border: #30363d;
@@ -15,8 +25,10 @@
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
     background: var(--bg); color: var(--text); line-height: 1.6;
-    max-width: 1400px; margin: 0 auto; padding: 24px;
   }
+  .page-wrap { max-width: 1400px; margin: 0 auto; padding: 24px; }
+  /* Subtle visual break between the light Tailwind header and the dark page body */
+  .page-wrap { border-top: 1px solid var(--border); }
   h1 { color: var(--text-bright); font-size: 1.6rem; margin-bottom: 4px; }
   h2 { color: var(--accent); font-size: 1.2rem; margin: 28px 0 12px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
   .subtitle { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; }
@@ -318,6 +330,39 @@
 </style>
 </head>
 <body>
+
+<!-- Navigation / Header -->
+<nav class="bg-white border-b border-stone-200 shadow-sm sticky top-0 z-50">
+  <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between h-16">
+      <div class="flex items-center">
+        <span class="text-2xl font-bold tracking-tight text-stone-700">RVA23<span class="text-teal-600">.Matrix</span></span>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="https://docularxu.github.io/" target="_blank" rel="noopener"
+           class="text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 px-4 py-2 rounded-md shadow-sm transition-colors">
+          About the author
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Author Context Banner -->
+<div class="bg-stone-100 border-b border-stone-200">
+  <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-2">
+    <p class="text-sm text-stone-500">By <a href="https://docularxu.github.io/" class="font-medium text-stone-700 hover:text-teal-600">Guodong Xu</a> (docularxu) | Upstream RVA23 contributor | RISC-V International Advocate | <a href="https://lore.kernel.org/all/?q=f:guodong.xu+riscv" target="_blank" rel="noopener" class="text-teal-600 hover:underline">Patches</a> | <a href="https://docularxu.github.io/" target="_blank" rel="noopener" class="text-teal-600 hover:underline">About</a></p>
+  </div>
+</div>
+
+<!-- Related Pages Banner -->
+<div class="bg-teal-50 border-b border-teal-200">
+  <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-3">
+    <p class="text-sm text-teal-800">Sister pages: <a href="linux-kernel-coverage.html" class="font-semibold text-teal-700 hover:underline">RVA23 Linux v7.0 Coverage Analysis</a> &middot; <a href="rva23-kernel-support-evolution.html" class="font-semibold text-teal-700 hover:underline">RVA23 Kernel Support Evolution</a></p>
+  </div>
+</div>
+
+<div class="page-wrap">
 <h1>RVA23 Extension Software Stack Matrix</h1>
 <p class="subtitle" id="subtitle">Which software layer needs to change to support each RVA23 extension?</p>
 
@@ -1058,5 +1103,6 @@ document.getElementById('new-only').addEventListener('change', (e) => {
 const initialProfile = window.location.hash.replace('#', '');
 switchTab(PROFILES[initialProfile] ? initialProfile : 'u64', false);
 </script>
+</div><!-- /.page-wrap -->
 </body>
 </html>
