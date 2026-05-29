@@ -29,7 +29,9 @@
       "linux_kernel": true,
       "layer": "kernel",
       "layer_note": "Foundational privilege level. Linux runs in S-mode. Trap entry/exit, page table base (satp), interrupt delegation (mideleg/medeleg).",
-      "rva23_new": false
+      "rva23_new": false,
+      "state_class": "csr-only",
+      "state_class_basis": "Supervisor v1.13 baseline CSRs: sstatus, sie, stvec, sscratch, sepc, scause, stval, sip, satp, scounteren, senvcfg (Priv Arch §10)"
     },
     {
       "name": "H",
@@ -44,7 +46,9 @@
       "linux_kernel": true,
       "layer": "kernel",
       "layer_note": "Mandatory in RVA23S64 via the Sha umbrella. KVM-RISCV depends on H. Kernel: hypervisor state save/restore, two-stage translation (hgatp/G-stage), VS-mode timer/interrupts, hypervisor instructions (hfence.vvma/gvma, hlv/hsv, hinval.*). Userspace: VMM (QEMU, kvmtool) drives /dev/kvm ioctls; no direct H-instruction emission.",
-      "rva23_new": true
+      "rva23_new": true,
+      "state_class": "csr-only",
+      "state_class_basis": "Hypervisor CSRs: hstatus, hedeleg, hideleg, hvip, hip, hie, hgeip, hgeie, henvcfg, hcounteren, htval, htinst, hgatp, vsstatus/vsie/vstvec/vsscratch/vsepc/vscause/vstval/vsip/vsatp (Priv Arch §18)"
     },
     {
       "name": "Ssstateen",
@@ -59,7 +63,9 @@
       "linux_kernel": true,
       "layer": "kernel",
       "layer_note": "Gates U-mode and VU-mode access to other-extension state (Zcmt jvt, Sha CSRs, future extensions). Kernel must save/restore sstateen* across context switch and selectively grant userspace access. Required by Sha. Distros need this plumbed into the ptrace regset.",
-      "rva23_new": true
+      "rva23_new": true,
+      "state_class": "csr-only",
+      "state_class_basis": "{m,h,s}stateen0..3 CSRs (Smstateen/Ssstateen spec §3)"
     },
     {
       "name": "Sscofpmf",
@@ -74,7 +80,9 @@
       "linux_kernel": true,
       "layer": "kernel",
       "layer_note": "Linux perf subsystem reads scountovf to handle HPM counter overflow interrupts in S-mode (no SBI ecall hop). Per-counter privilege filtering (e.g., kernel-only sampling) drives mhpmevent inhibit bits. Userspace 'perf' tool consumes via perf_event_open syscall.",
-      "rva23_new": true
+      "rva23_new": true,
+      "state_class": "csr-only",
+      "state_class_basis": "scountovf CSR + mhpmevent.OF + sip/sie.LCOFIP bits (Sscofpmf spec)"
     },
     {
       "name": "Sstc",
@@ -89,7 +97,9 @@
       "linux_kernel": true,
       "layer": "kernel",
       "layer_note": "Replaces sbi_set_timer ECALL with direct stimecmp CSR write. Linux already gates on RISCV_ISA_SSTC and falls back to SBI when unavailable. Significant timer-IRQ latency win and boot-path simplification. VS-mode mirror vstimecmp benefits KVM-RISCV guests.",
-      "rva23_new": true
+      "rva23_new": true,
+      "state_class": "csr-only",
+      "state_class_basis": "stimecmp / vstimecmp + menvcfg.STCE / henvcfg.STCE (Sstc spec)"
     },
     {
       "name": "Ssnpm",
@@ -104,7 +114,9 @@
       "linux_kernel": true,
       "layer": "kernel",
       "layer_note": "Kernel side of the U-mode pointer-masking feature (the Supm announcement in RVA23U64). Kernel configures senvcfg.PMM to set PMLEN, handles the prctl(PR_SET_TAGGED_ADDR_CTRL) opt-in, preserves PMLEN across context switch, and exposes it to ptrace.",
-      "rva23_new": true
+      "rva23_new": true,
+      "state_class": "csr-only",
+      "state_class_basis": "senvcfg.PMM / henvcfg.PMM (Ss-pointer-masking spec)"
     },
     {
       "name": "Svinval",
@@ -119,7 +131,9 @@
       "linux_kernel": true,
       "layer": "kernel",
       "layer_note": "Decouples TLB invalidation from the ordering fence. Lets the kernel batch invalidations across many addresses and emit a single ordering fence at the end. arch/riscv flush_tlb_* paths use it when available.",
-      "rva23_new": false
+      "rva23_new": false,
+      "state_class": "insn-only",
+      "state_class_basis": "Svinval — sfence.inval.ir/.w and hinval.* instructions, no new CSR"
     },
     {
       "name": "Svnapot",
@@ -134,7 +148,9 @@
       "linux_kernel": true,
       "layer": "kernel",
       "layer_note": "PTE-format extension: a single PTE can describe a 64-KiB naturally-aligned contiguous mapping (saves TLB pressure without changing the page table tree). Kernel hugetlb (CONFIG_RISCV_ISA_SVNAPOT) and transparent contiguous pages use it. Userspace sees it via mmap(MAP_HUGETLB).",
-      "rva23_new": true
+      "rva23_new": true,
+      "state_class": "property",
+      "state_class_basis": "Named-feature / capability extension — adds no instructions and no state; pure discoverable property (PTE encoding feature, no new CSR)"
     },
     {
       "name": "Svpbmt",
@@ -149,7 +165,9 @@
       "linux_kernel": true,
       "layer": "kernel",
       "layer_note": "PTE bits 62-61 select PMA (default), NC (non-cacheable), or IO (I/O ordering). Kernel: ioremap, pgprot_noncached, pgprot_writecombine, DMA mappings drive PBMT directly instead of region-based PMA. Removes the need for vendor-specific memtype hacks.",
-      "rva23_new": false
+      "rva23_new": false,
+      "state_class": "property",
+      "state_class_basis": "Named-feature / capability extension — adds no instructions and no state; pure discoverable property (PTE bits 62:61 reused for memory type; menvcfg.PBMTE gates)"
     },
     {
       "name": "Sv39",
@@ -164,7 +182,9 @@
       "linux_kernel": true,
       "layer": "kernel",
       "layer_note": "The mandatory minimum address-space size for RVA23S64. Sv48 / Sv57 are optional. Kernel page table walker, VM layout, KASLR, and direct map are all sized around Sv39 as a baseline.",
-      "rva23_new": false
+      "rva23_new": false,
+      "state_class": "property",
+      "state_class_basis": "Named-feature / capability extension — adds no instructions and no state; pure discoverable property (satp.MODE value 8 — capability advertised, field part of S baseline)"
     },
     {
       "name": "Zifencei",
@@ -179,7 +199,9 @@
       "linux_kernel": true,
       "layer": "kernel",
       "layer_note": "Kernel uses for module loading, kprobes, eBPF JIT, ftrace. FENCE.I only synchronizes the issuing hart so kernel multi-hart icache flushes also use SBI / IPI. Userspace JIT (V8, JVM) should use the __riscv_flush_icache vDSO / syscall rather than FENCE.I directly.",
-      "rva23_new": false
+      "rva23_new": false,
+      "state_class": "insn-only",
+      "state_class_basis": "Zifencei — fence.i instruction, no new state"
     },
     {
       "name": "Svade",
@@ -194,7 +216,9 @@
       "linux_kernel": true,
       "layer": "none",
       "layer_note": "Profile property: hardware must update PTE.A on read/exec, PTE.D on write. Kernel can drop the software A/D update fallback. Svadu (optional) is the inverse - hardware that can be told to NOT update A/D.",
-      "rva23_new": false
+      "rva23_new": false,
+      "state_class": "property",
+      "state_class_basis": "Named-feature / capability extension — adds no instructions and no state; pure discoverable property (raise page fault on A/D set rather than HW update)"
     },
     {
       "name": "Svbare",
@@ -209,7 +233,9 @@
       "linux_kernel": true,
       "layer": "none",
       "layer_note": "Profile property: S-mode must be able to run with no virtual-memory translation (Bare). Software-transparent guarantee that early boot and identity-mapped paths work before MMU enable.",
-      "rva23_new": false
+      "rva23_new": false,
+      "state_class": "property",
+      "state_class_basis": "Named-feature / capability extension — adds no instructions and no state; pure discoverable property (satp.MODE value 0 — bare/no-translation capability)"
     }
   ],
   "optional": [
@@ -226,7 +252,9 @@
       "linux_kernel": true,
       "layer": "kernel",
       "layer_note": "Larger virtual address space. Kernel selects at boot via DT/ACPI (PAGE_TABLE_LEVELS=4) and starts in Sv48 when available, falling back to Sv39 otherwise.",
-      "rva23_new": false
+      "rva23_new": false,
+      "state_class": "property",
+      "state_class_basis": "Named-feature / capability extension — adds no instructions and no state; pure discoverable property (satp.MODE value 9 — 48-bit virtual addressing capability)"
     },
     {
       "name": "Sv57",
@@ -241,7 +269,9 @@
       "linux_kernel": true,
       "layer": "kernel",
       "layer_note": "Even larger virtual address space (mirrors x86-64 LA57). Kernel runtime-detects via satp probe and starts in Sv57 when supported.",
-      "rva23_new": false
+      "rva23_new": false,
+      "state_class": "property",
+      "state_class_basis": "Named-feature / capability extension — adds no instructions and no state; pure discoverable property (satp.MODE value 10 — 57-bit virtual addressing capability)"
     },
     {
       "name": "Svadu",
@@ -256,7 +286,9 @@
       "linux_kernel": true,
       "layer": "kernel",
       "layer_note": "Inverse of Svade: if implemented, software can write menvcfg.ADUE=0 to suppress hardware A/D update and handle it in the fault path. Rarely useful (real-time / QoS configurations).",
-      "rva23_new": true
+      "rva23_new": true,
+      "state_class": "property",
+      "state_class_basis": "Named-feature / capability extension — adds no instructions and no state; pure discoverable property (HW A/D-bit update behavior; menvcfg.ADUE gates)"
     },
     {
       "name": "Svvptc",
@@ -271,7 +303,9 @@
       "linux_kernel": false,
       "layer": "none",
       "layer_note": "Microarchitectural optimization. Software-transparent: kernel can drop a few redundant SFENCE.VMA calls in the transient case, but is not required to.",
-      "rva23_new": true
+      "rva23_new": true,
+      "state_class": "property",
+      "state_class_basis": "Named-feature / capability extension — adds no instructions and no state; pure discoverable property (PTE-stale invalidation rule)"
     },
     {
       "name": "Sdtrig",
@@ -286,7 +320,9 @@
       "linux_kernel": false,
       "layer": "none",
       "layer_note": "Debug infrastructure: hardware breakpoints/watchpoints/ICOUNT exposed through the Debug Module. Consumed by external debuggers (gdb via OpenOCD) and self-hosted kgdb; not part of Linux's normal ABI.",
-      "rva23_new": true
+      "rva23_new": true,
+      "state_class": "csr-only",
+      "state_class_basis": "tselect, tdata1..3, tinfo, tcontrol, mcontext, scontext (Debug spec §5)"
     },
     {
       "name": "Sspm",
@@ -301,7 +337,9 @@
       "linux_kernel": false,
       "layer": "kernel",
       "layer_note": "Parallel to Supm (U-mode) - announces that the kernel itself can use pointer masking. Few in-kernel consumers exist yet; potential KASAN-style tagged allocator integration.",
-      "rva23_new": true
+      "rva23_new": true,
+      "state_class": "csr-only",
+      "state_class_basis": "Supervisor pointer masking — uses {m,h,s}envcfg.PMM (Sspm spec)"
     },
     {
       "name": "Ssstrict",
@@ -316,7 +354,9 @@
       "linux_kernel": false,
       "layer": "none",
       "layer_note": "Software-transparent profile property guaranteeing the implementation does not silently execute custom or unratified opcodes. Useful for compliance / sandboxing claims.",
-      "rva23_new": true
+      "rva23_new": true,
+      "state_class": "property",
+      "state_class_basis": "Named-feature / capability extension — adds no instructions and no state; pure discoverable property (conformance policy — no non-standard extensions / reserved encodings)"
     },
     {
       "name": "Zkr",
@@ -331,7 +371,9 @@
       "linux_kernel": true,
       "layer": "userspace",
       "layer_note": "Hardware entropy via CSR read of 'seed'. Kernel RNG (random.c) can seed from it; getrandom() / /dev/urandom paths benefit. Userspace can also read directly when permitted (controlled via mseccfg / sstateen).",
-      "rva23_new": false
+      "rva23_new": false,
+      "state_class": "csr-only",
+      "state_class_basis": "seed CSR (Scalar Crypto §4 — Entropy Source)"
     }
   ],
   "summary": {

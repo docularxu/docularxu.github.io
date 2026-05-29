@@ -29,7 +29,9 @@
       "linux_kernel": true,
       "layer": "none",
       "layer_note": "Base ISA, always present.",
-      "rva23_new": false
+      "rva23_new": false,
+      "state_class": "insn-only",
+      "state_class_basis": "Base ISA — defines GPR file and integer instruction set (baseline, not extension-added)"
     },
     {
       "name": "M",
@@ -44,7 +46,9 @@
       "linux_kernel": true,
       "layer": "compiler",
       "layer_note": "Compiler generates MUL/DIV. No kernel/userspace changes needed.",
-      "rva23_new": false
+      "rva23_new": false,
+      "state_class": "insn-only",
+      "state_class_basis": "ISA Manual §M — multiply/divide instructions, no new register"
     },
     {
       "name": "A",
@@ -59,7 +63,9 @@
       "linux_kernel": true,
       "layer": "userspace",
       "layer_note": "glibc pthread/futex implementations use LR/SC and AMOs directly.",
-      "rva23_new": false
+      "rva23_new": false,
+      "state_class": "insn-only",
+      "state_class_basis": "ISA Manual §A — LR/SC and AMO instructions; reservation set is microarch, no new register"
     },
     {
       "name": "F",
@@ -74,7 +80,9 @@
       "linux_kernel": true,
       "layer": "full_stack",
       "layer_note": "Compiler generates FP instructions; kernel saves/restores FP state in signal handling; glibc FP ABI.",
-      "rva23_new": false
+      "rva23_new": false,
+      "state_class": "fp",
+      "state_class_basis": "mstatus.FS (Priv Arch §3.1.6 — Floating-point context Status)"
     },
     {
       "name": "D",
@@ -89,7 +97,9 @@
       "linux_kernel": true,
       "layer": "full_stack",
       "layer_note": "Same as F but for 64-bit. Signal frame, ptrace, glibc ABI all affected.",
-      "rva23_new": false
+      "rva23_new": false,
+      "state_class": "fp",
+      "state_class_basis": "mstatus.FS (Priv Arch §3.1.6 — Floating-point context Status)"
     },
     {
       "name": "C",
@@ -104,7 +114,9 @@
       "linux_kernel": true,
       "layer": "compiler",
       "layer_note": "Compiler emits C instructions automatically when enabled. Kernel jump labels handle mixed 16/32-bit.",
-      "rva23_new": false
+      "rva23_new": false,
+      "state_class": "insn-only",
+      "state_class_basis": "ISA Manual §C — alternative compressed encodings of existing instructions"
     },
     {
       "name": "B",
@@ -119,7 +131,9 @@
       "linux_kernel": true,
       "layer": "compiler",
       "layer_note": "Compiler auto-generates bit manipulation instructions. No kernel/userspace changes needed.",
-      "rva23_new": false
+      "rva23_new": false,
+      "state_class": "insn-only",
+      "state_class_basis": "Bitmanip rationale: extension adds new instructions, no new architectural state (umbrella for Zba+Zbb+Zbs)"
     },
     {
       "name": "U",
@@ -134,7 +148,9 @@
       "linux_kernel": true,
       "layer": "none",
       "layer_note": "Privilege architecture. Defines U-mode. Software implication: trap handling, syscall convention.",
-      "rva23_new": false
+      "rva23_new": false,
+      "state_class": "property",
+      "state_class_basis": "User privilege mode — discoverable capability; mstatus has U-mode bits in base"
     },
     {
       "name": "V",
@@ -149,7 +165,9 @@
       "linux_kernel": true,
       "layer": "full_stack",
       "layer_note": "Heaviest extension for distro adoption. Kernel: sigcontext vector state save/restore, ptrace, fork/exec. Userspace: glibc vector ABI, OpenSSL/libc optimized routines. Heterogeneous VLEN on SMP is rejected by kernel.",
-      "rva23_new": true
+      "rva23_new": true,
+      "state_class": "vector",
+      "state_class_basis": "mstatus.VS (Priv Arch §3.1.6 — Vector context Status); adds v0–v31, vstart, vl, vtype, vxrm, vxsat, vcsr"
     },
     {
       "name": "Supm",
@@ -164,12 +182,14 @@
       "linux_kernel": true,
       "layer": "full_stack",
       "layer_note": "Kernel side: configures S/Smnpm/Ssnpm CSR fields, exposes opt-in to userspace via prctl(PR_SET_TAGGED_ADDR_CTRL) (mirroring Arm TBI/MTE), saves/restores PMLEN across context switch, plumbs ptrace. Userspace side: pointer-tagging libraries (HWASan, MTE-style allocators, GC-style runtimes) consume tagged pointers; glibc must honor the masked-pointer ABI on syscalls. Analogous to Arm's TBI/MTE, which is universally treated as full-stack rather than kernel-only.",
-      "rva23_new": true
+      "rva23_new": true,
+      "state_class": "csr-only",
+      "state_class_basis": "menvcfg.PMM / senvcfg.PMM (Pointer Masking spec §3)"
     },
     {
       "name": "Za64rs",
-      "long_name": "Reservation Set \u226464B",
-      "description": "Reservation sets contiguous, aligned, \u226464 bytes",
+      "long_name": "Reservation Set ≤64B",
+      "description": "Reservation sets contiguous, aligned, ≤64 bytes",
       "has_instructions": false,
       "csr_state": "none",
       "gcc_march": true,
@@ -179,12 +199,14 @@
       "linux_kernel": true,
       "layer": "none",
       "layer_note": "Platform property guarantee. No new instructions. Software-transparent hardware constraint on LR/SC reservation granularity.",
-      "rva23_new": false
+      "rva23_new": false,
+      "state_class": "property",
+      "state_class_basis": "Named-feature / capability extension — adds no instructions and no state; pure discoverable property (reservation-set size ≥64 B)"
     },
     {
       "name": "Za128rs",
-      "long_name": "Reservation Set \u2264128B",
-      "description": "Reservation sets contiguous, aligned, \u2264128 bytes",
+      "long_name": "Reservation Set ≤128B",
+      "description": "Reservation sets contiguous, aligned, ≤128 bytes",
       "has_instructions": false,
       "csr_state": "none",
       "gcc_march": true,
@@ -194,7 +216,9 @@
       "linux_kernel": true,
       "layer": "none",
       "layer_note": "Platform property guarantee. No new instructions. Relaxes Za64rs constraint.",
-      "rva23_new": false
+      "rva23_new": false,
+      "state_class": "property",
+      "state_class_basis": "Named-feature / capability extension — adds no instructions and no state; pure discoverable property (reservation-set size ≤128 B)"
     },
     {
       "name": "Zawrs",
@@ -209,7 +233,9 @@
       "linux_kernel": true,
       "layer": "userspace",
       "layer_note": "glibc futex implementation can use WRS for efficient waiting. LLVM only has assembly support (no pattern matching).",
-      "rva23_new": true
+      "rva23_new": true,
+      "state_class": "insn-only",
+      "state_class_basis": "ISA Manual §Zawrs — wrs.{nto,sto} instructions, no new state"
     },
     {
       "name": "Zba",
@@ -224,7 +250,9 @@
       "linux_kernel": true,
       "layer": "compiler",
       "layer_note": "Compiler auto-generates for address calculations. Transparent to kernel/userspace.",
-      "rva23_new": false
+      "rva23_new": false,
+      "state_class": "insn-only",
+      "state_class_basis": "Bitmanip rationale: extension adds new instructions, no new architectural state"
     },
     {
       "name": "Zbb",
@@ -238,8 +266,10 @@
       "llvm_status": "Supported",
       "linux_kernel": true,
       "layer": "compiler",
-      "layer_note": "Compiler pattern-matches idioms (e.g., __builtin_ctz \u2192 ctz). Transparent.",
-      "rva23_new": false
+      "layer_note": "Compiler pattern-matches idioms (e.g., __builtin_ctz → ctz). Transparent.",
+      "rva23_new": false,
+      "state_class": "insn-only",
+      "state_class_basis": "Bitmanip rationale: extension adds new instructions, no new architectural state"
     },
     {
       "name": "Zbs",
@@ -254,7 +284,9 @@
       "linux_kernel": true,
       "layer": "compiler",
       "layer_note": "Compiler auto-generates. Transparent.",
-      "rva23_new": false
+      "rva23_new": false,
+      "state_class": "insn-only",
+      "state_class_basis": "Bitmanip rationale: extension adds new instructions, no new architectural state"
     },
     {
       "name": "Zcb",
@@ -269,7 +301,9 @@
       "linux_kernel": true,
       "layer": "compiler",
       "layer_note": "Compiler auto-generates C-extension alternatives for common instructions. Pure code-size optimization.",
-      "rva23_new": true
+      "rva23_new": true,
+      "state_class": "insn-only",
+      "state_class_basis": "Zc rationale — additional compressed encodings, no new state"
     },
     {
       "name": "Zcmop",
@@ -284,7 +318,9 @@
       "linux_kernel": true,
       "layer": "none",
       "layer_note": "Currently defined as NOPs (write zero to x[rd]). Reserved for future redefinition. No functional impact today.",
-      "rva23_new": true
+      "rva23_new": true,
+      "state_class": "insn-only",
+      "state_class_basis": "Zcmop — c.mop.n reserves compressed encodings (HINT-class), no new state"
     },
     {
       "name": "Zimop",
@@ -299,7 +335,9 @@
       "linux_kernel": true,
       "layer": "none",
       "layer_note": "Currently defined as NOPs. Reserved for future redefinition. No functional impact today.",
-      "rva23_new": true
+      "rva23_new": true,
+      "state_class": "insn-only",
+      "state_class_basis": "Zimop — MOP.r/MOP.rr reserve encodings (HINT-class), no new state"
     },
     {
       "name": "Zfa",
@@ -314,7 +352,9 @@
       "linux_kernel": true,
       "layer": "compiler",
       "layer_note": "Compiler auto-generates new FP instructions. No new state to save/restore.",
-      "rva23_new": true
+      "rva23_new": true,
+      "state_class": "fp",
+      "state_class_basis": "mstatus.FS (Priv Arch §3.1.6 — Floating-point context Status) (extends F/D operations)"
     },
     {
       "name": "Zfhmin",
@@ -329,7 +369,9 @@
       "linux_kernel": true,
       "layer": "compiler",
       "layer_note": "Compiler emits flh/fsh/fmv.x.h/fmv.h.x/fcvt.{s,d}.h/fcvt.h.{s,d} when -march enables Zfhmin. Uses existing F-register file: no new architectural state, so no kernel signal-frame or glibc ABI changes beyond what F already requires.",
-      "rva23_new": false
+      "rva23_new": false,
+      "state_class": "fp",
+      "state_class_basis": "mstatus.FS (Priv Arch §3.1.6 — Floating-point context Status) (half-precision subset)"
     },
     {
       "name": "Zic64b",
@@ -344,7 +386,9 @@
       "linux_kernel": true,
       "layer": "kernel",
       "layer_note": "Platform property. No new instructions. Kernel: L1_CACHE_BYTES, DMA alignment, data structure layout. Device Tree provides cache block sizes.",
-      "rva23_new": false
+      "rva23_new": false,
+      "state_class": "property",
+      "state_class_basis": "Named-feature / capability extension — adds no instructions and no state; pure discoverable property (cache-block size = 64 B)"
     },
     {
       "name": "Zicbom",
@@ -359,7 +403,9 @@
       "linux_kernel": true,
       "layer": "kernel",
       "layer_note": "Kernel uses for cache management (DMA ops, page table maintenance). LLVM only has assembly support. Userspace can use via __builtin_riscv_cache_* but mainly kernel concern.",
-      "rva23_new": false
+      "rva23_new": false,
+      "state_class": "insn-only",
+      "state_class_basis": "CMO spec — CBO.* management instructions; menvcfg.CBCFE/CBIE gates only"
     },
     {
       "name": "Zicbop",
@@ -374,7 +420,9 @@
       "linux_kernel": true,
       "layer": "compiler",
       "layer_note": "Compiler can auto-generate prefetch instructions. Also usable via __builtin_prefetch. Transparent to kernel.",
-      "rva23_new": false
+      "rva23_new": false,
+      "state_class": "insn-only",
+      "state_class_basis": "CMO spec — CBO.PREFETCH.* are HINT instructions, no new state"
     },
     {
       "name": "Zicboz",
@@ -389,7 +437,9 @@
       "linux_kernel": true,
       "layer": "full_stack",
       "layer_note": "Kernel uses cbo.zero for fast page clearing AND must set senvcfg.CBZE to authorize U-mode execution (cbo.zero traps as illegal in U-mode while the bit is 0). Once enabled, userspace runtime (glibc memset, libc clear primitives) can issue cbo.zero directly. LLVM has assembly support only - no auto-generation. Linux exposes the capability via the riscv_hwprobe vDSO/syscall (block size in RISCV_HWPROBE_KEY_ZICBOZ_BLOCK_SIZE).",
-      "rva23_new": false
+      "rva23_new": false,
+      "state_class": "insn-only",
+      "state_class_basis": "CMO spec — CBO.ZERO instruction; menvcfg.CBZE gate only, no new state"
     },
     {
       "name": "Ziccamoa",
@@ -404,7 +454,9 @@
       "linux_kernel": true,
       "layer": "none",
       "layer_note": "Platform property guarantee. No new instructions. Software-transparent hardware memory system constraint.",
-      "rva23_new": false
+      "rva23_new": false,
+      "state_class": "property",
+      "state_class_basis": "Named-feature / capability extension — adds no instructions and no state; pure discoverable property (AMO atomicity rule)"
     },
     {
       "name": "Ziccif",
@@ -419,7 +471,9 @@
       "linux_kernel": true,
       "layer": "none",
       "layer_note": "Platform property guarantee. No new instructions. Software-transparent.",
-      "rva23_new": false
+      "rva23_new": false,
+      "state_class": "property",
+      "state_class_basis": "Named-feature / capability extension — adds no instructions and no state; pure discoverable property (instruction-fetch coherence guarantee)"
     },
     {
       "name": "Zicclsm",
@@ -434,7 +488,9 @@
       "linux_kernel": true,
       "layer": "none",
       "layer_note": "Platform property guarantee. No new instructions. Note: misaligned may be extremely slow - software should not rely on it for performance.",
-      "rva23_new": false
+      "rva23_new": false,
+      "state_class": "property",
+      "state_class_basis": "Named-feature / capability extension — adds no instructions and no state; pure discoverable property (misaligned load/store support guarantee)"
     },
     {
       "name": "Ziccrse",
@@ -449,7 +505,9 @@
       "linux_kernel": true,
       "layer": "none",
       "layer_note": "Platform property guarantee. No new instructions. Software-transparent.",
-      "rva23_new": false
+      "rva23_new": false,
+      "state_class": "property",
+      "state_class_basis": "Named-feature / capability extension — adds no instructions and no state; pure discoverable property (reservation-set eventual success guarantee)"
     },
     {
       "name": "Zicntr",
@@ -464,7 +522,9 @@
       "linux_kernel": true,
       "layer": "none",
       "layer_note": "No new instructions. CSRs for performance counters. LLVM accepts unconditionally for backward compat.",
-      "rva23_new": false
+      "rva23_new": false,
+      "state_class": "csr-only",
+      "state_class_basis": "Unprivileged counter CSRs cycle/time/instret (URO)"
     },
     {
       "name": "Zicond",
@@ -479,7 +539,9 @@
       "linux_kernel": true,
       "layer": "compiler",
       "layer_note": "Compiler pattern-matches conditional idioms and generates CZERO. Transparent.",
-      "rva23_new": true
+      "rva23_new": true,
+      "state_class": "insn-only",
+      "state_class_basis": "Zicond — czero.{eqz,nez} conditional-move instructions, no new state"
     },
     {
       "name": "Zicsr",
@@ -494,7 +556,9 @@
       "linux_kernel": true,
       "layer": "none",
       "layer_note": "CSR access instructions. LLVM accepts unconditionally for backward compat.",
-      "rva23_new": false
+      "rva23_new": false,
+      "state_class": "insn-only",
+      "state_class_basis": "Zicsr defines CSR access instructions; the CSRs themselves belong to other extensions"
     },
     {
       "name": "Zihintntl",
@@ -509,7 +573,9 @@
       "linux_kernel": true,
       "layer": "none",
       "layer_note": "Hint instructions - architecture-defined NOPs. Hardware may use for cache policy hints. Software-transparent.",
-      "rva23_new": true
+      "rva23_new": true,
+      "state_class": "insn-only",
+      "state_class_basis": "HINT-class encoding — software-transparent additions to existing instruction space, no new state"
     },
     {
       "name": "Zihintpause",
@@ -524,7 +590,9 @@
       "linux_kernel": true,
       "layer": "userspace",
       "layer_note": "glibc spinlocks and futex can use PAUSE for efficient spinning. LLVM only has assembly support.",
-      "rva23_new": false
+      "rva23_new": false,
+      "state_class": "insn-only",
+      "state_class_basis": "HINT-class encoding — software-transparent additions to existing instruction space, no new state"
     },
     {
       "name": "Zihpm",
@@ -539,7 +607,9 @@
       "linux_kernel": true,
       "layer": "kernel",
       "layer_note": "No new instructions. Kernel perf subsystem needs to expose hpmcounter CSRs to userspace via perf_events.",
-      "rva23_new": false
+      "rva23_new": false,
+      "state_class": "csr-only",
+      "state_class_basis": "hpmcounter3..31 / mhpmcounter3..31 / mhpmevent3..31 (Priv Arch §3.1.11)"
     },
     {
       "name": "Zkt",
@@ -554,7 +624,9 @@
       "linux_kernel": true,
       "layer": "none",
       "layer_note": "No new instructions. Hardware property guarantee for cryptographic constant-time. Software-transparent.",
-      "rva23_new": false
+      "rva23_new": false,
+      "state_class": "property",
+      "state_class_basis": "Named-feature / capability extension — adds no instructions and no state; pure discoverable property (data-independent execution latency)"
     },
     {
       "name": "Zvbb",
@@ -569,7 +641,9 @@
       "linux_kernel": true,
       "layer": "full_stack",
       "layer_note": "Requires V extension. Compiler can generate; kernel must handle in V sigcontext. Crypto libraries benefit.",
-      "rva23_new": true
+      "rva23_new": true,
+      "state_class": "vector",
+      "state_class_basis": "mstatus.VS (Priv Arch §3.1.6 — Vector context Status) (vector bit-manipulation)"
     },
     {
       "name": "Zvfhmin",
@@ -584,7 +658,9 @@
       "linux_kernel": true,
       "layer": "full_stack",
       "layer_note": "Requires V extension. Adds vfwcvt.f.f.v and vfwcvt.f.x.v. No new register state beyond V.",
-      "rva23_new": true
+      "rva23_new": true,
+      "state_class": "vector",
+      "state_class_basis": "mstatus.VS (Priv Arch §3.1.6 — Vector context Status) (vector FP16 subset)"
     },
     {
       "name": "Zvkt",
@@ -599,7 +675,9 @@
       "linux_kernel": true,
       "layer": "none",
       "layer_note": "No new instructions. Hardware property guarantee for vector crypto constant-time. Software-transparent.",
-      "rva23_new": true
+      "rva23_new": true,
+      "state_class": "vector",
+      "state_class_basis": "mstatus.VS (Priv Arch §3.1.6 — Vector context Status) (vector data-independent timing — capability over vector state)"
     }
   ],
   "optional": [
@@ -616,7 +694,9 @@
       "linux_kernel": true,
       "layer": "userspace",
       "layer_note": "glibc pthread can use for byte/halfword atomic ops. Kernel futex optimization.",
-      "rva23_new": true
+      "rva23_new": true,
+      "state_class": "insn-only",
+      "state_class_basis": "ISA Manual §Zabha — byte/halfword AMO instructions, no new register"
     },
     {
       "name": "Zacas",
@@ -631,7 +711,9 @@
       "linux_kernel": true,
       "layer": "userspace",
       "layer_note": "glibc pthread and lock-free data structures benefit. LLVM won't generate amocas.q on RV64 (ABI compat).",
-      "rva23_new": true
+      "rva23_new": true,
+      "state_class": "insn-only",
+      "state_class_basis": "ISA Manual §Zacas — amocas.{w,d,q} instructions, no new register"
     },
     {
       "name": "Zama16b",
@@ -646,7 +728,9 @@
       "linux_kernel": false,
       "layer": "none",
       "layer_note": "Platform property guarantee. No new instructions. Not yet in Linux kernel cpufeature.",
-      "rva23_new": true
+      "rva23_new": true,
+      "state_class": "property",
+      "state_class_basis": "Named-feature / capability extension — adds no instructions and no state; pure discoverable property (misaligned access atomicity ≤16 B)"
     },
     {
       "name": "Zbc",
@@ -661,7 +745,9 @@
       "linux_kernel": true,
       "layer": "userspace",
       "layer_note": "Used by CRC and crypto libraries. Compiler intrinsics; no auto-generation.",
-      "rva23_new": true
+      "rva23_new": true,
+      "state_class": "insn-only",
+      "state_class_basis": "Bitmanip rationale: extension adds new instructions, no new architectural state (carry-less multiply)"
     },
     {
       "name": "Zfbfmin",
@@ -676,7 +762,9 @@
       "linux_kernel": true,
       "layer": "compiler",
       "layer_note": "ML/AI workloads. Compiler can generate BF16 conversion instructions.",
-      "rva23_new": true
+      "rva23_new": true,
+      "state_class": "fp",
+      "state_class_basis": "mstatus.FS (Priv Arch §3.1.6 — Floating-point context Status) (bf16↔f32 conversion)"
     },
     {
       "name": "Zfh",
@@ -691,7 +779,9 @@
       "linux_kernel": true,
       "layer": "full_stack",
       "layer_note": "Superset of Zfhmin. Adds FP16 arithmetic. Compiler generates; kernel saves FP16 state in signal frame.",
-      "rva23_new": false
+      "rva23_new": false,
+      "state_class": "fp",
+      "state_class_basis": "mstatus.FS (Priv Arch §3.1.6 — Floating-point context Status) (half-precision FP)"
     },
     {
       "name": "Ziccamoc",
@@ -706,7 +796,9 @@
       "linux_kernel": false,
       "layer": "none",
       "layer_note": "Platform property guarantee. No new instructions. Not yet in Linux kernel.",
-      "rva23_new": true
+      "rva23_new": true,
+      "state_class": "property",
+      "state_class_basis": "Named-feature / capability extension — adds no instructions and no state; pure discoverable property (AMO ordering with sequence)"
     },
     {
       "name": "Zicfilp",
@@ -721,7 +813,9 @@
       "linux_kernel": true,
       "layer": "full_stack",
       "layer_note": "Compiler generates shadow landing pads; kernel manages enforcement state; ELF binary format changes; distro must handle mixed CFI/non-CFI binaries. LLVM still experimental.",
-      "rva23_new": true
+      "rva23_new": true,
+      "state_class": "csr-only",
+      "state_class_basis": "Forward CFI: elp tracking + mstatus.SPELP/MPELP, menvcfg.LPE/henvcfg.LPE/senvcfg.LPE (Zicfilp spec)"
     },
     {
       "name": "Zicfiss",
@@ -736,7 +830,9 @@
       "linux_kernel": true,
       "layer": "full_stack",
       "layer_note": "Kernel manages shadow stack memory; signal handling must save/restore SSP; ptrace needs new regset; glibc must be compiled with shadow stack support. LLVM still experimental.",
-      "rva23_new": true
+      "rva23_new": true,
+      "state_class": "csr-only",
+      "state_class_basis": "Shadow stack: ssp CSR + menvcfg.SSE/henvcfg.SSE/senvcfg.SSE (Zicfiss spec)"
     },
     {
       "name": "Zvbc",
@@ -751,7 +847,9 @@
       "linux_kernel": true,
       "layer": "userspace",
       "layer_note": "OpenSSL/GnuTLS acceleration. Compiler intrinsics only (no pattern matching in GCC or LLVM). Requires V.",
-      "rva23_new": true
+      "rva23_new": true,
+      "state_class": "vector",
+      "state_class_basis": "mstatus.VS (Priv Arch §3.1.6 — Vector context Status) (vector carry-less multiply)"
     },
     {
       "name": "Zvfbfmin",
@@ -766,7 +864,9 @@
       "linux_kernel": true,
       "layer": "full_stack",
       "layer_note": "ML/AI vector workloads. Requires V. No new register state.",
-      "rva23_new": true
+      "rva23_new": true,
+      "state_class": "vector",
+      "state_class_basis": "mstatus.VS (Priv Arch §3.1.6 — Vector context Status) (vector bf16↔f32 conversion)"
     },
     {
       "name": "Zvfbfwma",
@@ -781,7 +881,9 @@
       "linux_kernel": true,
       "layer": "full_stack",
       "layer_note": "ML/AI vector workloads. Requires V + Zvfbfmin. No new register state.",
-      "rva23_new": true
+      "rva23_new": true,
+      "state_class": "vector",
+      "state_class_basis": "mstatus.VS (Priv Arch §3.1.6 — Vector context Status) (vector bf16 widening FMA)"
     },
     {
       "name": "Zvfh",
@@ -796,7 +898,9 @@
       "linux_kernel": true,
       "layer": "full_stack",
       "layer_note": "Superset of Zvfhmin. Adds vector FP16 arithmetic. Requires V.",
-      "rva23_new": true
+      "rva23_new": true,
+      "state_class": "vector",
+      "state_class_basis": "mstatus.VS (Priv Arch §3.1.6 — Vector context Status) (vector half-precision FP)"
     },
     {
       "name": "Zvkng",
@@ -811,7 +915,9 @@
       "linux_kernel": true,
       "layer": "userspace",
       "layer_note": "OpenSSL/GnuTLS AES-GCM acceleration. Compiler intrinsics only. Requires V.",
-      "rva23_new": true
+      "rva23_new": true,
+      "state_class": "vector",
+      "state_class_basis": "mstatus.VS (Priv Arch §3.1.6 — Vector context Status) (vector NIST crypto bundle: Zvkn+Zvkg)"
     },
     {
       "name": "Zvksg",
@@ -826,7 +932,9 @@
       "linux_kernel": true,
       "layer": "userspace",
       "layer_note": "OpenSSL/GnuTLS SM4-GCM acceleration. Compiler intrinsics only. Requires V.",
-      "rva23_new": true
+      "rva23_new": true,
+      "state_class": "vector",
+      "state_class_basis": "mstatus.VS (Priv Arch §3.1.6 — Vector context Status) (vector ShangMi crypto bundle: Zvks+Zvkg)"
     }
   ],
   "summary": {

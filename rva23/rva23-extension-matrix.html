@@ -60,6 +60,67 @@
   .tag-new { background: rgba(188,140,255,0.15); color: var(--purple); font-size: 0.68rem; }
   .tag-bits { background: rgba(210,153,34,0.15); color: var(--yellow); }
   .tag-csr  { background: rgba(63,185,80,0.15); color: var(--green); }
+  /* State-class tags: 5-way refined classification.
+     WITHOUT architectural state:  insn-only (gray), property (cyan)
+     WITH architectural state:     fp (orange), vector (purple), csr-only (accent blue) */
+  .tag-state-insn-only { background: rgba(139,148,158,0.15); color: var(--text-muted); }
+  .tag-state-property  { background: rgba(86,212,221,0.16);  color: #56d4dd; }
+  .tag-state-fp        { background: rgba(219,109,40,0.18);  color: var(--orange); }
+  .tag-state-vector    { background: rgba(188,140,255,0.18); color: var(--purple); }
+  .tag-state-csr-only  { background: rgba(88,166,255,0.15);  color: var(--accent); }
+  .tag-state { cursor: help; }
+  /* State-class tag tooltip — immediate, no native-title delay */
+  .state-tag-wrap { position: relative; display: inline-block; }
+  .state-tooltip {
+    visibility: hidden; opacity: 0;
+    position: absolute; bottom: calc(100% + 6px); left: 0;
+    z-index: 100;
+    width: max-content; max-width: 320px;
+    background: var(--surface); color: var(--text);
+    border: 1px solid var(--border); border-radius: 6px;
+    padding: 8px 10px; font-size: 0.78rem; line-height: 1.45;
+    font-weight: 400; white-space: normal;
+    letter-spacing: normal; text-transform: none;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.45);
+    pointer-events: none;
+    transition: opacity 0.08s ease-in;
+  }
+  .state-tooltip code {
+    background: rgba(255,255,255,0.06); color: var(--text-bright);
+    padding: 1px 4px; border-radius: 3px; font-size: 0.86em;
+  }
+  .state-tag-wrap:hover .state-tooltip,
+  .state-tag-wrap:focus-within .state-tooltip { visibility: visible; opacity: 1; }
+  /* When near the right edge, flip the tooltip to the left */
+  td:last-child .state-tooltip,
+  td:nth-last-child(-n+3) .state-tooltip { left: auto; right: 0; }
+  /* Column-header tooltip — same mechanism for explaining what a column means */
+  th.col-with-tooltip { position: relative; cursor: help; }
+  .col-tooltip {
+    visibility: hidden; opacity: 0;
+    position: absolute; top: calc(100% + 4px); left: 0;
+    z-index: 200;
+    width: 360px; max-width: 90vw;
+    background: var(--surface); color: var(--text);
+    border: 1px solid var(--border); border-radius: 6px;
+    padding: 10px 12px;
+    /* Override <th> uppercase styling for legible body text */
+    font-size: 0.82rem; font-weight: 400;
+    text-transform: none; letter-spacing: normal;
+    line-height: 1.5;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+    pointer-events: none;
+    transition: opacity 0.08s ease-in;
+  }
+  .col-tooltip strong { color: var(--text-bright); font-weight: 600; }
+  .col-tooltip code {
+    background: rgba(255,255,255,0.06); color: var(--text-bright);
+    padding: 1px 5px; border-radius: 3px; font-size: 0.86em;
+  }
+  .col-tooltip ul { margin: 6px 0 4px 18px; padding: 0; }
+  .col-tooltip li { margin: 3px 0; }
+  th.col-with-tooltip:hover .col-tooltip,
+  th.col-with-tooltip:focus-within .col-tooltip { visibility: visible; opacity: 1; }
   .layer-badge {
     display: inline-block; padding: 2px 8px; border-radius: 4px;
     font-size: 0.72rem; font-weight: 600;
@@ -273,6 +334,56 @@
   <div class="footnote-ref">Several adjacent features that vendors typically bundle with "RVA23-class" products are <em>not</em> in the ISA profile and so do not appear in the U64 / S64 matrix &mdash; in particular <strong>AIA</strong> (see the dedicated <a href="#aia" data-profile-link="aia">AIA tab</a> for <code>Smaia</code>/<code>Ssaia</code>/IMSIC/APLIC breakdown), <strong>IOMMU</strong>, RAS, ACPI / DT bindings, SBI v2.0+. See also the <a href="#platform-not-covered">Platform-layer items not covered</a> block at the bottom.</div>
 </details>
 
+<details class="intro-callout" open>
+  <summary>Arch.&nbsp;state class &mdash; does this extension add architectural state? (5-way refinement)</summary>
+  <p>Cross-cutting with the software-layer view: <strong>which extensions add <em>architectural state</em></strong> &mdash; registers or CSRs the OS must save/restore on context switch? The primary axis is binary (<em>with</em> vs <em>without</em>), grounded in the RISC-V Privileged Architecture spec's own state-tracking machinery (<code>mstatus.FS</code>, <code>mstatus.VS</code>) and the <code>Smstateen</code>/<code>Ssstateen</code> mechanism. The <em>without</em> side splits further into instruction-additions vs pure capability advertisements.</p>
+  <table style="width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.86rem;">
+    <thead>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <th style="text-align: left; padding: 6px 8px; color: var(--text-muted); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px; width: 18%;">State class</th>
+        <th style="text-align: left; padding: 6px 8px; color: var(--text-muted); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px; width: 32%;">Examples</th>
+        <th style="text-align: left; padding: 6px 8px; color: var(--text-muted); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px;">Spec basis</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="background: rgba(139,148,158,0.04);">
+        <td colspan="3" style="padding: 6px 8px; color: var(--text-muted); font-size: 0.76rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border);">Without architectural state &mdash; no OS save/restore needed</td>
+      </tr>
+      <tr style="border-bottom: 1px solid rgba(48,54,61,0.5);">
+        <td style="padding: 8px; vertical-align: top;"><span class="tag tag-state tag-state-insn-only">insn-only</span></td>
+        <td style="padding: 8px; vertical-align: top;"><code>M</code>, <code>A</code>, <code>C</code>, <code>B</code>, <code>Zba</code>, <code>Zbb</code>, <code>Zbs</code>, <code>Zcb</code>, <code>Zicond</code>, <code>Zicbom</code>, <code>Zicboz</code>, <code>Zihintpause</code>, <code>Zawrs</code>, <code>Svinval</code>, <code>Zifencei</code>, <code>Zacas</code>, <code>Zabha</code>, <code>Zbc</code>&hellip;</td>
+        <td style="padding: 8px; vertical-align: top; color: var(--text);">Adds new instructions that compute on existing GPRs / memory. No new persistent state. Bitmanip rationale (B): <em>"do not add any new architectural state."</em> Same logic for HINTs, CMOs, atomics, fence variants.</td>
+      </tr>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <td style="padding: 8px; vertical-align: top;"><span class="tag tag-state tag-state-property">property</span></td>
+        <td style="padding: 8px; vertical-align: top;"><code>Zic64b</code>, <code>Za64rs</code>, <code>Za128rs</code>, <code>Ziccamoa</code>, <code>Ziccif</code>, <code>Zicclsm</code>, <code>Ziccrse</code>, <code>Zkt</code>, <code>Sv39</code>, <code>Sv48</code>, <code>Sv57</code>, <code>Svnapot</code>, <code>Svpbmt</code>, <code>Svade</code>, <code>Svadu</code>&hellip;</td>
+        <td style="padding: 8px; vertical-align: top; color: var(--text);"><em>Named-feature / capability</em> extensions &mdash; assert one architectural guarantee (cache geometry, atomicity rule, page-table mode value, timing property&hellip;) and add neither instructions nor state. Pure discoverable bits; <code>hwprobe(2)</code> reports them as flags, not feature tests.</td>
+      </tr>
+      <tr style="background: rgba(88,166,255,0.05);">
+        <td colspan="3" style="padding: 6px 8px; color: var(--accent); font-size: 0.76rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border);">With architectural state &mdash; OS must save/restore on context switch</td>
+      </tr>
+      <tr style="border-bottom: 1px solid rgba(48,54,61,0.5);">
+        <td style="padding: 8px; vertical-align: top;"><span class="tag tag-state tag-state-fp">fp</span></td>
+        <td style="padding: 8px; vertical-align: top;"><code>F</code>, <code>D</code>, <code>Zfh</code>, <code>Zfhmin</code>, <code>Zfa</code>, <code>Zfbfmin</code></td>
+        <td style="padding: 8px; vertical-align: top; color: var(--text);"><code>mstatus.FS</code> (Priv Arch &sect;3.1.6 &mdash; "Floating-point context Status"). FPU register file <code>f0&ndash;f31</code> + <code>fcsr</code>; spec rationale: <em>"using dirty bits on floating-point register file state can reduce context-switch overhead."</em></td>
+      </tr>
+      <tr style="border-bottom: 1px solid rgba(48,54,61,0.5);">
+        <td style="padding: 8px; vertical-align: top;"><span class="tag tag-state tag-state-vector">vector</span></td>
+        <td style="padding: 8px; vertical-align: top;"><code>V</code>, <code>Zvbb</code>, <code>Zvfh</code>, <code>Zvfhmin</code>, <code>Zvkng</code>, <code>Zvkt</code>&hellip;</td>
+        <td style="padding: 8px; vertical-align: top; color: var(--text);"><code>mstatus.VS</code> (Priv Arch &sect;3.1.6 &mdash; "Vector context Status"). Vector register file <code>v0&ndash;v31</code> + <code>vstart</code>, <code>vl</code>, <code>vtype</code>, <code>vxrm</code>, <code>vxsat</code>, <code>vcsr</code>.</td>
+      </tr>
+      <tr>
+        <td style="padding: 8px; vertical-align: top;"><span class="tag tag-state tag-state-csr-only">csr-only</span></td>
+        <td style="padding: 8px; vertical-align: top;"><code>H</code>, <code>Ss1p13</code>, <code>Sstc</code>, <code>Ssaia</code>, <code>Supm</code>, <code>Ssstateen</code>, <code>Sdtrig</code>, <code>Sscofpmf</code>, <code>Zicfilp</code>, <code>Zicfiss</code>, <code>Zkr</code></td>
+        <td style="padding: 8px; vertical-align: top; color: var(--text);">Per-extension new CSR(s) or new bits in existing CSRs &mdash; no new wide register file. Many require an <code>{m,h,s}stateen0..3</code> enable bit (<code>Smstateen</code>/<code>Ssstateen</code> spec &sect;3) or have their own access-gating bit in <code>menvcfg</code>/<code>senvcfg</code>.</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="footnote-ref">
+    The 5-way scheme is an engineering refinement &mdash; not normative spec terminology. The binary split (<em>with / without state</em>) is anchored in <code>mstatus.FS/VS</code> and Smstateen; the further <em>insn-only vs property</em> split has no single canonical name but matches the operational reality: <em>property</em> extensions are invisible to compilers and userspace, only observable via discovery (e.g. Linux <code>hwprobe</code>). State class is orthogonal to the "Layer" column &mdash; e.g.&nbsp;<code>F</code> is <span class="tag tag-state tag-state-fp">fp</span> but software-layer <em>full-stack</em>; <code>Zicbom</code> is <span class="tag tag-state tag-state-insn-only">insn-only</span> but software-layer <em>kernel</em>. Hover any state tag in the table below to see its individual spec citation.
+  </div>
+</details>
+
 <div class="tabs" role="tablist">
   <button class="tab-btn active" data-profile="u64" role="tab">RVA23U64<span class="tab-sub">User mode</span></button>
   <button class="tab-btn" data-profile="s64" role="tab">RVA23S64<span class="tab-sub">Supervisor / Hypervisor additions</span></button>
@@ -307,6 +418,15 @@
   <span style="margin-left: 12px">
     <label><input type="checkbox" id="new-only"> New in RVA23 only</label>
   </span>
+</div>
+<div class="filter-bar">
+  <label>Filter arch.&nbsp;state:</label>
+  <button class="filter-btn state-filter-btn active" data-state-filter="all">All</button>
+  <button class="filter-btn state-filter-btn" data-state-filter="insn-only">insn-only</button>
+  <button class="filter-btn state-filter-btn" data-state-filter="property">property</button>
+  <button class="filter-btn state-filter-btn" data-state-filter="fp">fp</button>
+  <button class="filter-btn state-filter-btn" data-state-filter="vector">vector</button>
+  <button class="filter-btn state-filter-btn" data-state-filter="csr-only">csr-only</button>
 </div>
 
 <div id="priv-ref-container" style="display: none;"></div>
@@ -505,6 +625,7 @@
       <th>Description</th>
       <th>Instructions?</th>
       <th>CSRs?</th>
+      <th class="col-with-tooltip" tabindex="0">Arch. state<span class="col-tooltip" role="tooltip"><strong>Does this extension add architectural state?</strong><br>I.e.&nbsp;registers or CSRs the OS must save / restore on context switch.<br><br><strong>Without state</strong> &mdash; no save/restore:<ul><li><code>insn-only</code> &mdash; adds instructions only (compute on existing GPRs)</li><li><code>property</code> &mdash; adds neither instructions nor state; pure capability bit (e.g.&nbsp;cache geometry, atomicity guarantee)</li></ul><strong>With state</strong> &mdash; OS save/restore needed:<ul><li><code>fp</code> &mdash; extends FPU state, tracked by <code>mstatus.FS</code></li><li><code>vector</code> &mdash; extends vector state, tracked by <code>mstatus.VS</code></li><li><code>csr-only</code> &mdash; adds new CSR(s) or bits, but no new wide register file</li></ul>Hover any tag below for the per-extension spec citation. Full reference card is the collapsible section near the top of the page.</span></th>
       <th>GCC march</th>
       <th>LLVM march</th>
       <th>Linux kernel</th>
@@ -523,6 +644,7 @@
       <th>Description</th>
       <th>Instructions?</th>
       <th>CSRs?</th>
+      <th class="col-with-tooltip" tabindex="0">Arch. state<span class="col-tooltip" role="tooltip"><strong>Does this extension add architectural state?</strong><br>I.e.&nbsp;registers or CSRs the OS must save / restore on context switch.<br><br><strong>Without state</strong> &mdash; no save/restore:<ul><li><code>insn-only</code> &mdash; adds instructions only (compute on existing GPRs)</li><li><code>property</code> &mdash; adds neither instructions nor state; pure capability bit (e.g.&nbsp;cache geometry, atomicity guarantee)</li></ul><strong>With state</strong> &mdash; OS save/restore needed:<ul><li><code>fp</code> &mdash; extends FPU state, tracked by <code>mstatus.FS</code></li><li><code>vector</code> &mdash; extends vector state, tracked by <code>mstatus.VS</code></li><li><code>csr-only</code> &mdash; adds new CSR(s) or bits, but no new wide register file</li></ul>Hover any tag below for the per-extension spec citation. Full reference card is the collapsible section near the top of the page.</span></th>
       <th>GCC march</th>
       <th>LLVM march</th>
       <th>Linux kernel</th>
@@ -592,12 +714,29 @@ function csrTag(e) {
   if (v === 'bits') return '<span class="tag tag-bits" title="New bitfield(s) in existing CSRs">Bits</span>';
   return '<span class="tag tag-no">No</span>';
 }
+function stateTag(e) {
+  const sc = e.state_class || 'none';
+  const basis = e.state_class_basis || '';
+  const label = sc === 'none' ? 'none' : sc;
+  // Class names: tag-state-none / -fp / -vector / -csr-only.
+  // Wrap with state-tag-wrap for the CSS-driven tooltip; also set title= as fallback for touch/keyboard.
+  const tooltip = basis
+    ? `<span class="state-tooltip" role="tooltip">${escapeAttr(basis)}</span>`
+    : '';
+  return `<span class="state-tag-wrap" tabindex="0" title="${escapeAttr(basis)}">` +
+         `<span class="tag tag-state tag-state-${sc}">${label}</span>` +
+         tooltip +
+         `</span>`;
+}
+function escapeAttr(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
 function layerBadge(layer) {
   return `<span class="layer-badge layer-${layer}">${LAYER_LABELS[layer]}</span>`;
 }
 
 function renderRow(e) {
-  return `<tr data-layer="${e.layer}" data-new="${e.rva23_new ? '1' : '0'}">
+  return `<tr data-layer="${e.layer}" data-state="${e.state_class || 'none'}" data-new="${e.rva23_new ? '1' : '0'}">
     <td>
       <span class="ext-name">${e.name}</span>
       ${e.rva23_new ? ' <span class="tag tag-new">NEW in RVA23</span>' : ''}
@@ -605,6 +744,7 @@ function renderRow(e) {
     <td class="ext-desc">${e.description}</td>
     <td><span class="has-inst ${e.has_instructions ? 'has-inst-yes' : 'has-inst-no'}">${e.has_instructions ? 'Yes' : 'No'}</span></td>
     <td>${csrTag(e)}</td>
+    <td>${stateTag(e)}</td>
     <td>${gccTag(e)}${e.gcc_status && !e.gcc_status.includes('profile property') ? `<div class="note">${e.gcc_status}</div>` : ''}</td>
     <td>${llvmTag(e)}${e.llvm_status && !e.llvm_status.includes('profile property') ? `<div class="note">${e.llvm_status}</div>` : ''}</td>
     <td>${kernelTag(e)}</td>
@@ -648,6 +788,7 @@ const PROFILES = {
 
 // View state shared across profiles
 let currentFilter = 'all';
+let currentStateFilter = 'all';
 let mandatoryOnly = false;
 let newOnly = false;
 let currentProfile = 'u64';
@@ -695,10 +836,12 @@ function applyFilters() {
     const rows = tbody.querySelectorAll('tr');
     rows.forEach(row => {
       const layer = row.dataset.layer;
+      const state = row.dataset.state;
       const isNew = row.dataset.new === '1';
       const layerOk = (currentFilter === 'all' || layer === currentFilter);
+      const stateOk = (currentStateFilter === 'all' || state === currentStateFilter);
       const newOk = !newOnly || isNew;
-      row.style.display = (layerOk && newOk) ? '' : 'none';
+      row.style.display = (layerOk && stateOk && newOk) ? '' : 'none';
     });
     headings[i].style.display = (i === 1 && mandatoryOnly) ? 'none' : '';
   });
@@ -713,7 +856,7 @@ function setViewMode(kind) {
   const isAia = (kind === 'aia');
   document.getElementById('summary').style.display = matrixOnly ? '' : 'none';
   document.querySelector('.legend').style.display = matrixOnly ? '' : 'none';
-  document.querySelector('.filter-bar').style.display = matrixOnly ? '' : 'none';
+  document.querySelectorAll('.filter-bar').forEach(el => { el.style.display = matrixOnly ? '' : 'none'; });
   document.getElementById('mandatory-heading').style.display = matrixOnly ? '' : 'none';
   document.getElementById('mandatory-table').style.display = matrixOnly ? '' : 'none';
   // optional table h2 sibling
@@ -881,11 +1024,22 @@ window.addEventListener('hashchange', () => {
   if (PROFILES[name] && name !== currentProfile) switchTab(name, false);
 });
 
-document.querySelectorAll('.filter-btn').forEach(btn => {
+// Layer filter buttons: only those without the state-filter-btn marker class
+document.querySelectorAll('.filter-btn:not(.state-filter-btn)').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.filter-btn:not(.state-filter-btn)').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     currentFilter = btn.dataset.filter;
+    applyFilters();
+  });
+});
+
+// State-class filter buttons
+document.querySelectorAll('.state-filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.state-filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentStateFilter = btn.dataset.stateFilter;
     applyFilters();
   });
 });
