@@ -112,6 +112,34 @@
 		.selection-blue::selection {
 			background-color: rgba(59, 130, 246, 0.3);
 		}
+
+		.today-line {
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			width: 2px;
+			background: repeating-linear-gradient(
+				to bottom,
+				#f97316 0px,
+				#f97316 6px,
+				transparent 6px,
+				transparent 12px
+			);
+			z-index: 20;
+			pointer-events: none;
+		}
+
+		.today-label {
+			position: absolute;
+			bottom: 8px;
+			left: 6px;
+			white-space: nowrap;
+			font-size: 9px;
+			font-weight: 800;
+			text-transform: uppercase;
+			color: #f97316;
+			letter-spacing: 0.05em;
+		}
 	</style>
 </head>
 
@@ -344,6 +372,7 @@
 		const PIXELS_PER_WEEK = 55;
 		const START_DATE = new Date(2026, 0, 1);
 		const SPLIT_DATE = new Date(2026, 5, 30); // June 30, 2026
+		const TODAY = new Date();
 
 		function getWeeksDiff(d1, d2) {
 			return (d2 - d1) / (7 * 24 * 60 * 60 * 1000);
@@ -426,7 +455,24 @@
 				currentDate.setDate(currentDate.getDate() + 7);
 			}
 
-			// 3. Add Events
+			// 3. Today marker
+			if (TODAY >= startDate && TODAY <= endDate) {
+				const todayWeeks = getWeeksDiff(startDate, TODAY);
+				const todayPx = todayWeeks * PIXELS_PER_WEEK;
+
+				const todayLine = document.createElement('div');
+				todayLine.className = 'today-line';
+				todayLine.style.left = `${todayPx}px`;
+
+				const todayLabel = document.createElement('div');
+				todayLabel.className = 'today-label';
+				todayLabel.innerText = 'Today';
+				todayLine.appendChild(todayLabel);
+
+				container.appendChild(todayLine);
+			}
+
+			// 4. Add Events
 			events.forEach(event => {
 				const eventDate = new Date(event.date);
 				const diffWeeks = getWeeksDiff(startDate, eventDate);
