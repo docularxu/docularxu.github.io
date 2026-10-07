@@ -376,7 +376,23 @@
 		}
 
 		/* Blog card styles */
+		.blog-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+			gap: 20px;
+			align-items: stretch;
+			margin-bottom: 20px;
+		}
+
+		.blog-grid>.blog-card {
+			min-width: 0;
+		}
+
 		.blog-card {
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			width: 100%;
 			border: 2px solid #003262;
 			border-radius: 12px;
 			padding: 20px;
@@ -384,6 +400,112 @@
 			background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
 			transition: transform 0.2s, box-shadow 0.2s;
 			cursor: pointer;
+		}
+
+		.blog-card-media {
+			position: relative;
+			width: 100%;
+			aspect-ratio: 16 / 9;
+			overflow: hidden;
+			border-radius: 6px;
+			border: 1px solid #ccc;
+			margin-bottom: 12px;
+			background: #000;
+		}
+
+		.blog-card-media img {
+			display: block;
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+
+		/* charts/diagrams: never crop, letterbox on a light background */
+		.blog-card-media.chart {
+			background: #fff;
+		}
+
+		.blog-card-media.chart img {
+			object-fit: contain;
+		}
+
+		.blog-card-play {
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			transform: translate(-50%, -50%);
+			width: 48px;
+			height: 48px;
+			border-radius: 50%;
+			background: rgba(0, 0, 0, 0.6);
+			color: #fff;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 20px;
+			padding-left: 4px;
+			box-sizing: border-box;
+		}
+
+		.blog-card-actions {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 8px;
+			margin-top: auto;
+			padding-top: 4px;
+		}
+
+		.blog-card-actions>a {
+			text-decoration: none;
+			flex: 1;
+			min-width: 100px;
+		}
+
+		.blog-card-actions .blog-card-badge {
+			text-align: center;
+		}
+
+		.blog-card-actions .blog-card-badge.wide {
+			flex: 1 1 100%;
+			text-align: left;
+		}
+
+		/* title is the link; card body text stays selectable */
+		.blog-card-link {
+			color: inherit;
+			text-decoration: none;
+		}
+
+		.blog-card-link:hover {
+			text-decoration: underline;
+		}
+
+		.blog-card-link::after {
+			content: " ↗";
+			font-size: 0.8em;
+			opacity: 0.6;
+		}
+
+		.blog-grid .blog-card {
+			cursor: auto;
+			user-select: text;
+		}
+
+		/* fold long descriptions to 4 lines; unfold on hover (desktop) or tap (touch) */
+		.blog-grid .blog-card-desc {
+			display: -webkit-box;
+			-webkit-line-clamp: 4;
+			-webkit-box-orient: vertical;
+			overflow: hidden;
+			flex: 0 0 auto;
+			/* the actions row uses margin-top:auto, so the box must not stretch */
+		}
+
+		.blog-grid .blog-card:hover .blog-card-desc,
+		.blog-grid .blog-card-desc.expanded {
+			display: block;
+			-webkit-line-clamp: unset;
+			overflow: visible;
 		}
 
 		.blog-card:hover {
@@ -430,6 +552,7 @@
 			color: #555;
 			line-height: 1.5;
 			margin-bottom: 12px;
+			flex: 1;
 		}
 
 		body.dark .blog-card-desc {
@@ -726,8 +849,8 @@
 		<ul>
 			<li><a href="#about">About</a></li>
 			<li><a href="#upstreaming">Kernel Upstreaming</a></li>
+			<li><a href="#blog">Spotlight</a></li>
 			<li><a href="#ecosystem">Ecosystem Intel</a></li>
-			<li><a href="#blog">Blog</a></li>
 			<li><a href="#works">RVV Benchmarks</a></li>
 			<li><a href="#acceleration">Arm SVE</a></li>
 			<li><a href="#experience">Experience</a></li>
@@ -824,6 +947,230 @@
 				work (building the kernel for RVA23) by Charlie Jenkins, which I measured on SpacemiT K3 silicon
 				for the RISC-V Summit Europe 2026 talk.</p>
 
+			<h2 id="blog">In the Spotlight</h2>
+			<p class="note">Conference talks, blog posts, and coverage by RISC-V International and RISE on my
+				RVA23 and Linux kernel work. Newest first.</p>
+
+			<div class="blog-grid">
+				<div class="blog-card">
+						<div class="blog-card-lead">
+							<img src="assets/images/lpc-2026-prague-logo.png"
+								alt="Linux Plumbers Conference 2026, Prague"
+								style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px;">
+							<div style="flex: 1;">
+								<div class="blog-card-header">Linux Plumbers Conference 2026, Prague
+								</div>
+								<div class="blog-card-date">October 6, 2026</div>
+							</div>
+						</div>
+						<div class="blog-card-title"><a class="blog-card-link" href="https://lpc.events/event/20/contributions/2626/"
+								target="_blank" rel="noopener noreferrer">RVA23 in practice: discovery, dispatch, and
+							the hardware left behind</a></div>
+						<div class="blog-card-desc">RISC-V Microconference talk on the three
+							unresolved kernel questions between "the profile exists" and
+							"userspace can rely on it": extension discovery (hwprobe vs. prctl),
+							a dispatch story distributions can adopt, and pre-RVA23 hardware.</div>
+						<div class="blog-card-actions">
+							<a href="https://lpc.events/event/20/contributions/2626/attachments/1995/4541/lpc26-rva23-in-practice-v3-2026-10-02.pdf"
+								target="_blank" rel="noopener noreferrer">
+								<div class="blog-card-badge">
+									📊 Slides
+								</div>
+							</a>
+						</div>
+				</div>
+				<div class="blog-card">
+						<div class="blog-card-lead">
+							<img src="RISC-V_ Stacked_Color.png" alt="RISC-V International"
+								style="width: 60px; height: 60px; object-fit: contain;">
+							<div style="flex: 1;">
+								<div class="blog-card-header">RISC-V International Blog
+								</div>
+								<div class="blog-card-date">September 28, 2026</div>
+							</div>
+						</div>
+						<div class="blog-card-title"><a class="blog-card-link" href="https://riscv.org/blog/community-motion-what-are-risc-v-advocates-doing/"
+								target="_blank" rel="noopener noreferrer">Community Motion: What Are RISC-V Advocates
+							Doing?</a></div>
+						<div class="blog-card-desc">RISC-V International featured my work as an
+							Advocate under "Guodong Xu: From RVA23 to Real-World Adoption": the
+							Summit Europe talk, the RVA23 readiness blog, the RISE Platform Working
+							Group, and the LPC 2026 RISC-V Microconference paper.</div>
+						<div class="blog-card-actions">
+							<div class="blog-card-badge wide">
+								🏅 Featured as RISC-V International Advocate
+							</div>
+						</div>
+				</div>
+				<div class="blog-card">
+						<div class="blog-card-lead">
+							<img src="RiscStar_Logo08.png" alt="RISCstar Solutions"
+								style="width: 60px; height: 60px; object-fit: contain;">
+							<div style="flex: 1;">
+								<div class="blog-card-header">RISCstar Solutions Blog
+								</div>
+								<div class="blog-card-date">August 12, 2026</div>
+							</div>
+						</div>
+						<div class="blog-card-title"><a class="blog-card-link" href="https://riscstar.com/blog/rva23-from-ratification-to-real-world-readiness/"
+								target="_blank" rel="noopener noreferrer">RVA23: From Ratification to Real-World
+							Readiness</a></div>
+						<div class="blog-card-desc">RVA23 was ratified in October 2024, and the
+							SpacemiT K3 is now on shelves with more RVA23 silicon close behind.
+							What was the industry up to in between, and is the software stack
+							ready for the chips that have arrived?</div>
+						<div class="blog-card-actions">
+							<div class="blog-card-badge wide">
+								🔧 RVA23 • Silicon • Distributions
+							</div>
+						</div>
+				</div>
+				<div class="blog-card">
+						<div class="blog-card-media">
+							<img src="assets/images/yt-rva23-summit-europe-2026.jpg"
+								alt="RVA23 Profile Support in Linux Kernel — RISC-V Summit Europe 2026 (video)">
+							<span class="blog-card-play" aria-hidden="true">▶</span>
+						</div>
+						<div class="blog-card-lead">
+							<div style="flex: 1;">
+								<div class="blog-card-header">RISC-V Summit Europe 2026, Bologna
+								</div>
+								<div class="blog-card-date">June 9, 2026</div>
+							</div>
+						</div>
+						<div class="blog-card-title"><a class="blog-card-link" href="https://riscv-europe.org/summit/2026/presentations"
+								target="_blank" rel="noopener noreferrer">RVA23 Profile Support in Linux Kernel: From
+							Extension Definitions to Userspace Export</a></div>
+						<div class="blog-card-desc">Main Hall talk co-presented with Charlie
+							Jenkins (Meta), in the plenary slot right after Greg KH's keynote (one
+							of 26 oral talks accepted from 291 submissions). How the kernel's RVA23
+							mandatory coverage went from ~68% to 100% in Linux v7.0, how
+							maintainers decide what "supporting" an extension means, and the
+							runtime-detection and compile-time-specialisation series for
+							v7.1. Selected by the RISE Project as a Featured RISE Member Talk.</div>
+						<div class="blog-card-actions">
+							<a href="https://riscv-europe.org/summit/2026/media/proceedings/2026-06-09-RISC-V-Summit-Europe-12h00-XU-slides.pdf"
+								target="_blank" rel="noopener noreferrer">
+								<div class="blog-card-badge">
+									📊 Slides
+								</div>
+							</a>
+							<a href="https://youtu.be/kDV-avIs4kU"
+								target="_blank" rel="noopener noreferrer">
+								<div class="blog-card-badge">
+									🎥 Video
+								</div>
+							</a>
+						</div>
+				</div>
+				<div class="blog-card">
+						<div class="blog-card-media">
+							<img src="assets/images/yt-rvi-china-meetup-2026-04.jpg"
+								alt="Empowering RISC-V Ecosystem with AI Agents — online talk (video)">
+							<span class="blog-card-play" aria-hidden="true">▶</span>
+						</div>
+						<div class="blog-card-lead">
+							<div style="flex: 1;">
+								<div class="blog-card-header">RISC-V International China Community Meetup
+								</div>
+								<div class="blog-card-date">April 10, 2026</div>
+							</div>
+						</div>
+						<div class="blog-card-title"><a class="blog-card-link" href="https://community.riscv.org/triggers/read/a8d54f12f20a4a499da81a5dc8e3f25a/"
+								target="_blank" rel="noopener noreferrer">Empowering RISC-V Ecosystem with AI Agents:
+							RVA23 Specs and Practical RISC-V Skills</a></div>
+						<div class="blog-card-desc">Online talk co-presented with Jian Zhang
+							on RVA23 readiness and AI-assisted workflows for daily RISC-V
+							development.</div>
+						<div class="blog-card-actions">
+							<a href="https://www.slideshare.net/slideshow/empowering-risc-v-ecosystem-with-ai-agents-rva23-specs-and-practical-risc-v-skills/286945033"
+								target="_blank" rel="noopener noreferrer">
+								<div class="blog-card-badge">
+									📊 Slides
+								</div>
+							</a>
+							<a href="https://youtu.be/fp7V90UABJE"
+								target="_blank" rel="noopener noreferrer">
+								<div class="blog-card-badge">
+									🎥 Video
+								</div>
+							</a>
+						</div>
+				</div>
+				<div class="blog-card">
+						<div class="blog-card-media chart">
+							<img src="assets/images/rva23-mandatory-extension-kernel-support-2026-03.png"
+								alt="Chart: RVA23 mandatory extension support in the Linux kernel, reaching 100% in v7.0-rc1">
+						</div>
+						<div class="blog-card-lead">
+							<img src="RISC-V_ Stacked_Color.png" alt="RISC-V International"
+								style="width: 60px; height: 60px; object-fit: contain;">
+							<div style="flex: 1;">
+								<div class="blog-card-header">This Week in RISC-V
+								</div>
+								<div class="blog-card-date">March 20, 2026</div>
+							</div>
+						</div>
+						<div class="blog-card-title"><a class="blog-card-link" href="https://www.linkedin.com/pulse/week-risc-v-march-20-2026-risc-v-international-95ope/"
+								target="_blank" rel="noopener noreferrer">RISC-V International Featured: Linux v7.0-rc1
+							Reaches Full RVA23 Mandatory Extension Coverage</a></div>
+						<div class="blog-card-desc">My <a href="https://riscstar.com/blog/linux-v7-0-rc1-rva23-mandatory-extension-coverage-reaches-100/"
+							target="_blank" rel="noopener noreferrer"
+							style="color: inherit; text-decoration: underline;">RISCstar blog post</a>
+							on RVA23 upstream work was cited by RISC-V International
+							in the 🧠 This Week in RISC-V: March 20, 2026 issue.</div>
+						<div class="blog-card-actions">
+							<div class="blog-card-badge wide">
+								📢 RISC-V International Weekly Newsletter
+							</div>
+						</div>
+				</div>
+				<div class="blog-card">
+						<div class="blog-card-lead">
+							<img src="RISC-V_ Stacked_Color.png" alt="RISC-V International"
+								style="width: 60px; height: 60px; object-fit: contain;">
+							<div style="flex: 1;">
+								<div class="blog-card-header">RISC-V International Blog
+								</div>
+								<div class="blog-card-date">July 24, 2025</div>
+							</div>
+						</div>
+						<div class="blog-card-title"><a class="blog-card-link" href="https://riscv.org/blog/2025/07/risc-v-summit-china-2025-reflections-from-a-risc-v-software-contributor/"
+								target="_blank" rel="noopener noreferrer">RISC-V Summit China 2025: Reflections from
+							a RISC-V Software Contributor</a></div>
+						<div class="blog-card-desc">Insights and observations from attending the
+							5th RISC-V Summit China, sharing perspectives on ecosystem
+							development and community growth.</div>
+						<div class="blog-card-actions">
+							<div class="blog-card-badge wide">
+								📢 Republished by CRVA (China RISC-V Alliance)
+							</div>
+						</div>
+				</div>
+				<div class="blog-card">
+						<div class="blog-card-lead">
+							<img src="RiscStar_Logo08.png" alt="RISCstar Solutions"
+								style="width: 60px; height: 60px; object-fit: contain;">
+							<div style="flex: 1;">
+								<div class="blog-card-header">RISCstar Solutions Blog
+								</div>
+								<div class="blog-card-date">April 14, 2025</div>
+							</div>
+						</div>
+						<div class="blog-card-title"><a class="blog-card-link" href="https://riscstar.com/blog/risc-v-linux-kernel-upstreaming-china-conference/"
+								target="_blank" rel="noopener noreferrer">RISC-V Linux Kernel Upstreaming: Insights
+							from the 2025 China RISC-V Ecosystem Conference</a></div>
+						<div class="blog-card-desc">Key insights on the current state of RISC-V
+							Linux kernel upstreaming and challenges faced by the community.
+						</div>
+						<div class="blog-card-actions">
+							<div class="blog-card-badge wide">
+								🔧 Linux Kernel • RISC-V
+							</div>
+						</div>
+				</div>
+			</div>
+
 			<h2 id="ecosystem">RISC-V Ecosystem Intelligence</h2>
 			<p class="note">Interactive dashboards and analysis tools tracking the evolution of RISC-V
 				support in
@@ -875,258 +1222,6 @@
 						<div class="blog-card-badge"
 							style="display: inline-block; margin-top: 5px;">Profile
 							Coverage</div>
-					</div>
-				</a>
-			</div>
-
-			<h2 id="blog">Blog Posts & Publications</h2>
-			<p class="note">Sharing insights and experiences from the RISC-V ecosystem and open source
-				community.</p>
-
-			<div
-				style="display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-start; margin-bottom: 20px;">
-				<a href="https://lpc.events/event/20/contributions/2626/"
-					target="_blank" rel="noopener noreferrer"
-					style="text-decoration: none; flex: 1 1 calc(33.333% - 14px); min-width: 0;">
-					<div class="blog-card">
-						<div class="blog-card-lead">
-							<img src="assets/images/lpc-2026-prague-logo.png"
-								alt="Linux Plumbers Conference 2026, Prague"
-								style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px;">
-							<div style="flex: 1;">
-								<div class="blog-card-header">Linux Plumbers Conference 2026, Prague
-								</div>
-								<div class="blog-card-date">October 6, 2026</div>
-							</div>
-						</div>
-						<div class="blog-card-title">RVA23 in practice: discovery, dispatch, and
-							the hardware left behind</div>
-						<div class="blog-card-desc">RISC-V Microconference talk on the three
-							unresolved kernel questions between "the profile exists" and
-							"userspace can rely on it": extension discovery (hwprobe vs. prctl),
-							a dispatch story distributions can adopt, and pre-RVA23 hardware.</div>
-						<div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px;">
-							<a href="https://lpc.events/event/20/contributions/2626/attachments/1995/4541/lpc26-rva23-in-practice-v3-2026-10-02.pdf"
-								target="_blank" rel="noopener noreferrer"
-								onclick="event.stopPropagation();"
-								style="text-decoration: none; flex: 1; min-width: 100px;">
-								<div class="blog-card-badge" style="text-align: center;">
-									📊 Slides
-								</div>
-							</a>
-						</div>
-					</div>
-				</a>
-				<a href="https://riscv.org/blog/community-motion-what-are-risc-v-advocates-doing/"
-					target="_blank" rel="noopener noreferrer"
-					style="text-decoration: none; flex: 1 1 calc(33.333% - 14px); min-width: 0;">
-					<div class="blog-card">
-						<div class="blog-card-lead">
-							<img src="RISC-V_ Stacked_Color.png" alt="RISC-V International"
-								style="width: 60px; height: 60px; object-fit: contain;">
-							<div style="flex: 1;">
-								<div class="blog-card-header">RISC-V International Blog
-								</div>
-								<div class="blog-card-date">September 28, 2026</div>
-							</div>
-						</div>
-						<div class="blog-card-title">Community Motion: What Are RISC-V Advocates
-							Doing?</div>
-						<div class="blog-card-desc">RISC-V International featured my work as an
-							Advocate under "Guodong Xu: From RVA23 to Real-World Adoption": the
-							Summit Europe talk, the RVA23 readiness blog, the RISE Platform Working
-							Group, and the LPC 2026 RISC-V Microconference paper.</div>
-						<div class="blog-card-badge">
-							🏅 Featured as RISC-V International Advocate
-						</div>
-					</div>
-				</a>
-				<a href="https://riscstar.com/blog/rva23-from-ratification-to-real-world-readiness/"
-					target="_blank" rel="noopener noreferrer"
-					style="text-decoration: none; flex: 1 1 calc(33.333% - 14px); min-width: 0;">
-					<div class="blog-card">
-						<div class="blog-card-lead">
-							<img src="RiscStar_Logo08.png" alt="RISCstar Solutions"
-								style="width: 60px; height: 60px; object-fit: contain;">
-							<div style="flex: 1;">
-								<div class="blog-card-header">RISCstar Solutions Blog
-								</div>
-								<div class="blog-card-date">August 12, 2026</div>
-							</div>
-						</div>
-						<div class="blog-card-title">RVA23: From Ratification to Real-World
-							Readiness</div>
-						<div class="blog-card-desc">RVA23 was ratified in October 2024, and the
-							SpacemiT K3 is now on shelves with more RVA23 silicon close behind.
-							What was the industry up to in between, and is the software stack
-							ready for the chips that have arrived?</div>
-						<div class="blog-card-badge">
-							🔧 RVA23 • Silicon • Distributions
-						</div>
-					</div>
-				</a>
-				<a href="https://riscv-europe.org/summit/2026/presentations"
-					target="_blank" rel="noopener noreferrer"
-					style="text-decoration: none; flex: 1 1 calc(33.333% - 14px); min-width: 0;">
-					<div class="blog-card">
-						<div style="position: relative; width: 100%; padding-bottom: 56.25%; margin-bottom: 12px;">
-							<iframe src="https://www.youtube.com/embed/kDV-avIs4kU"
-								title="RVA23 Profile Support in Linux Kernel — RISC-V Summit Europe 2026"
-								frameborder="0" allowfullscreen
-								allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-								onclick="event.stopPropagation();"
-								style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 1px solid #ccc; border-radius: 6px;"></iframe>
-						</div>
-						<div class="blog-card-lead">
-							<div style="flex: 1;">
-								<div class="blog-card-header">RISC-V Summit Europe 2026, Bologna
-								</div>
-								<div class="blog-card-date">June 9, 2026</div>
-							</div>
-						</div>
-						<div class="blog-card-title">RVA23 Profile Support in Linux Kernel: From
-							Extension Definitions to Userspace Export</div>
-						<div class="blog-card-desc">Main Hall talk co-presented with Charlie
-							Jenkins (Meta), in the plenary slot right after Greg KH's keynote (one
-							of 26 oral talks accepted from 291 submissions). How the kernel's RVA23
-							mandatory coverage went from ~68% to 100% in Linux v7.0, how
-							maintainers decide what "supporting" an extension means, and the
-							runtime-detection and compile-time-specialisation series for
-							v7.1. Selected by the RISE Project as a Featured RISE Member Talk.</div>
-						<div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px;">
-							<a href="https://riscv-europe.org/summit/2026/media/proceedings/2026-06-09-RISC-V-Summit-Europe-12h00-XU-slides.pdf"
-								target="_blank" rel="noopener noreferrer"
-								onclick="event.stopPropagation();"
-								style="text-decoration: none; flex: 1; min-width: 100px;">
-								<div class="blog-card-badge" style="text-align: center;">
-									📊 Slides
-								</div>
-							</a>
-							<a href="https://youtu.be/kDV-avIs4kU"
-								target="_blank" rel="noopener noreferrer"
-								onclick="event.stopPropagation();"
-								style="text-decoration: none; flex: 1; min-width: 100px;">
-								<div class="blog-card-badge" style="text-align: center;">
-									🎥 Video
-								</div>
-							</a>
-						</div>
-					</div>
-				</a>
-				<a href="https://community.riscv.org/triggers/read/a8d54f12f20a4a499da81a5dc8e3f25a/"
-					target="_blank" rel="noopener noreferrer"
-					style="text-decoration: none; flex: 1 1 calc(33.333% - 14px); min-width: 0;">
-					<div class="blog-card">
-						<div style="position: relative; width: 100%; padding-bottom: 83.37%; margin-bottom: 12px;">
-							<iframe src="https://www.slideshare.net/slideshow/embed_code/key/LUCmkp52pmPf9H"
-								title="Empowering RISC-V Ecosystem with AI Agents — SlideShare"
-								frameborder="0" marginwidth="0" marginheight="0" scrolling="no"
-								allowfullscreen
-								onclick="event.stopPropagation();"
-								style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 1px solid #ccc; border-radius: 6px;"></iframe>
-						</div>
-						<div class="blog-card-lead">
-							<div style="flex: 1;">
-								<div class="blog-card-header">RISC-V International China Community Meetup
-								</div>
-								<div class="blog-card-date">April 10, 2026</div>
-							</div>
-						</div>
-						<div class="blog-card-title">Empowering RISC-V Ecosystem with AI Agents:
-							RVA23 Specs and Practical RISC-V Skills</div>
-						<div class="blog-card-desc">Online talk co-presented with Jian Zhang
-							on RVA23 readiness and AI-assisted workflows for daily RISC-V
-							development.</div>
-						<div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px;">
-							<a href="https://www.slideshare.net/slideshow/empowering-risc-v-ecosystem-with-ai-agents-rva23-specs-and-practical-risc-v-skills/286945033"
-								target="_blank" rel="noopener noreferrer"
-								onclick="event.stopPropagation();"
-								style="text-decoration: none; flex: 1; min-width: 100px;">
-								<div class="blog-card-badge" style="text-align: center;">
-									📊 Slides
-								</div>
-							</a>
-							<a href="https://youtu.be/fp7V90UABJE"
-								target="_blank" rel="noopener noreferrer"
-								onclick="event.stopPropagation();"
-								style="text-decoration: none; flex: 1; min-width: 100px;">
-								<div class="blog-card-badge" style="text-align: center;">
-									🎥 Video
-								</div>
-							</a>
-						</div>
-					</div>
-				</a>
-				<a href="https://www.linkedin.com/pulse/week-risc-v-march-20-2026-risc-v-international-95ope/"
-					target="_blank" rel="noopener noreferrer"
-					style="text-decoration: none; flex: 1 1 calc(33.333% - 14px); min-width: 0;">
-					<div class="blog-card">
-						<div class="blog-card-lead">
-							<img src="RISC-V_ Stacked_Color.png" alt="RISC-V International"
-								style="width: 60px; height: 60px; object-fit: contain;">
-							<div style="flex: 1;">
-								<div class="blog-card-header">This Week in RISC-V
-								</div>
-								<div class="blog-card-date">March 20, 2026</div>
-							</div>
-						</div>
-						<div class="blog-card-title">RISC-V International Featured: Linux v7.0-rc1
-							Reaches Full RVA23 Mandatory Extension Coverage</div>
-						<div class="blog-card-desc">My <a href="https://riscstar.com/blog/linux-v7-0-rc1-rva23-mandatory-extension-coverage-reaches-100/"
-							target="_blank" rel="noopener noreferrer"
-							onclick="event.stopPropagation();"
-							style="color: inherit; text-decoration: underline;">RISCstar blog post</a>
-							on RVA23 upstream work was cited by RISC-V International
-							in the 🧠 This Week in RISC-V: March 20, 2026 issue.</div>
-						<div class="blog-card-badge">
-							📢 RISC-V International Weekly Newsletter
-						</div>
-					</div>
-				</a>
-				<a href="https://riscv.org/blog/2025/07/risc-v-summit-china-2025-reflections-from-a-risc-v-software-contributor/"
-					target="_blank" rel="noopener noreferrer"
-					style="text-decoration: none; flex: 1 1 calc(33.333% - 14px); min-width: 0;">
-					<div class="blog-card">
-						<div class="blog-card-lead">
-							<img src="RISC-V_ Stacked_Color.png" alt="RISC-V International"
-								style="width: 60px; height: 60px; object-fit: contain;">
-							<div style="flex: 1;">
-								<div class="blog-card-header">RISC-V International Blog
-								</div>
-								<div class="blog-card-date">July 24, 2025</div>
-							</div>
-						</div>
-						<div class="blog-card-title">RISC-V Summit China 2025: Reflections from
-							a RISC-V Software Contributor</div>
-						<div class="blog-card-desc">Insights and observations from attending the
-							5th RISC-V Summit China, sharing perspectives on ecosystem
-							development and community growth.</div>
-						<div class="blog-card-badge">
-							📢 Republished by CRVA (China RISC-V Alliance)
-						</div>
-					</div>
-				</a>
-				<a href="https://riscstar.com/blog/risc-v-linux-kernel-upstreaming-china-conference/"
-					target="_blank" rel="noopener noreferrer"
-					style="text-decoration: none; flex: 1 1 calc(33.333% - 14px); min-width: 0;">
-					<div class="blog-card">
-						<div class="blog-card-lead">
-							<img src="RiscStar_Logo08.png" alt="RISCstar Solutions"
-								style="width: 60px; height: 60px; object-fit: contain;">
-							<div style="flex: 1;">
-								<div class="blog-card-header">RISCstar Solutions Blog
-								</div>
-								<div class="blog-card-date">April 14, 2025</div>
-							</div>
-						</div>
-						<div class="blog-card-title">RISC-V Linux Kernel Upstreaming: Insights
-							from the 2025 China RISC-V Ecosystem Conference</div>
-						<div class="blog-card-desc">Key insights on the current state of RISC-V
-							Linux kernel upstreaming and challenges faced by the community.
-						</div>
-						<div class="blog-card-badge">
-							🔧 Linux Kernel • RISC-V
-						</div>
 					</div>
 				</a>
 			</div>
@@ -2030,6 +2125,16 @@
 		</script>
 
 		<!-- GoatCounter Analytics -->
+		<script>
+			// Touch devices have no hover: tap a folded blog description to unfold it.
+			document.querySelectorAll('.blog-grid .blog-card-desc').forEach(function (d) {
+				d.addEventListener('click', function (e) {
+					if (e.target.closest('a')) return;
+					if (window.getSelection && String(window.getSelection())) return;
+					d.classList.toggle('expanded');
+				});
+			});
+		</script>
 		<script data-goatcounter="https://docularxu.goatcounter.com/count"
 			async src="//gc.zgo.at/count.js"></script>
 
