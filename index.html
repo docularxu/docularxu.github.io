@@ -726,9 +726,9 @@
 		<ul>
 			<li><a href="#about">About</a></li>
 			<li><a href="#upstreaming">Kernel Upstreaming</a></li>
-			<li><a href="#works">RVV Benchmarks</a></li>
 			<li><a href="#ecosystem">Ecosystem Intel</a></li>
 			<li><a href="#blog">Blog</a></li>
+			<li><a href="#works">RVV Benchmarks</a></li>
 			<li><a href="#acceleration">Arm SVE</a></li>
 			<li><a href="#experience">Experience</a></li>
 			<li><a href="#contact">Contact</a></li>
@@ -787,144 +787,42 @@
 			<p>I'm <strong>Guodong Xu</strong> (徐国栋), also known online as
 				<strong>docular</strong> / <strong>docularxu</strong>. I've spent 20+ years working
 				on Linux kernel development, from early driver bring-up at Motorola, through a
-				decade leading Arm platform work at Linaro, to upstream RISC-V work at RISCstar
-				today. My focus has been on
+				decade leading Arm platform work at Linaro, and upstream RISC-V work at RISCstar,
+				to the Qualcomm China Linux Team today. My focus has been on
 				the parts most people never see: BSP development, power management, and
 				performance tuning. I still remember telling my family I worked at Motorola—their
 				first question: "So you sell phones?"
 			</p>
-			<p>I split my time between writing code and working with customers. At RISCstar, I lead software engineering while
-				contributing patches to mainline Linux and the open-source community around it.
-				I give talks at RISC-V Summit, openEuler, and similar events when I have
-				something worth sharing.
+			<p>Since June 2026 I've been with Qualcomm's China Linux Team. Before that, at RISCstar,
+				I led software engineering while contributing patches to mainline Linux and the
+				open-source community around it. I'm a <a href="https://riscv.org/developers/ambassadors-advocates/" target="_blank"
+					rel="noopener noreferrer">RISC-V International Advocate</a>, and I give talks
+				at RISC-V Summit, Linux Plumbers Conference, openEuler, and similar events when I
+				have something worth sharing.
+			</p>
+			<p>In the Linux kernel, I am the <a
+					href="https://lore.kernel.org/r/20260603-b4-spacemit-reset-maintainers-v2-1-db0716d43a7f@gmail.com"
+					target="_blank" rel="noopener noreferrer">maintainer</a> of the SpacemiT reset
+				driver (<code>drivers/reset/spacemit/</code>, covering the K1 and K3 SoCs).
 			</p>
 
 			<h2 id="upstreaming">Recent Works - Linux Kernel Upstreaming</h2>
-			<p class="note">My public upstream work since joining RISCstar. (The rest stays with clients.)</p>
+			<p class="note">What I am actively working on upstream right now. Earlier series are listed under
+				<a href="#upstreaming-earlier">Earlier Work: Linux Kernel Upstreaming</a>.</p>
 
-			<h3>SpacemiT K3 SoC Support</h3>
+			<h3>RVA23 Profile: runtime detection and userspace export</h3>
 			<ul class="works-list">
-				<li><a href="https://lore.kernel.org/r/20260115-k3-basic-dt-v5-0-6990ac9f4308@riscstar.com"
-						target="_blank" rel="noopener noreferrer">Basic device tree enablement
-						(15 Jan 2026, applied)</a></li>
-				<li><a href="https://lore.kernel.org/r/20260120-k3-reset-v3-0-effe87f4bdbe@riscstar.com"
-						target="_blank" rel="noopener noreferrer">Reset driver v3
-						(20 Jan 2026, under review)</a></li>
+				<li><a href="https://lore.kernel.org/r/20260920-rva23u64-hwprobe-v2-v8-0-5f14bc5c23d3@oss.qualcomm.com"
+						target="_blank" rel="noopener noreferrer">riscv: hwprobe: Expose RVA23U64
+						base behavior, v8 (11 patches; 20 Sep 2026, under review)</a> — carried
+					forward from Andrew Jones' RFC; introduces an ISA-bases bitmap, prints
+					<code>isa bases</code> in
+					/proc/cpuinfo, and exposes the <code>rva23u64</code> base behavior via
+					hwprobe so distributions can target RVA23 with glibc-hwcaps.</li>
 			</ul>
-
-			<h3>RVA23 Contributions</h3>
-			<ul class="works-list">
-				<li><a href="https://lore.kernel.org/all/20260113-prism-unvaried-abf3b4679e3a@spud/"
-						target="_blank" rel="noopener noreferrer">RVA23U64/RVA23S64 mandatory
-						extensions support, patch 6-9 (13 Jan 2026, applied to riscv-dt-for-next)</a></li>
-				<li><a href="https://lore.kernel.org/r/20260115-adding-b-dtsi-v2-0-254dd61cf947@riscstar.com"
-						target="_blank" rel="noopener noreferrer">riscv: dts: Add "b" ISA
-						extension to existing devicetrees (20 Jan 2026, accepted)</a></li>
-				<li><a href="https://lore.kernel.org/lkml/20260125-supm-ext-id-v2-0-1e3b9714c860@riscstar.com/"
-						target="_blank" rel="noopener noreferrer">riscv: cpufeature: Add Supm
-						extension id and validation (25 Jan 2026, under review)</a></li>
-			</ul>
-			<p class="note" style="margin-top: 15px; margin-bottom: 8px;"><strong>Fixes found during RVA23 work:</strong></p>
-			<ul class="works-list">
-				<li><a href="https://lore.kernel.org/r/20251223-zk-missing-zknh-v1-1-b627c990ee1a@riscstar.com"
-						target="_blank" rel="noopener noreferrer">riscv/cpufeature.c: Zk missing
-						Zknh (6 Jan 2026, applied)</a></li>
-				<li><a href="https://lore.kernel.org/lkml/20251225-h-description-v2-1-b0c66080c704@riscstar.com/"
-						target="_blank" rel="noopener noreferrer">dt-bindings: riscv: update
-						ratified version of h, svinval, svnapot, svpbmt (10 Jan 2026, applied)</a></li>
-			</ul>
-
-			<h3>SpacemiT K1 SoC Support</h3>
-			<ul class="works-list">
-				<li><a href="https://lore.kernel.org/all/20250822-working_dma_0701_v2-v5-0-f5c0eda734cc@riscstar.com/#r"
-						target="_blank" rel="noopener noreferrer">PDMA: Working DMA driver for
-						SpacemiT K1 (22 Aug 2025, merged into v6.18)</a></li>
-				<li><a href="https://lore.kernel.org/all/20250707222910-GYC408198@gentoo/#r"
-						target="_blank" rel="noopener noreferrer">PWM: PWM support for SpacemiT
-						K1 SoC (7 Jul 2025, merged into v6.17)</a></li>
-			</ul>
-
-			<h3>StarFive JH7110 SoC Support</h3>
-			<ul class="works-list">
-				<li><a href="https://lore.kernel.org/all/20241028082553.1989797-1-guodong@riscstar.com/"
-						target="_blank" rel="noopener noreferrer">Add DeepComputing FML13V01
-						board dts (28 Oct 2024, merged into v6.12)</a></li>
-			</ul>
-
-			<h2 id="works">Recent Works - RVV Performance Benchmarks</h2>
-			<p class="note">Benchmark analyses and performance reports for RISC-V Vector Extension (RVV).
-			</p>
-
-			<div class="works-two-column">
-				<div class="works-column">
-					<h3>SLEEF (Nonlinear Math)</h3>
-					<ul class="works-list">
-						<li><a href="https://docularxu.github.io/sleef/webpages/rvv_benchmark_16Oct2025.html"
-								target="_blank" rel="noopener noreferrer">SLEEF RVV
-								Benchmark Summary (16 Oct 2025)</a></li>
-						<li><a href="https://docularxu.github.io/sleef/webpages/rvv_benchmark_gelu_17Oct2025.html"
-								target="_blank" rel="noopener noreferrer">GELU Kernel
-								Benchmarks: erf/tanh on RVV (17 Oct 2025)</a></li>
-					</ul>
-
-					<h3>OpenBLAS (Linear Algebra)</h3>
-					<ul class="works-list">
-						<li><a href="https://docularxu.github.io/OpenBLAS/webpages/rvv_benchmark_openblas_gemv_16Oct2025.html"
-								target="_blank" rel="noopener noreferrer">RISC-V GEMV
-								Performance Summary (16 Oct 2025)</a></li>
-						<li><a href="https://docularxu.github.io/OpenBLAS/webpages/rvv_benchmark_openblas_16Oct2025.html"
-								target="_blank" rel="noopener noreferrer">OpenBLAS RVV
-								Benchmark Summary (16 Oct 2025)</a></li>
-					</ul>
-				</div>
-
-				<div class="works-column">
-					<div class="blog-card" style="height: 100%;">
-						<div
-							style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-							<img src="RISC-V_ Stacked_Color.png" alt="RISC-V International"
-								style="width: 60px; height: 60px; object-fit: contain;">
-							<div style="flex: 1;">
-								<div class="blog-card-header">RISC-V Summit NA 2025
-								</div>
-								<div class="blog-card-date">October 23, 2025</div>
-							</div>
-						</div>
-						<div class="blog-card-title">Moving to RISC-V Vector: A Practical
-							Journey of AI Operator Optimization</div>
-						<div class="blog-card-desc">Conference talk on practical AI operator
-							optimization using RISC-V Vector Extension, presented at RISC-V
-							Summit North America.</div>
-						<div
-							style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px;">
-							<a href="https://www.youtube.com/watch?v=ASA2XYi_QwA&list=PL85jopFZCnbNUnI0l_jg5C8UKNiuAwdVq&index=55"
-								target="_blank" rel="noopener noreferrer"
-								style="text-decoration: none; flex: 1; min-width: 120px;">
-								<div class="blog-card-badge"
-									style="text-align: center;">
-									🎥 YouTube
-								</div>
-							</a>
-							<a href="downloads/Moving_to_RISC-V_Vector-_A_Practical_Journey_of_AI_Operator_Optimization_-_Guodong_Xu_RISCstar_Solutions_-_19Oct2025-with-script.pdf"
-								target="_blank" rel="noopener noreferrer"
-								style="text-decoration: none; flex: 1; min-width: 120px;">
-								<div class="blog-card-badge"
-									style="text-align: center;">
-									📄 PDF
-								</div>
-							</a>
-							<a href="downloads/Moving_to_RISC-V_Vector-_A_Practical_Journey_of_AI_Operator_Optimization_-_Guodong_Xu_RISCstar_Solutions_-_19Oct2025-with-script.pptx"
-								target="_blank" rel="noopener noreferrer"
-								style="text-decoration: none; flex: 1; min-width: 120px;">
-								<div class="blog-card-badge"
-									style="text-align: center;">
-									📊 PPTX
-								</div>
-							</a>
-						</div>
-					</div>
-				</div>
-			</div>
+			<p class="note" style="margin-top: 10px;">Companion to this series: the compile-time specialisation
+				work (building the kernel for RVA23) by Charlie Jenkins, which I measured on SpacemiT K3 silicon
+				for the RISC-V Summit Europe 2026 talk.</p>
 
 			<h2 id="ecosystem">RISC-V Ecosystem Intelligence</h2>
 			<p class="note">Interactive dashboards and analysis tools tracking the evolution of RISC-V
@@ -987,6 +885,134 @@
 
 			<div
 				style="display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-start; margin-bottom: 20px;">
+				<a href="https://lpc.events/event/20/contributions/2626/"
+					target="_blank" rel="noopener noreferrer"
+					style="text-decoration: none; flex: 1 1 calc(33.333% - 14px); min-width: 0;">
+					<div class="blog-card">
+						<div class="blog-card-lead">
+							<img src="assets/images/lpc-2026-prague-logo.png"
+								alt="Linux Plumbers Conference 2026, Prague"
+								style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px;">
+							<div style="flex: 1;">
+								<div class="blog-card-header">Linux Plumbers Conference 2026, Prague
+								</div>
+								<div class="blog-card-date">October 6, 2026</div>
+							</div>
+						</div>
+						<div class="blog-card-title">RVA23 in practice: discovery, dispatch, and
+							the hardware left behind</div>
+						<div class="blog-card-desc">RISC-V Microconference talk on the three
+							unresolved kernel questions between "the profile exists" and
+							"userspace can rely on it": extension discovery (hwprobe vs. prctl),
+							a dispatch story distributions can adopt, and pre-RVA23 hardware.</div>
+						<div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px;">
+							<a href="https://lpc.events/event/20/contributions/2626/attachments/1995/4541/lpc26-rva23-in-practice-v3-2026-10-02.pdf"
+								target="_blank" rel="noopener noreferrer"
+								onclick="event.stopPropagation();"
+								style="text-decoration: none; flex: 1; min-width: 100px;">
+								<div class="blog-card-badge" style="text-align: center;">
+									📊 Slides
+								</div>
+							</a>
+						</div>
+					</div>
+				</a>
+				<a href="https://riscv.org/blog/community-motion-what-are-risc-v-advocates-doing/"
+					target="_blank" rel="noopener noreferrer"
+					style="text-decoration: none; flex: 1 1 calc(33.333% - 14px); min-width: 0;">
+					<div class="blog-card">
+						<div class="blog-card-lead">
+							<img src="RISC-V_ Stacked_Color.png" alt="RISC-V International"
+								style="width: 60px; height: 60px; object-fit: contain;">
+							<div style="flex: 1;">
+								<div class="blog-card-header">RISC-V International Blog
+								</div>
+								<div class="blog-card-date">September 28, 2026</div>
+							</div>
+						</div>
+						<div class="blog-card-title">Community Motion: What Are RISC-V Advocates
+							Doing?</div>
+						<div class="blog-card-desc">RISC-V International featured my work as an
+							Advocate under "Guodong Xu: From RVA23 to Real-World Adoption": the
+							Summit Europe talk, the RVA23 readiness blog, the RISE Platform Working
+							Group, and the LPC 2026 RISC-V Microconference paper.</div>
+						<div class="blog-card-badge">
+							🏅 Featured as RISC-V International Advocate
+						</div>
+					</div>
+				</a>
+				<a href="https://riscstar.com/blog/rva23-from-ratification-to-real-world-readiness/"
+					target="_blank" rel="noopener noreferrer"
+					style="text-decoration: none; flex: 1 1 calc(33.333% - 14px); min-width: 0;">
+					<div class="blog-card">
+						<div class="blog-card-lead">
+							<img src="RiscStar_Logo08.png" alt="RISCstar Solutions"
+								style="width: 60px; height: 60px; object-fit: contain;">
+							<div style="flex: 1;">
+								<div class="blog-card-header">RISCstar Solutions Blog
+								</div>
+								<div class="blog-card-date">August 12, 2026</div>
+							</div>
+						</div>
+						<div class="blog-card-title">RVA23: From Ratification to Real-World
+							Readiness</div>
+						<div class="blog-card-desc">RVA23 was ratified in October 2024, and the
+							SpacemiT K3 is now on shelves with more RVA23 silicon close behind.
+							What was the industry up to in between, and is the software stack
+							ready for the chips that have arrived?</div>
+						<div class="blog-card-badge">
+							🔧 RVA23 • Silicon • Distributions
+						</div>
+					</div>
+				</a>
+				<a href="https://riscv-europe.org/summit/2026/presentations"
+					target="_blank" rel="noopener noreferrer"
+					style="text-decoration: none; flex: 1 1 calc(33.333% - 14px); min-width: 0;">
+					<div class="blog-card">
+						<div style="position: relative; width: 100%; padding-bottom: 56.25%; margin-bottom: 12px;">
+							<iframe src="https://www.youtube.com/embed/kDV-avIs4kU"
+								title="RVA23 Profile Support in Linux Kernel — RISC-V Summit Europe 2026"
+								frameborder="0" allowfullscreen
+								allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+								onclick="event.stopPropagation();"
+								style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 1px solid #ccc; border-radius: 6px;"></iframe>
+						</div>
+						<div class="blog-card-lead">
+							<div style="flex: 1;">
+								<div class="blog-card-header">RISC-V Summit Europe 2026, Bologna
+								</div>
+								<div class="blog-card-date">June 9, 2026</div>
+							</div>
+						</div>
+						<div class="blog-card-title">RVA23 Profile Support in Linux Kernel: From
+							Extension Definitions to Userspace Export</div>
+						<div class="blog-card-desc">Main Hall talk co-presented with Charlie
+							Jenkins (Meta), in the plenary slot right after Greg KH's keynote (one
+							of 26 oral talks accepted from 291 submissions). How the kernel's RVA23
+							mandatory coverage went from ~68% to 100% in Linux v7.0, how
+							maintainers decide what "supporting" an extension means, and the
+							runtime-detection and compile-time-specialisation series for
+							v7.1. Selected by the RISE Project as a Featured RISE Member Talk.</div>
+						<div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px;">
+							<a href="https://riscv-europe.org/summit/2026/media/proceedings/2026-06-09-RISC-V-Summit-Europe-12h00-XU-slides.pdf"
+								target="_blank" rel="noopener noreferrer"
+								onclick="event.stopPropagation();"
+								style="text-decoration: none; flex: 1; min-width: 100px;">
+								<div class="blog-card-badge" style="text-align: center;">
+									📊 Slides
+								</div>
+							</a>
+							<a href="https://youtu.be/kDV-avIs4kU"
+								target="_blank" rel="noopener noreferrer"
+								onclick="event.stopPropagation();"
+								style="text-decoration: none; flex: 1; min-width: 100px;">
+								<div class="blog-card-badge" style="text-align: center;">
+									🎥 Video
+								</div>
+							</a>
+						</div>
+					</div>
+				</a>
 				<a href="https://community.riscv.org/triggers/read/a8d54f12f20a4a499da81a5dc8e3f25a/"
 					target="_blank" rel="noopener noreferrer"
 					style="text-decoration: none; flex: 1 1 calc(33.333% - 14px); min-width: 0;">
@@ -1105,6 +1131,129 @@
 				</a>
 			</div>
 
+			<h2 id="upstreaming-earlier">Earlier Work: Linux Kernel Upstreaming (2024–2026)</h2>
+			<p class="note">Public upstream work from my time at RISCstar. (Client work stays with clients.)</p>
+
+			<h3>RVA23 Contributions</h3>
+			<ul class="works-list">
+				<li><a href="https://lore.kernel.org/all/20260113-prism-unvaried-abf3b4679e3a@spud/"
+						target="_blank" rel="noopener noreferrer">RVA23U64/RVA23S64 mandatory
+						extensions support, patch 6-9 (13 Jan 2026, applied to riscv-dt-for-next)</a></li>
+				<li><a href="https://lore.kernel.org/r/20260115-adding-b-dtsi-v2-0-254dd61cf947@riscstar.com"
+						target="_blank" rel="noopener noreferrer">riscv: dts: Add "b" ISA
+						extension to existing devicetrees (20 Jan 2026, accepted)</a></li>
+				<li><a href="https://lore.kernel.org/lkml/20260125-supm-ext-id-v2-0-1e3b9714c860@riscstar.com/"
+						target="_blank" rel="noopener noreferrer">riscv: cpufeature: Add Supm
+						extension id and validation (25 Jan 2026, applied Apr 2026)</a></li>
+			</ul>
+			<p class="note" style="margin-top: 15px; margin-bottom: 8px;"><strong>Fixes found during RVA23 work:</strong></p>
+			<ul class="works-list">
+				<li><a href="https://lore.kernel.org/r/20251223-zk-missing-zknh-v1-1-b627c990ee1a@riscstar.com"
+						target="_blank" rel="noopener noreferrer">riscv/cpufeature.c: Zk missing
+						Zknh (6 Jan 2026, applied)</a></li>
+				<li><a href="https://lore.kernel.org/lkml/20251225-h-description-v2-1-b0c66080c704@riscstar.com/"
+						target="_blank" rel="noopener noreferrer">dt-bindings: riscv: update
+						ratified version of h, svinval, svnapot, svpbmt (10 Jan 2026, applied)</a></li>
+			</ul>
+
+			<h3>SpacemiT K3 &amp; K1 SoC Support</h3>
+			<ul class="works-list">
+				<li><a href="https://lore.kernel.org/r/20260115-k3-basic-dt-v5-0-6990ac9f4308@riscstar.com"
+						target="_blank" rel="noopener noreferrer">K3: Basic device tree enablement
+						(15 Jan 2026, applied)</a></li>
+				<li><a href="https://lore.kernel.org/r/20260120-k3-reset-v3-0-effe87f4bdbe@riscstar.com"
+						target="_blank" rel="noopener noreferrer">K3: Reset driver v3
+						(20 Jan 2026, under review)</a></li>
+				<li><a href="https://lore.kernel.org/all/20250822-working_dma_0701_v2-v5-0-f5c0eda734cc@riscstar.com/#r"
+						target="_blank" rel="noopener noreferrer">K1: PDMA — working DMA driver
+						(22 Aug 2025, merged into v6.18)</a></li>
+				<li><a href="https://lore.kernel.org/all/20250707222910-GYC408198@gentoo/#r"
+						target="_blank" rel="noopener noreferrer">K1: PWM support
+						(7 Jul 2025, merged into v6.17)</a></li>
+			</ul>
+
+			<h3>StarFive JH7110 SoC Support</h3>
+			<ul class="works-list">
+				<li><a href="https://lore.kernel.org/all/20241028082553.1989797-1-guodong@riscstar.com/"
+						target="_blank" rel="noopener noreferrer">Add DeepComputing FML13V01
+						board dts (28 Oct 2024, merged into v6.12)</a></li>
+			</ul>
+
+			<h2 id="works">Earlier Work: RVV Performance Benchmarks (2025)</h2>
+			<p class="note">Benchmark analyses and performance reports for RISC-V Vector Extension (RVV).
+			</p>
+
+			<div class="works-two-column">
+				<div class="works-column">
+					<h3>SLEEF (Nonlinear Math)</h3>
+					<ul class="works-list">
+						<li><a href="https://docularxu.github.io/sleef/webpages/rvv_benchmark_16Oct2025.html"
+								target="_blank" rel="noopener noreferrer">SLEEF RVV
+								Benchmark Summary (16 Oct 2025)</a></li>
+						<li><a href="https://docularxu.github.io/sleef/webpages/rvv_benchmark_gelu_17Oct2025.html"
+								target="_blank" rel="noopener noreferrer">GELU Kernel
+								Benchmarks: erf/tanh on RVV (17 Oct 2025)</a></li>
+					</ul>
+
+					<h3>OpenBLAS (Linear Algebra)</h3>
+					<ul class="works-list">
+						<li><a href="https://docularxu.github.io/OpenBLAS/webpages/rvv_benchmark_openblas_gemv_16Oct2025.html"
+								target="_blank" rel="noopener noreferrer">RISC-V GEMV
+								Performance Summary (16 Oct 2025)</a></li>
+						<li><a href="https://docularxu.github.io/OpenBLAS/webpages/rvv_benchmark_openblas_16Oct2025.html"
+								target="_blank" rel="noopener noreferrer">OpenBLAS RVV
+								Benchmark Summary (16 Oct 2025)</a></li>
+					</ul>
+				</div>
+
+				<div class="works-column">
+					<div class="blog-card" style="height: 100%;">
+						<div
+							style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+							<img src="RISC-V_ Stacked_Color.png" alt="RISC-V International"
+								style="width: 60px; height: 60px; object-fit: contain;">
+							<div style="flex: 1;">
+								<div class="blog-card-header">RISC-V Summit NA 2025
+								</div>
+								<div class="blog-card-date">October 23, 2025</div>
+							</div>
+						</div>
+						<div class="blog-card-title">Moving to RISC-V Vector: A Practical
+							Journey of AI Operator Optimization</div>
+						<div class="blog-card-desc">Conference talk on practical AI operator
+							optimization using RISC-V Vector Extension, presented at RISC-V
+							Summit North America.</div>
+						<div
+							style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px;">
+							<a href="https://www.youtube.com/watch?v=ASA2XYi_QwA&list=PL85jopFZCnbNUnI0l_jg5C8UKNiuAwdVq&index=55"
+								target="_blank" rel="noopener noreferrer"
+								style="text-decoration: none; flex: 1; min-width: 120px;">
+								<div class="blog-card-badge"
+									style="text-align: center;">
+									🎥 YouTube
+								</div>
+							</a>
+							<a href="downloads/Moving_to_RISC-V_Vector-_A_Practical_Journey_of_AI_Operator_Optimization_-_Guodong_Xu_RISCstar_Solutions_-_19Oct2025-with-script.pdf"
+								target="_blank" rel="noopener noreferrer"
+								style="text-decoration: none; flex: 1; min-width: 120px;">
+								<div class="blog-card-badge"
+									style="text-align: center;">
+									📄 PDF
+								</div>
+							</a>
+							<a href="downloads/Moving_to_RISC-V_Vector-_A_Practical_Journey_of_AI_Operator_Optimization_-_Guodong_Xu_RISCstar_Solutions_-_19Oct2025-with-script.pptx"
+								target="_blank" rel="noopener noreferrer"
+								style="text-decoration: none; flex: 1; min-width: 120px;">
+								<div class="blog-card-badge"
+									style="text-align: center;">
+									📊 PPTX
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+
 			<h2 id="acceleration">Earlier Work: Arm SVE Libraries</h2>
 			<p>I have extensive experience accelerating computing libraries using vector instructions
 				(including Arm SVE/SME and RISC-V Vector Extension). The contributions listed here
@@ -1130,17 +1279,25 @@
 
 			<h2 id="experience">Education & Experience</h2>
 			<h3>Current</h3>
-			<p><strong>Director of Software Engineering, RISCstar</strong> — 2026.03 – Present</p>
+			<p><strong>Engineer, Principal — China Linux Team, Qualcomm</strong> — 2026.06 – Present</p>
 			<ul>
-				<li>RISCstar provides low‑level software solutions for Arm and RISC‑V.</li>
-				<li>Collaborating with the RISC‑V ecosystem—working with SoC vendors, participating
-					in spec development, and contributing to open‑source projects.</li>
-				<li>Driving upstream Linux kernel development for RISC‑V, with active contributions
-					to mainline (ISA extension support, SoC enablement).</li>
+				<li>Linux kernel and platform software engineering with Qualcomm's China Linux Team.</li>
+				<li><a href="https://riscv.org/developers/ambassadors-advocates/" target="_blank" rel="noopener noreferrer">RISC‑V
+						International Advocate</a>; member of the RISE Platform Working Group.
+					Continuing to contribute to the upstream Linux kernel and the RISC‑V ecosystem.</li>
 			</ul>
 
 			<h3>Previously</h3>
 			<div class="timeline">
+				<div class="timeline-item">
+					<span class="timeline-bullet"></span>
+					<p><strong>Director of Software Engineering, RISCstar</strong> — 2026.03 – 2026.06:
+						Led software engineering at RISCstar, a provider of low‑level software
+						solutions for Arm and RISC‑V. Collaborated with the RISC‑V ecosystem—SoC
+						vendors, spec development, open‑source projects—and drove upstream Linux
+						kernel development for RISC‑V (ISA extension support, SoC enablement,
+						RVA23 profile work).</p>
+				</div>
 				<div class="timeline-item">
 					<span class="timeline-bullet"></span>
 					<p><strong>Director of China Operations, RISCstar</strong> — 2024.10 – 2026.03
@@ -1210,6 +1367,22 @@
 
 			<h2 id="badges">Badges & Certifications</h2>
 			<div style="display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-start;">
+				<a href="https://riscv.org/developers/ambassadors-advocates/"
+					target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+					<div
+						style="width: 150px; height: 270px; border: 1px solid #cfe9e6; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; background: transparent; color: #1a1a1a; text-align: center; transition: transform 0.2s; cursor: pointer;">
+						<img src="RISC-V_ Stacked_Color.png" alt="RISC-V International"
+							style="width: 80px; height: 80px; margin-bottom: 15px; object-fit: contain; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); border: 1px solid rgba(0, 0, 0, 0.08); background: #fff; padding: 6px;">
+						<div style="font-size: 13px; margin-bottom: 8px; line-height: 1.3;">
+							RISC-V International Advocate</div>
+						<div style="font-size: 11px; margin-bottom: 12px;">Ambassadors & Advocates
+							Program</div>
+						<div
+							style="font-size: 10px; border-top: 1px solid #cfe9e6; padding-top: 8px; width: 100%;">
+							RISC-V International</div>
+						<div style="font-size: 10px; margin-top: 4px;">2026</div>
+					</div>
+				</a>
 				<div data-iframe-width="150" data-iframe-height="270"
 					data-share-badge-id="edf559a7-ea86-4a47-b588-1cef37cce759"
 					data-share-badge-host="https://www.credly.com"></div>
@@ -1253,122 +1426,35 @@
 					</div>
 				</div>
 
-				<!-- 2022 & 2023 Events -->
-				<div class="chart-year-divider">
-					<span class="year-label">2022</span>
-					<span class="year-label">2023</span>
-				</div>
-				<div class="events-container">
-					<div class="event-item">
-						<div class="event-date">May 16</div>
-						<div class="event-title"><a href="#conferences">openEuler</a> + Linaro
-							Developer Day</div>
-						<div class="event-details">Talk<br>"Accelerating High-Performance
-							Computing with Arm SVE Vector Instructions"</div>
-					</div>
-					<div class="event-item">
-						<div class="event-date">August 19</div>
-						<div class="event-title"><a
-								href="https://apachecon.com/acasia2023/tracks/performance.html"
-								target="_blank" rel="noopener noreferrer">ApacheCon
-								2023</a></div>
-						<div class="event-details">Talk<br>"Optimizing HDFS Performance:
-							Balanced Utilization of Hardware Accelerators and ARM64
-							Multi-core Capabilities on KUNPENG920"</div>
-					</div>
-				</div>
-
-				<!-- 2024 Events -->
-				<div class="chart-year-divider" style="margin-top: 40px;">
-					<span class="year-label">2024</span>
-				</div>
-				<div class="events-container">
-					<div class="event-item">
-						<div class="event-date">April 10</div>
-						<div class="event-title"><a
-								href="https://www.youtube.com/watch?v=F1ty-fPf79Y"
-								target="_blank" rel="noopener noreferrer">FOSSASIA
-								Summit 2024</a>, Ha Noi</div>
-						<div class="event-details">Talk<br>"Optimizing Workloads with Arm64 &
-							Hardware Accelerators"<br><span class="note">Topics: HBase/HDFS
-								Transparent Encryption, AES/SM4, OpenSSL 3.0</span>
-						</div>
-					</div>
-					<div class="event-item">
-						<div class="event-date">July 5</div>
-						<div class="event-title"><a href="#conferences">openEuler</a> Big Data
-							Meetup</div>
-						<div class="event-details">Talk<br>"Advantages and Challenges of Using
-							UADK Acceleration in Big Data"</div>
-					</div>
-					<div class="event-item">
-						<div class="event-date">December 18</div>
-						<div class="event-title"><a href="https://en.cixtech.com/"
-								target="_blank" rel="noopener noreferrer">CIX
-								Technology</a> 2024 Ecosystem Conference</div>
-						<div class="event-details">Panel Discussion with ecosystem leaders from
-							Red Hat, Ubuntu, Deepin, Kylin, and <a
-								href="#conferences">openEuler</a><br>"Embracing
-							Community, Open and Win-Win"</div>
-					</div>
-					<div class="event-item">
-						<div class="event-date">December 28</div>
-						<div class="event-title">RISC-V Industry Development Conference 2024
-						</div>
-						<div class="event-details">Talk<br>"Crossing the Chasm: Ecosystem
-							Transition and Challenges from Arm to RISC-V"</div>
-					</div>
-				</div>
-
-				<!-- 2025 Events -->
-				<div class="chart-year-divider" style="margin-top: 40px;">
-					<span class="year-label">2025</span>
-				</div>
-				<div class="events-container">
-					<div class="event-item">
-						<div class="event-date">February 28</div>
-						<div class="event-title">2025 China RISC-V Ecosystem Conference</div>
-						<div class="event-details">Talk<br>"Current Status of RISC-V Linux
-							Kernel Open Source Upstream"</div>
-					</div>
-					<div class="event-item">
-						<div class="event-date">March 22</div>
-						<div class="event-title"><a href="#conferences">openEuler on RISC-V</a>
-							& <a href="#conferences">deepin</a> Meetup</div>
-						<div class="event-details">Lightning Talk<br>"Understanding RISC-V
-							Ecosystem Development Stages and Construction Path from the
-							Perspective of Arm Ecosystem Development"</div>
-					</div>
-					<div class="event-item">
-						<div class="event-date">July 16</div>
-						<div class="event-title">The 5th RISC-V Summit China</div>
-						<div class="event-details">Poster<br>"RISC-V Linux Kernel / Boot
-							Firmware 2025 Progress Report: Challenges from Upstream and
-							Downstream"</div>
-					</div>
-					<div class="event-item">
-						<div class="event-date">October 23</div>
-						<div class="event-title">RISC-V Summit 2025 NA</div>
-						<div class="event-details">Talk<br>"Moving to RISC-V Vector: A Practical
-							Journey of AI Operator Optimization"</div>
-					</div>
-					<div class="event-item">
-						<div class="event-date">November 25</div>
-						<div class="event-title"><a href="http://www.rdsa-summit.com/"
-								target="_blank" rel="noopener noreferrer">RISC-V
-								Industry Development Conference and RDSA International
-								Summit</a></div>
-						<div class="event-details">Talk<br>"Porting Code to RISC-V: Course
-							Development practices accelerating the RISC-V developer
-							ecosystem"</div>
-					</div>
-				</div>
-
 				<!-- 2026 Events -->
-				<div class="chart-year-divider" style="margin-top: 40px;">
+				<div class="chart-year-divider">
 					<span class="year-label">2026</span>
 				</div>
 				<div class="events-container">
+					<div class="event-item">
+						<div class="event-date">October 6</div>
+						<div class="event-title"><a href="https://lpc.events/event/20/contributions/2626/"
+								target="_blank" rel="noopener noreferrer">Linux Plumbers
+								Conference 2026</a>, Prague</div>
+						<div class="event-details">RISC-V Microconference Talk<br>"RVA23 in
+							practice: discovery, dispatch, and the hardware left behind"<br>[<a
+								href="https://lpc.events/event/20/contributions/2626/attachments/1995/4541/lpc26-rva23-in-practice-v3-2026-10-02.pdf"
+								target="_blank" rel="noopener noreferrer">Slides</a>]</div>
+					</div>
+					<div class="event-item">
+						<div class="event-date">June 9</div>
+						<div class="event-title"><a href="https://riscv-europe.org/summit/2026/presentations"
+								target="_blank" rel="noopener noreferrer">RISC-V Summit Europe
+								2026</a>, Bologna</div>
+						<div class="event-details">Main Hall Talk (with Charlie Jenkins)<br>"RVA23
+							Profile Support in Linux Kernel: From Extension Definitions to
+							Userspace Export"<br><span class="note">Plenary slot right after Greg
+								KH's keynote; Featured RISE Member Talk</span><br>[<a
+								href="https://riscv-europe.org/summit/2026/media/proceedings/2026-06-09-RISC-V-Summit-Europe-12h00-XU-slides.pdf"
+								target="_blank" rel="noopener noreferrer">Slides</a>] [<a
+								href="https://youtu.be/kDV-avIs4kU" target="_blank"
+								rel="noopener noreferrer">Video</a>]</div>
+					</div>
 					<div class="event-item">
 						<div class="event-date">April 10</div>
 						<div class="event-title"><a
@@ -1384,48 +1470,131 @@
 								rel="noopener noreferrer">Video</a>]</div>
 					</div>
 				</div>
+				<!-- 2025 Events -->
+				<div class="chart-year-divider" style="margin-top: 40px;">
+					<span class="year-label">2025</span>
+				</div>
+				<div class="events-container">
+					<div class="event-item">
+						<div class="event-date">November 25</div>
+						<div class="event-title"><a href="http://www.rdsa-summit.com/"
+								target="_blank" rel="noopener noreferrer">RISC-V
+								Industry Development Conference and RDSA International
+								Summit</a></div>
+						<div class="event-details">Talk<br>"Porting Code to RISC-V: Course
+							Development practices accelerating the RISC-V developer
+							ecosystem"</div>
+					</div>
+					<div class="event-item">
+						<div class="event-date">October 23</div>
+						<div class="event-title">RISC-V Summit 2025 NA</div>
+						<div class="event-details">Talk<br>"Moving to RISC-V Vector: A Practical
+							Journey of AI Operator Optimization"</div>
+					</div>
+					<div class="event-item">
+						<div class="event-date">July 16</div>
+						<div class="event-title">The 5th RISC-V Summit China</div>
+						<div class="event-details">Poster<br>"RISC-V Linux Kernel / Boot
+							Firmware 2025 Progress Report: Challenges from Upstream and
+							Downstream"</div>
+					</div>
+					<div class="event-item">
+						<div class="event-date">March 22</div>
+						<div class="event-title"><a href="#conferences">openEuler on RISC-V</a>
+							& <a href="#conferences">deepin</a> Meetup</div>
+						<div class="event-details">Lightning Talk<br>"Understanding RISC-V
+							Ecosystem Development Stages and Construction Path from the
+							Perspective of Arm Ecosystem Development"</div>
+					</div>
+					<div class="event-item">
+						<div class="event-date">February 28</div>
+						<div class="event-title">2025 China RISC-V Ecosystem Conference</div>
+						<div class="event-details">Talk<br>"Current Status of RISC-V Linux
+							Kernel Open Source Upstream"</div>
+					</div>
+				</div>
+				<!-- 2024 Events -->
+				<div class="chart-year-divider" style="margin-top: 40px;">
+					<span class="year-label">2024</span>
+				</div>
+				<div class="events-container">
+					<div class="event-item">
+						<div class="event-date">December 28</div>
+						<div class="event-title">RISC-V Industry Development Conference 2024
+						</div>
+						<div class="event-details">Talk<br>"Crossing the Chasm: Ecosystem
+							Transition and Challenges from Arm to RISC-V"</div>
+					</div>
+					<div class="event-item">
+						<div class="event-date">December 18</div>
+						<div class="event-title"><a href="https://en.cixtech.com/"
+								target="_blank" rel="noopener noreferrer">CIX
+								Technology</a> 2024 Ecosystem Conference</div>
+						<div class="event-details">Panel Discussion with ecosystem leaders from
+							Red Hat, Ubuntu, Deepin, Kylin, and <a
+								href="#conferences">openEuler</a><br>"Embracing
+							Community, Open and Win-Win"</div>
+					</div>
+					<div class="event-item">
+						<div class="event-date">July 5</div>
+						<div class="event-title"><a href="#conferences">openEuler</a> Big Data
+							Meetup</div>
+						<div class="event-details">Talk<br>"Advantages and Challenges of Using
+							UADK Acceleration in Big Data"</div>
+					</div>
+					<div class="event-item">
+						<div class="event-date">April 10</div>
+						<div class="event-title"><a
+								href="https://www.youtube.com/watch?v=F1ty-fPf79Y"
+								target="_blank" rel="noopener noreferrer">FOSSASIA
+								Summit 2024</a>, Ha Noi</div>
+						<div class="event-details">Talk<br>"Optimizing Workloads with Arm64 &
+							Hardware Accelerators"<br><span class="note">Topics: HBase/HDFS
+								Transparent Encryption, AES/SM4, OpenSSL 3.0</span>
+						</div>
+					</div>
+				</div>
+				<!-- 2023 & 2022 Events -->
+				<div class="chart-year-divider" style="margin-top: 40px;">
+					<span class="year-label">2023</span>
+					<span class="year-label">2022</span>
+				</div>
+				<div class="events-container">
+					<div class="event-item">
+						<div class="event-date">August 19</div>
+						<div class="event-title"><a
+								href="https://apachecon.com/acasia2023/tracks/performance.html"
+								target="_blank" rel="noopener noreferrer">ApacheCon
+								2023</a></div>
+						<div class="event-details">Talk<br>"Optimizing HDFS Performance:
+							Balanced Utilization of Hardware Accelerators and ARM64
+							Multi-core Capabilities on KUNPENG920"</div>
+					</div>
+					<div class="event-item">
+						<div class="event-date">May 16</div>
+						<div class="event-title"><a href="#conferences">openEuler</a> + Linaro
+							Developer Day</div>
+						<div class="event-details">Talk<br>"Accelerating High-Performance
+							Computing with Arm SVE Vector Instructions"</div>
+					</div>
+				</div>
 			</div>
 
 			<h3>English</h3>
 			<ul class="works-list">
-				<li>16 May 2022, openEuler + Linaro Developer Day, Talk: "Accelerating High-Performance
-					Computing with Arm SVE Vector Instructions"</li>
-				<li>19 Aug 2023, <a href="https://apachecon.com/acasia2023/tracks/performance.html"
-						target="_blank" rel="noopener noreferrer">ApacheCon 2023</a>, Talk:
-					"Optimizing HDFS Performance: Balanced Utilization of Hardware Accelerators and
-					ARM64 Multi-core Capabilities on KUNPENG920"
-					<br><span class="note">Topics: HDFS, Big Data, MD5, Multi-buffer, UADK
-						Acceleration, OPENSSL</span>
-				</li>
-				<li>10 Apr 2024, <a href="https://www.youtube.com/watch?v=F1ty-fPf79Y" target="_blank"
-						rel="noopener noreferrer">FOSSASIA Summit 2024</a>, Ha Noi, Talk:
-					"Optimizing Workloads with Arm64 & Hardware Accelerators"
-					<br><span class="note">Topics: HBase/HDFS Transparent Encryption, AES/SM4,
-						OpenSSL 3.0</span>
-				</li>
-				<li>5 Jul 2024, openEuler Big Data Meetup, Talk: "Advantages and Challenges of Using
-					UADK Acceleration in Big Data"</li>
-				<li>18 Dec 2024, Shanghai Zhangjiang, <a href="https://en.cixtech.com/" target="_blank"
-						rel="noopener noreferrer">CIX Technology</a> 2024 Ecosystem Conference,
-					Panel Discussion with ecosystem leaders from Red Hat, Ubuntu, Deepin, Kylin, and
-					openEuler: "Embracing Community, Open and Win-Win"</li>
-				<li>28 Dec 2024, RISC-V Industry Development Conference 2024, Talk: "Crossing the Chasm:
-					Ecosystem Transition and Challenges from Arm to RISC-V"</li>
-				<li>28 Feb 2025, 2025 China RISC-V Ecosystem Conference, Talk: "Current Status of RISC-V
-					Linux Kernel Open Source Upstream"</li>
-				<li>22 Mar 2025, openEuler on RISC-V & deepin Meetup-Beijing, Lightning Talk:
-					"Understanding RISC-V Ecosystem Development Stages and Construction Path from
-					the Perspective of Arm Ecosystem Development"</li>
-				<li>16 Jul 2025, The 5th RISC-V Summit China, Shanghai, Poster: "RISC-V Linux Kernel /
-					Boot Firmware 2025 Progress Report: Challenges from Upstream and Downstream"
-				</li>
-				<li>23 Oct 2025, RISC-V Summit 2025 NA, Talk: "Moving to RISC-V Vector: A Practical
-					Journey of AI Operator Optimization"</li>
-				<li>25 Nov 2025, <a href="http://www.rdsa-summit.com/" target="_blank"
-						rel="noopener noreferrer">RISC-V Industry Development Conference and
-						RDSA International Summit</a>, Zhuhai/Macao, Talk: "Porting Code to
-					RISC-V: Course Development practices accelerating the RISC-V developer
-					ecosystem"</li>
+				<li>6 Oct 2026, <a href="https://lpc.events/event/20/contributions/2626/" target="_blank"
+						rel="noopener noreferrer">Linux Plumbers Conference 2026</a>, Prague,
+					RISC-V Microconference Talk: "RVA23 in practice: discovery, dispatch, and
+					the hardware left behind" [<a href="https://lpc.events/event/20/contributions/2626/attachments/1995/4541/lpc26-rva23-in-practice-v3-2026-10-02.pdf" target="_blank"
+						rel="noopener noreferrer">Slides</a>]</li>
+				<li>9 Jun 2026, <a href="https://riscv-europe.org/summit/2026/presentations" target="_blank"
+						rel="noopener noreferrer">RISC-V Summit Europe 2026</a>, Bologna, Main
+					Hall Talk (with Charlie Jenkins): "RVA23 Profile Support in Linux Kernel:
+					From Extension Definitions to Userspace Export" — Featured RISE Member Talk
+					[<a href="https://riscv-europe.org/summit/2026/media/proceedings/2026-06-09-RISC-V-Summit-Europe-12h00-XU-slides.pdf"
+						target="_blank" rel="noopener noreferrer">Slides</a>] [<a
+						href="https://youtu.be/kDV-avIs4kU" target="_blank"
+						rel="noopener noreferrer">Video</a>]</li>
 				<li>10 Apr 2026, <a
 						href="https://community.riscv.org/triggers/read/a8d54f12f20a4a499da81a5dc8e3f25a/"
 						target="_blank" rel="noopener noreferrer">RISC-V International China
@@ -1436,6 +1605,44 @@
 						target="_blank" rel="noopener noreferrer">Slides</a>] [<a
 						href="https://youtu.be/fp7V90UABJE" target="_blank"
 						rel="noopener noreferrer">Video</a>]</li>
+				<li>25 Nov 2025, <a href="http://www.rdsa-summit.com/" target="_blank"
+						rel="noopener noreferrer">RISC-V Industry Development Conference and
+						RDSA International Summit</a>, Zhuhai/Macao, Talk: "Porting Code to
+					RISC-V: Course Development practices accelerating the RISC-V developer
+					ecosystem"</li>
+				<li>23 Oct 2025, RISC-V Summit 2025 NA, Talk: "Moving to RISC-V Vector: A Practical
+					Journey of AI Operator Optimization"</li>
+				<li>16 Jul 2025, The 5th RISC-V Summit China, Shanghai, Poster: "RISC-V Linux Kernel /
+					Boot Firmware 2025 Progress Report: Challenges from Upstream and Downstream"
+				</li>
+				<li>22 Mar 2025, openEuler on RISC-V & deepin Meetup-Beijing, Lightning Talk:
+					"Understanding RISC-V Ecosystem Development Stages and Construction Path from
+					the Perspective of Arm Ecosystem Development"</li>
+				<li>28 Feb 2025, 2025 China RISC-V Ecosystem Conference, Talk: "Current Status of RISC-V
+					Linux Kernel Open Source Upstream"</li>
+				<li>28 Dec 2024, RISC-V Industry Development Conference 2024, Talk: "Crossing the Chasm:
+					Ecosystem Transition and Challenges from Arm to RISC-V"</li>
+				<li>18 Dec 2024, Shanghai Zhangjiang, <a href="https://en.cixtech.com/" target="_blank"
+						rel="noopener noreferrer">CIX Technology</a> 2024 Ecosystem Conference,
+					Panel Discussion with ecosystem leaders from Red Hat, Ubuntu, Deepin, Kylin, and
+					openEuler: "Embracing Community, Open and Win-Win"</li>
+				<li>5 Jul 2024, openEuler Big Data Meetup, Talk: "Advantages and Challenges of Using
+					UADK Acceleration in Big Data"</li>
+				<li>10 Apr 2024, <a href="https://www.youtube.com/watch?v=F1ty-fPf79Y" target="_blank"
+						rel="noopener noreferrer">FOSSASIA Summit 2024</a>, Ha Noi, Talk:
+					"Optimizing Workloads with Arm64 & Hardware Accelerators"
+					<br><span class="note">Topics: HBase/HDFS Transparent Encryption, AES/SM4,
+						OpenSSL 3.0</span>
+				</li>
+				<li>19 Aug 2023, <a href="https://apachecon.com/acasia2023/tracks/performance.html"
+						target="_blank" rel="noopener noreferrer">ApacheCon 2023</a>, Talk:
+					"Optimizing HDFS Performance: Balanced Utilization of Hardware Accelerators and
+					ARM64 Multi-core Capabilities on KUNPENG920"
+					<br><span class="note">Topics: HDFS, Big Data, MD5, Multi-buffer, UADK
+						Acceleration, OPENSSL</span>
+				</li>
+				<li>16 May 2022, openEuler + Linaro Developer Day, Talk: "Accelerating High-Performance
+					Computing with Arm SVE Vector Instructions"</li>
 			</ul>
 
 			<!-- Visual Timeline Chart (Chinese) -->
@@ -1448,113 +1655,35 @@
 					</div>
 				</div>
 
-				<!-- 2022 & 2023 Events -->
-				<div class="chart-year-divider">
-					<span class="year-label">2022</span>
-					<span class="year-label">2023</span>
-				</div>
-				<div class="events-container">
-					<div class="event-item">
-						<div class="event-date">5月16日</div>
-						<div class="event-title"><a href="#conferences">openEuler</a> + Linaro
-							Developer Day</div>
-						<div class="event-details">演讲<br>《利用 Arm SVE 向量指令加速高性能计算》</div>
-					</div>
-					<div class="event-item">
-						<div class="event-date">8月19日</div>
-						<div class="event-title"><a
-								href="https://apachecon.com/acasia2023/tracks/performance.html"
-								target="_blank" rel="noopener noreferrer">ApacheCon
-								2023</a></div>
-						<div class="event-details">
-							演讲<br>《优化HDFS性能:在KUNPENG920上实现硬件加速器和ARM64多核能力的均衡利用》<br><span
-								class="note">主要内容：HDFS，大数据，MD5，Multi-buffer，UADK
-								加速，OPENSSL</span></div>
-					</div>
-				</div>
-
-				<!-- 2024 Events -->
-				<div class="chart-year-divider">
-					<span class="year-label">2024</span>
-				</div>
-				<div class="events-container">
-					<div class="event-item">
-						<div class="event-date">4月10日</div>
-						<div class="event-title"><a
-								href="https://www.youtube.com/watch?v=F1ty-fPf79Y"
-								target="_blank" rel="noopener noreferrer">FOSSASIA
-								Summit 2024</a>, Ha Noi</div>
-						<div class="event-details">演讲<br>《Optimizing Workloads with Arm64 &
-							Hardware Accelerators》<br><span class="note">主要内容：HBase/HDFS
-								Transparent Encryption，AES/SM4，OpenSSL 3.0</span></div>
-					</div>
-					<div class="event-item">
-						<div class="event-date">7月5日</div>
-						<div class="event-title"><a href="#conferences">openEuler</a> 大数据 Meetup
-						</div>
-						<div class="event-details">演讲<br>《大数据领域使用 UADK 加速的优势和挑战》</div>
-					</div>
-					<div class="event-item">
-						<div class="event-date">12月18日</div>
-						<div class="event-title"><a href="https://en.cixtech.com/"
-								target="_blank"
-								rel="noopener noreferrer">此芯科技</a>2024生态大会</div>
-						<div class="event-details">圆桌论坛：与来自 红帽 / Ubuntu / 统信 Deepin / 麒麟 <a
-								href="#conferences">openEuler</a> 的生态负责人共话《拥抱社区，开放共赢》
-						</div>
-					</div>
-					<div class="event-item">
-						<div class="event-date">12月28日</div>
-						<div class="event-title">2024 RISC-V 产业发展大会</div>
-						<div class="event-details">演讲<br>《跨越鸿沟：从Arm到RISC-V的生态转型与挑战》</div>
-					</div>
-				</div>
-
-				<!-- 2025 Events -->
-				<div class="chart-year-divider" style="margin-top: 40px;">
-					<span class="year-label">2025</span>
-				</div>
-				<div class="events-container">
-					<div class="event-item">
-						<div class="event-date">2月28日</div>
-						<div class="event-title">2025 中国 RISC-V 生态大会</div>
-						<div class="event-details">演讲<br>《RISC-V Linux内核开源upstream现状》</div>
-					</div>
-					<div class="event-item">
-						<div class="event-date">3月22日</div>
-						<div class="event-title"><a href="#conferences">openEuler on RISC-V</a>
-							& <a href="#conferences">Deepin</a> Meetup</div>
-						<div class="event-details">演讲<br>《从 Arm 生态的发展看 RISC-V 生态的发展阶段和构建之路》
-						</div>
-					</div>
-					<div class="event-item">
-						<div class="event-date">7月16日</div>
-						<div class="event-title">第五届RISC-V中国峰会</div>
-						<div class="event-details">Poster<br>《RISC-V Linux 内核/启动固件2025进展报告》
-						</div>
-					</div>
-					<div class="event-item">
-						<div class="event-date">10月23日</div>
-						<div class="event-title">RISC-V Summit 2025 NA</div>
-						<div class="event-details">Talk<br>"Moving to RISC-V Vector: A Practical
-							Journey of AI Operator Optimization"</div>
-					</div>
-					<div class="event-item">
-						<div class="event-date">11月25日</div>
-						<div class="event-title"><a href="http://www.rdsa-summit.com/"
-								target="_blank"
-								rel="noopener noreferrer">RISC-V产业发展大会暨RDSA国际论坛</a>，人才分论坛
-						</div>
-						<div class="event-details">演讲<br>《〈Porting Code to RISC-V〉：加速 RISC-V
-							开发者生态的课程实践》</div>
-					</div>
-				</div>
-
 				<!-- 2026 Events -->
-				<div class="chart-year-divider" style="margin-top: 40px;">
+				<div class="chart-year-divider">
 					<span class="year-label">2026</span>
 				</div>
 				<div class="events-container">
+					<div class="event-item">
+						<div class="event-date">10月6日</div>
+						<div class="event-title"><a href="https://lpc.events/event/20/contributions/2626/"
+								target="_blank" rel="noopener noreferrer">Linux Plumbers
+								Conference 2026</a>，布拉格</div>
+						<div class="event-details">RISC-V Microconference 演讲<br>"RVA23 in
+							practice: discovery, dispatch, and the hardware left behind"<br>[<a
+								href="https://lpc.events/event/20/contributions/2626/attachments/1995/4541/lpc26-rva23-in-practice-v3-2026-10-02.pdf"
+								target="_blank" rel="noopener noreferrer">Slides</a>]</div>
+					</div>
+					<div class="event-item">
+						<div class="event-date">6月9日</div>
+						<div class="event-title"><a href="https://riscv-europe.org/summit/2026/presentations"
+								target="_blank" rel="noopener noreferrer">RISC-V Summit Europe
+								2026</a>，博洛尼亚</div>
+						<div class="event-details">主会场演讲（与 Charlie Jenkins 联合）<br>"RVA23
+							Profile Support in Linux Kernel: From Extension Definitions to
+							Userspace Export"<br><span class="note">首日主会场，紧接 Greg KH
+								Keynote；RISE 基金会 Featured RISE Member Talk</span><br>[<a
+								href="https://riscv-europe.org/summit/2026/media/proceedings/2026-06-09-RISC-V-Summit-Europe-12h00-XU-slides.pdf"
+								target="_blank" rel="noopener noreferrer">Slides</a>] [<a
+								href="https://youtu.be/kDV-avIs4kU" target="_blank"
+								rel="noopener noreferrer">Video</a>]</div>
+					</div>
 					<div class="event-item">
 						<div class="event-date">4月10日</div>
 						<div class="event-title"><a
@@ -1569,37 +1698,121 @@
 								rel="noopener noreferrer">Video</a>]</div>
 					</div>
 				</div>
+				<!-- 2025 Events -->
+				<div class="chart-year-divider" style="margin-top: 40px;">
+					<span class="year-label">2025</span>
+				</div>
+				<div class="events-container">
+					<div class="event-item">
+						<div class="event-date">11月25日</div>
+						<div class="event-title"><a href="http://www.rdsa-summit.com/"
+								target="_blank"
+								rel="noopener noreferrer">RISC-V产业发展大会暨RDSA国际论坛</a>，人才分论坛
+						</div>
+						<div class="event-details">演讲<br>《〈Porting Code to RISC-V〉：加速 RISC-V
+							开发者生态的课程实践》</div>
+					</div>
+					<div class="event-item">
+						<div class="event-date">10月23日</div>
+						<div class="event-title">RISC-V Summit 2025 NA</div>
+						<div class="event-details">Talk<br>"Moving to RISC-V Vector: A Practical
+							Journey of AI Operator Optimization"</div>
+					</div>
+					<div class="event-item">
+						<div class="event-date">7月16日</div>
+						<div class="event-title">第五届RISC-V中国峰会</div>
+						<div class="event-details">Poster<br>《RISC-V Linux 内核/启动固件2025进展报告》
+						</div>
+					</div>
+					<div class="event-item">
+						<div class="event-date">3月22日</div>
+						<div class="event-title"><a href="#conferences">openEuler on RISC-V</a>
+							& <a href="#conferences">Deepin</a> Meetup</div>
+						<div class="event-details">演讲<br>《从 Arm 生态的发展看 RISC-V 生态的发展阶段和构建之路》
+						</div>
+					</div>
+					<div class="event-item">
+						<div class="event-date">2月28日</div>
+						<div class="event-title">2025 中国 RISC-V 生态大会</div>
+						<div class="event-details">演讲<br>《RISC-V Linux内核开源upstream现状》</div>
+					</div>
+				</div>
+				<!-- 2024 Events -->
+				<div class="chart-year-divider" style="margin-top: 40px;">
+					<span class="year-label">2024</span>
+				</div>
+				<div class="events-container">
+					<div class="event-item">
+						<div class="event-date">12月28日</div>
+						<div class="event-title">2024 RISC-V 产业发展大会</div>
+						<div class="event-details">演讲<br>《跨越鸿沟：从Arm到RISC-V的生态转型与挑战》</div>
+					</div>
+					<div class="event-item">
+						<div class="event-date">12月18日</div>
+						<div class="event-title"><a href="https://en.cixtech.com/"
+								target="_blank"
+								rel="noopener noreferrer">此芯科技</a>2024生态大会</div>
+						<div class="event-details">圆桌论坛：与来自 红帽 / Ubuntu / 统信 Deepin / 麒麟 <a
+								href="#conferences">openEuler</a> 的生态负责人共话《拥抱社区，开放共赢》
+						</div>
+					</div>
+					<div class="event-item">
+						<div class="event-date">7月5日</div>
+						<div class="event-title"><a href="#conferences">openEuler</a> 大数据 Meetup
+						</div>
+						<div class="event-details">演讲<br>《大数据领域使用 UADK 加速的优势和挑战》</div>
+					</div>
+					<div class="event-item">
+						<div class="event-date">4月10日</div>
+						<div class="event-title"><a
+								href="https://www.youtube.com/watch?v=F1ty-fPf79Y"
+								target="_blank" rel="noopener noreferrer">FOSSASIA
+								Summit 2024</a>, Ha Noi</div>
+						<div class="event-details">演讲<br>《Optimizing Workloads with Arm64 &
+							Hardware Accelerators》<br><span class="note">主要内容：HBase/HDFS
+								Transparent Encryption，AES/SM4，OpenSSL 3.0</span></div>
+					</div>
+				</div>
+				<!-- 2023 & 2022 Events -->
+				<div class="chart-year-divider" style="margin-top: 40px;">
+					<span class="year-label">2023</span>
+					<span class="year-label">2022</span>
+				</div>
+				<div class="events-container">
+					<div class="event-item">
+						<div class="event-date">8月19日</div>
+						<div class="event-title"><a
+								href="https://apachecon.com/acasia2023/tracks/performance.html"
+								target="_blank" rel="noopener noreferrer">ApacheCon
+								2023</a></div>
+						<div class="event-details">
+							演讲<br>《优化HDFS性能:在KUNPENG920上实现硬件加速器和ARM64多核能力的均衡利用》<br><span
+								class="note">主要内容：HDFS，大数据，MD5，Multi-buffer，UADK
+								加速，OPENSSL</span></div>
+					</div>
+					<div class="event-item">
+						<div class="event-date">5月16日</div>
+						<div class="event-title"><a href="#conferences">openEuler</a> + Linaro
+							Developer Day</div>
+						<div class="event-details">演讲<br>《利用 Arm SVE 向量指令加速高性能计算》</div>
+					</div>
+				</div>
 			</div>
 
 			<h3>中文</h3>
 			<ul class="works-list">
-				<li>16 May 2022，openEuler + Linaro Developer Day，演讲《利用 Arm SVE 向量指令加速高性能计算》</li>
-				<li>19 Aug 2023，<a href="https://apachecon.com/acasia2023/tracks/performance.html"
-						target="_blank" rel="noopener noreferrer">ApacheCon
-						2023</a>，《优化HDFS性能:在KUNPENG920上实现硬件加速器和ARM64多核能力的均衡利用》
-					<br><span class="note">主要内容：HDFS，大数据，MD5，Multi-buffer，UADK 加速，OPENSSL</span>
-				</li>
-				<li>10 Apr 2024，<a href="https://www.youtube.com/watch?v=F1ty-fPf79Y" target="_blank"
-						rel="noopener noreferrer">FOSSASIA Summit 2024</a>，Ha Noi，演讲《Optimizing
-					Workloads with Arm64 & Hardware Accelerators》
-					<br><span class="note">主要内容：HBase/HDFS Transparent Encryption，AES/SM4，OpenSSL
-						3.0</span>
-				</li>
-				<li>5 Jul 2024，openEuler 大数据 Meetup，演讲《大数据领域使用 UADK 加速的优势和挑战》</li>
-				<li>18 Dec 2024，上海张江，<a href="https://en.cixtech.com/" target="_blank"
-						rel="noopener noreferrer">此芯科技</a>2024生态大会，圆桌论坛：与来自 红帽 / Ubuntu / 统信
-					Deepin / 麒麟 openEuler 的生态负责人共话《拥抱社区，开放共赢》</li>
-				<li>28 Dec 2024，RISC-V 产业发展大会 2024，演讲《跨越鸿沟：从Arm到RISC-V的生态转型与挑战》</li>
-				<li>28 Feb 2025，2025 中国 RISC-V 生态大会，演讲《RISC-V Linux内核开源upstream现状》</li>
-				<li>22 Mar 2025，openEuler on RISC-V & deepin Meetup-北京站，闪电演讲《从 Arm 生态的发展看 RISC-V
-					生态的发展阶段和构建之路》</li>
-				<li>16 Jul 2025，第五届RISC-V中国峰会，The 5th RISC-V Summit China, 上海。Posters，《RISC-V Linux
-					内核/启动固件2025进展报告 - 从上游支持到生产级部署的实践与挑战》</li>
-				<li>23 Oct 2025，RISC-V Summit 2025 NA，"Moving to RISC-V Vector: A Practical Journey of
-					AI Operator Optimization - Guodong Xu, RISCstar Solutions"</li>
-				<li>25 Nov 2025，<a href="http://www.rdsa-summit.com/" target="_blank"
-						rel="noopener noreferrer">RISC-V产业发展大会暨RDSA国际论坛</a>，人才分论坛，珠海/澳门，演讲《〈Porting
-					Code to RISC-V〉：加速 RISC-V 开发者生态的课程实践》</li>
+				<li>6 Oct 2026，<a href="https://lpc.events/event/20/contributions/2626/" target="_blank"
+						rel="noopener noreferrer">Linux Plumbers Conference 2026</a>，布拉格，RISC-V
+					Microconference 演讲 "RVA23 in practice: discovery, dispatch, and the hardware
+					left behind" [<a href="https://lpc.events/event/20/contributions/2626/attachments/1995/4541/lpc26-rva23-in-practice-v3-2026-10-02.pdf" target="_blank"
+						rel="noopener noreferrer">Slides</a>]</li>
+				<li>9 Jun 2026，<a href="https://riscv-europe.org/summit/2026/presentations" target="_blank"
+						rel="noopener noreferrer">RISC-V Summit Europe 2026</a>，博洛尼亚，主会场，与 Charlie
+					Jenkins 联合演讲 "RVA23 Profile Support in Linux Kernel: From Extension
+					Definitions to Userspace Export"（RISE 基金会 Featured RISE Member Talk）
+					[<a href="https://riscv-europe.org/summit/2026/media/proceedings/2026-06-09-RISC-V-Summit-Europe-12h00-XU-slides.pdf" target="_blank"
+						rel="noopener noreferrer">Slides</a>] [<a href="https://youtu.be/kDV-avIs4kU"
+						target="_blank" rel="noopener noreferrer">Video</a>]</li>
 				<li>10 Apr 2026，<a
 						href="https://community.riscv.org/triggers/read/a8d54f12f20a4a499da81a5dc8e3f25a/"
 						target="_blank" rel="noopener noreferrer">RISC-V International
@@ -1609,6 +1822,33 @@
 						target="_blank" rel="noopener noreferrer">Slides</a>] [<a
 						href="https://youtu.be/fp7V90UABJE" target="_blank"
 						rel="noopener noreferrer">Video</a>]</li>
+				<li>25 Nov 2025，<a href="http://www.rdsa-summit.com/" target="_blank"
+						rel="noopener noreferrer">RISC-V产业发展大会暨RDSA国际论坛</a>，人才分论坛，珠海/澳门，演讲《〈Porting
+					Code to RISC-V〉：加速 RISC-V 开发者生态的课程实践》</li>
+				<li>23 Oct 2025，RISC-V Summit 2025 NA，"Moving to RISC-V Vector: A Practical Journey of
+					AI Operator Optimization - Guodong Xu, RISCstar Solutions"</li>
+				<li>16 Jul 2025，第五届RISC-V中国峰会，The 5th RISC-V Summit China, 上海。Posters，《RISC-V Linux
+					内核/启动固件2025进展报告 - 从上游支持到生产级部署的实践与挑战》</li>
+				<li>22 Mar 2025，openEuler on RISC-V & deepin Meetup-北京站，闪电演讲《从 Arm 生态的发展看 RISC-V
+					生态的发展阶段和构建之路》</li>
+				<li>28 Feb 2025，2025 中国 RISC-V 生态大会，演讲《RISC-V Linux内核开源upstream现状》</li>
+				<li>28 Dec 2024，RISC-V 产业发展大会 2024，演讲《跨越鸿沟：从Arm到RISC-V的生态转型与挑战》</li>
+				<li>18 Dec 2024，上海张江，<a href="https://en.cixtech.com/" target="_blank"
+						rel="noopener noreferrer">此芯科技</a>2024生态大会，圆桌论坛：与来自 红帽 / Ubuntu / 统信
+					Deepin / 麒麟 openEuler 的生态负责人共话《拥抱社区，开放共赢》</li>
+				<li>5 Jul 2024，openEuler 大数据 Meetup，演讲《大数据领域使用 UADK 加速的优势和挑战》</li>
+				<li>10 Apr 2024，<a href="https://www.youtube.com/watch?v=F1ty-fPf79Y" target="_blank"
+						rel="noopener noreferrer">FOSSASIA Summit 2024</a>，Ha Noi，演讲《Optimizing
+					Workloads with Arm64 & Hardware Accelerators》
+					<br><span class="note">主要内容：HBase/HDFS Transparent Encryption，AES/SM4，OpenSSL
+						3.0</span>
+				</li>
+				<li>19 Aug 2023，<a href="https://apachecon.com/acasia2023/tracks/performance.html"
+						target="_blank" rel="noopener noreferrer">ApacheCon
+						2023</a>，《优化HDFS性能:在KUNPENG920上实现硬件加速器和ARM64多核能力的均衡利用》
+					<br><span class="note">主要内容：HDFS，大数据，MD5，Multi-buffer，UADK 加速，OPENSSL</span>
+				</li>
+				<li>16 May 2022，openEuler + Linaro Developer Day，演讲《利用 Arm SVE 向量指令加速高性能计算》</li>
 			</ul>
 
 			<h2 id="videos">Other Videos & References</h2>
