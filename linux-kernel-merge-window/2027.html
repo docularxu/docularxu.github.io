@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Linux Kernel Release Calendar 2027</title>
+	<meta name="description" content="Linux kernel release calendar 2027: predicted merge window dates, weekly -rc dates, and stable release dates on one timeline, with Ubuntu kernel freezes marked.">
+	<meta name="author" content="Guodong Xu">
+	<link rel="canonical" href="https://docularxu.github.io/linux-kernel-merge-window/2027.html">
+	<meta property="og:type" content="website">
+	<meta property="og:site_name" content="Guodong Xu">
+	<meta property="og:title" content="Linux Kernel Release Calendar 2027">
+	<meta property="og:description" content="Linux kernel release calendar 2027: predicted merge window dates, weekly -rc dates, and stable release dates on one timeline, with Ubuntu kernel freezes marked.">
+	<meta property="og:url" content="https://docularxu.github.io/linux-kernel-merge-window/2027.html">
+	<meta property="og:image" content="https://docularxu.github.io/assets/images/og-linux-kernel-release-calendar-2027.png">
+	<meta property="og:image:width" content="1200">
+	<meta property="og:image:height" content="630">
+	<meta property="og:image:alt" content="Horizontal timeline of Linux kernel merge windows, release candidates and stable releases in 2027">
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:title" content="Linux Kernel Release Calendar 2027">
+	<meta name="twitter:description" content="Linux kernel release calendar 2027: predicted merge window dates, weekly -rc dates, and stable release dates on one timeline, with Ubuntu kernel freezes marked.">
+	<meta name="twitter:image" content="https://docularxu.github.io/assets/images/og-linux-kernel-release-calendar-2027.png">
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script src="https://unpkg.com/lucide@latest"></script>
+	<style>
+		.no-scrollbar::-webkit-scrollbar {
+			display: none;
+		}
+
+		.no-scrollbar {
+			-ms-overflow-style: none;
+			scrollbar-width: none;
+		}
+
+		/* Timeline specific styles */
+		.timeline-container {
+			position: relative;
+			min-height: 400px;
+			/* Increased height for top/bottom content */
+			padding-top: 140px;
+			/* Space for top events */
+			padding-bottom: 60px;
+			/* Space for bottom labels */
+			padding-left: 150px;
+			/* Prevent truncation of left-edge events */
+			padding-right: 100px;
+			/* Prevent truncation of right-edge events */
+		}
+
+		.axis-line {
+			position: absolute;
+			left: 0;
+			right: 0;
+			top: 200px;
+			height: 4px;
+			background: #cbd5e1;
+			/* slate-300 */
+			border-radius: 2px;
+			width: max-content;
+			min-width: 100%;
+		}
+
+		.axis-arrow-head {
+			position: absolute;
+			right: -10px;
+			top: 50%;
+			transform: translateY(-50%);
+			width: 0;
+			height: 0;
+			border-top: 8px solid transparent;
+			border-bottom: 8px solid transparent;
+			border-left: 12px solid #cbd5e1;
+		}
+
+		.tick-mark {
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+			width: 2px;
+			height: 16px;
+			background: #94a3b8;
+			/* slate-400 */
+		}
+
+		.tick-label {
+			position: absolute;
+			top: 24px;
+			transform: translateX(-50%);
+			text-align: center;
+			white-space: nowrap;
+		}
+
+		.event-marker {
+			position: absolute;
+			left: 0;
+			/* Positioned via JS */
+			transform: translateX(-50%);
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			width: max-content;
+			z-index: 10;
+		}
+
+		.event-dot {
+			width: 12px;
+			height: 12px;
+			border-radius: 50%;
+			border: 2px solid #0f172a;
+			/* bg-slate-900 */
+			margin-bottom: 8px;
+			/* Space between dot and card */
+		}
+
+		/* Connecting line for events above the axis */
+		.event-line {
+			position: absolute;
+			bottom: 0;
+			left: 50%;
+			transform: translateX(-50%);
+			width: 2px;
+			background-color: inherit;
+			/* Inherit color from parent event style */
+			z-index: 0;
+		}
+
+		.selection-blue::selection {
+			background-color: rgba(59, 130, 246, 0.3);
+		}
+
+		.today-line {
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			width: 2px;
+			background: repeating-linear-gradient(
+				to bottom,
+				#f97316 0px,
+				#f97316 6px,
+				transparent 6px,
+				transparent 12px
+			);
+			z-index: 20;
+			pointer-events: none;
+		}
+
+		.today-label {
+			position: absolute;
+			bottom: 8px;
+			left: 6px;
+			white-space: nowrap;
+			font-size: 9px;
+			font-weight: 800;
+			text-transform: uppercase;
+			color: #f97316;
+			letter-spacing: 0.05em;
+		}
+	</style>
+</head>
+
+<body class="bg-slate-900 text-slate-100 min-h-screen selection-blue">
+
+	<div class="max-w-[1600px] mx-auto p-4 md:p-10">
+		<!-- Header -->
+		<header
+			class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-slate-800 pb-8">
+			<div class="space-y-2">
+				<div
+					class="flex items-center gap-2 text-blue-400 font-bold uppercase tracking-[0.2em] text-xs">
+					<i data-lucide="clock" class="w-4 h-4"></i>
+					Horizontal Release Timeline
+				</div>
+				<h1 class="text-4xl md:text-5xl font-black tracking-tighter">
+					Kernel Release <span
+						class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">2027</span>
+				</h1>
+				<p class="text-xs text-slate-500 print:hidden">by <a href="https://docularxu.github.io/"
+						class="text-slate-400 hover:text-white underline underline-offset-2 decoration-slate-600 hover:decoration-slate-300 transition-colors">Guodong
+						Xu</a>, Linux kernel developer at Qualcomm</p>
+			</div>
+
+			<div
+				class="flex flex-wrap gap-4 p-4 bg-slate-800/50 rounded-2xl border border-slate-700/50 backdrop-blur-md">
+				<div
+					class="flex items-center gap-2 text-[10px] font-black uppercase text-blue-400 border-r border-slate-700 pr-4">
+					<div class="w-2 h-2 rounded-full bg-blue-500"></div> Release Candidate
+				</div>
+				<div
+					class="flex items-center gap-2 text-[10px] font-black uppercase text-emerald-400 border-r border-slate-700 pr-4">
+					<div class="w-2 h-2 rounded-full bg-emerald-500"></div> Stable Kernel
+				</div>
+				<div class="flex items-center gap-2 text-[10px] font-black uppercase text-purple-400">
+					<div class="w-2 h-2 rounded-full bg-purple-500"></div> Merge Window
+				</div>
+			</div>
+		</header>
+
+		<!-- Timeline Container - Two Rows -->
+		<div class="space-y-8">
+			<!-- First Row: Jan to June 30 -->
+			<div class="relative group border-b border-slate-800">
+				<div id="timeline-scroll-area-1"
+					class="overflow-x-auto pb-4 pt-4 no-scrollbar cursor-grab active:cursor-grabbing"
+					style="padding-left: 80px; padding-right: 80px;">
+					<div id="timeline-content-1" class="timeline-container">
+						<!-- Javascript generates content here -->
+					</div>
+				</div>
+			</div>
+
+			<!-- Second Row: June 30 to End -->
+			<div class="relative group border-b border-slate-800">
+				<div id="timeline-scroll-area-2"
+					class="overflow-x-auto pb-4 pt-4 no-scrollbar cursor-grab active:cursor-grabbing"
+					style="padding-left: 80px; padding-right: 80px;">
+					<div id="timeline-content-2" class="timeline-container">
+						<!-- Javascript generates content here -->
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Footer -->
+		<footer
+			class="mt-12 bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl p-8 border border-slate-700 shadow-2xl overflow-hidden relative">
+			<div class="absolute top-0 right-0 p-10 opacity-5 pointer-events-none">
+				<i data-lucide="git-merge" class="w-64 h-64 text-white"></i>
+			</div>
+
+			<div class="relative z-10 grid md:grid-cols-3 gap-10">
+				<div class="md:col-span-1 flex flex-col gap-4">
+					<h3 class="text-xl font-black text-white flex items-center gap-2">
+						<i data-lucide="info" class="w-6 h-6 text-blue-400"></i>
+						Cycle Details
+					</h3>
+					<ul class="text-xs text-slate-400 leading-relaxed space-y-2">
+						<li class="flex gap-2">
+							<i data-lucide="arrow-right" class="w-3 h-3 text-blue-400 shrink-0 mt-0.5"></i>
+							<span>Two-week merge window after each release.</span>
+						</li>
+						<li class="flex gap-2">
+							<i data-lucide="arrow-right" class="w-3 h-3 text-blue-400 shrink-0 mt-0.5"></i>
+							<span>Weekly -rc builds, tagged on Sundays.</span>
+						</li>
+						<li class="flex gap-2">
+							<i data-lucide="arrow-right" class="w-3 h-3 text-blue-400 shrink-0 mt-0.5"></i>
+							<span>Final release normally one-week after rc7.</span>
+						</li>
+						<li class="flex gap-2">
+							<i data-lucide="arrow-right" class="w-3 h-3 text-blue-400 shrink-0 mt-0.5"></i>
+							<span>Dates firm up as each release lands.</span>
+						</li>
+						<li class="flex gap-2">
+							<i data-lucide="triangle-alert" class="w-3 h-3 text-amber-500 shrink-0 mt-0.5"></i>
+							<span>All 2027 dates are predictions, extrapolated from the v7.4 cycle. Each rc8 shifts the rest of the year by a week.</span>
+						</li>
+					</ul>
+					<a href="https://docularxu.github.io/"
+						class="inline-flex items-center gap-2 px-4 py-2 bg-slate-700/50 hover:bg-slate-700 text-slate-400 hover:text-white rounded-lg border border-slate-600/50 transition-all duration-200 text-xs font-medium mt-auto self-start">
+						<i data-lucide="user" class="w-3.5 h-3.5"></i>
+						Guodong Xu
+					</a>
+				</div>
+
+				<div class="md:col-span-2 grid sm:grid-cols-2 gap-4">
+					<div class="bg-slate-900/50 p-5 rounded-2xl border border-slate-700/50">
+						<h4
+							class="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-4">
+							Ubuntu 27.04 Schedule</h4>
+						<div class="space-y-3">
+							<div
+								class="flex justify-between text-xs border-b border-slate-800 pb-2">
+								<span class="text-slate-400">Target Kernel</span>
+								<span class="font-bold text-slate-300"><a href="https://documentation.ubuntu.com/release-notes/27.04/schedule/" class="hover:underline" target="_blank" rel="noopener noreferrer">To be announced</a></span>
+							</div>
+							<div
+								class="flex justify-between text-xs border-b border-slate-800 pb-2">
+								<span class="text-slate-400">Feature Freeze</span>
+								<span class="font-bold text-amber-500">Feb 25, 2027</span>
+							</div>
+							<div
+								class="flex justify-between text-xs border-b border-slate-800 pb-2">
+								<span class="text-slate-400">Kernel Feature Freeze</span>
+								<span class="font-bold text-amber-500">Mar 25, 2027</span>
+							</div>
+							<div
+								class="flex justify-between text-xs border-b border-slate-800 pb-2">
+								<span class="text-slate-400">Beta Freeze / HWE Freeze</span>
+								<span class="font-bold text-amber-500">Mar 29, 2027</span>
+							</div>
+							<div
+								class="flex justify-between text-xs border-b border-slate-800 pb-2">
+								<span class="text-slate-400">Kernel Freeze</span>
+								<span class="font-bold text-amber-500">Apr 8, 2027</span>
+							</div>
+							<div
+								class="flex justify-between text-xs border-b border-slate-800 pb-2">
+								<span class="text-slate-400">Final Freeze</span>
+								<span class="font-bold text-amber-500">Apr 15, 2027</span>
+							</div>
+							<div
+								class="flex justify-between text-xs pb-1">
+								<span class="text-slate-400">Final Release</span>
+								<span class="font-bold text-emerald-400">Apr 22, 2027</span>
+							</div>
+						</div>
+					</div>
+
+					<div
+						class="bg-slate-900/50 p-5 rounded-2xl border border-slate-700/50 flex flex-col justify-between">
+						<div>
+							<h4
+								class="text-[10px] font-black text-emerald-400 uppercase tracking-widest mb-4">
+								More Resources</h4>
+							<ul class="text-[11px] text-slate-400 space-y-2">
+								<li class="flex gap-2">
+									<i data-lucide="calendar-arrow-down"
+										class="w-3 h-3 text-amber-400 shrink-0 mt-0.5"></i>
+									<a href="2026.html" class="hover:text-white underline underline-offset-2 decoration-slate-700 hover:decoration-amber-400 transition-colors">Linux Kernel Release Calendar <span class="font-black text-sm text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-orange-400">2026</span></a>
+								</li>
+								<li class="flex gap-2">
+									<i data-lucide="arrow-right"
+										class="w-3 h-3 text-emerald-500 shrink-0 mt-0.5"></i>
+									<a href="../uboot-merge-window/2026.html" class="hover:text-white underline underline-offset-2 decoration-slate-700 hover:decoration-slate-400 transition-colors">U-Boot Release Calendar 2026</a>
+								</li>
+								<li class="flex gap-2">
+									<i data-lucide="arrow-right"
+										class="w-3 h-3 text-emerald-500 shrink-0 mt-0.5"></i>
+									<a href="../rva23/rva23-kernel-support-evolution.html" class="hover:text-white underline underline-offset-2 decoration-slate-700 hover:decoration-slate-400 transition-colors">Linux Kernel RVA23 Compliance Checker</a>
+								</li>
+								<li class="flex gap-2">
+									<i data-lucide="arrow-right"
+										class="w-3 h-3 text-emerald-500 shrink-0 mt-0.5"></i>
+									<a href="../rva23/linux-kernel-coverage.html" class="hover:text-white underline underline-offset-2 decoration-slate-700 hover:decoration-slate-400 transition-colors">RVA23 Profile Linux Kernel Coverage Analysis</a>
+								</li>
+								<li class="flex gap-2">
+									<i data-lucide="arrow-right"
+										class="w-3 h-3 text-emerald-500 shrink-0 mt-0.5"></i>
+									<a href="../rva23/rva23-extension-matrix.html" class="hover:text-white underline underline-offset-2 decoration-slate-700 hover:decoration-slate-400 transition-colors">RVA23 Extension Software Stack Matrix</a>
+								</li>
+								<li class="flex gap-2">
+									<i data-lucide="arrow-right"
+										class="w-3 h-3 text-emerald-500 shrink-0 mt-0.5"></i>
+									<a href="../riscv-arm64-targets/index.html" class="hover:text-white underline underline-offset-2 decoration-slate-700 hover:decoration-slate-400 transition-colors">Arm64 vs RISC-V: Supported Board (DTB) Growth</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</footer>
+	</div>
+
+	<script>
+		const KERNEL_EVENTS = [
+			{ date: '2026-12-20', endDate: '2027-01-03', title: 'v7.5 Merge Window', type: 'window' },
+			{ date: '2027-01-03', title: '-rc1', type: 'rc' },
+			{ date: '2027-01-10', title: '-rc2', type: 'rc' },
+			{ date: '2027-01-17', title: '-rc3', type: 'rc' },
+			{ date: '2027-01-24', title: '-rc4', type: 'rc' },
+			{ date: '2027-01-31', title: '-rc5', type: 'rc' },
+			{ date: '2027-02-07', title: '-rc6', type: 'rc' },
+			{ date: '2027-02-14', title: '-rc7', type: 'rc' },
+			{ date: '2027-02-21', endDate: '2027-03-07', title: 'v7.6 Merge Window', type: 'window' },
+			{ date: '2027-02-21', title: 'Kernel v7.5', type: 'release', desc: '' },
+			{ date: '2027-03-07', title: '-rc1', type: 'rc' },
+			{ date: '2027-03-14', title: '-rc2', type: 'rc' },
+			{ date: '2027-03-21', title: '-rc3', type: 'rc' },
+			{ date: '2027-03-28', title: '-rc4', type: 'rc' },
+			{ date: '2027-04-04', title: '-rc5', type: 'rc' },
+			{ date: '2027-04-08', title: 'Kernel Freeze', type: 'milestone', desc: 'Ubuntu 27.04' },
+			{ date: '2027-04-11', title: '-rc6', type: 'rc' },
+			{ date: '2027-04-18', title: '-rc7', type: 'rc' },
+			{ date: '2027-04-25', endDate: '2027-05-09', title: 'v7.7 Merge Window', type: 'window' },
+			{ date: '2027-04-25', title: 'Kernel v7.6', type: 'release', desc: '' },
+			{ date: '2027-05-09', title: '-rc1', type: 'rc' },
+			{ date: '2027-05-16', title: '-rc2', type: 'rc' },
+			{ date: '2027-05-23', title: '-rc3', type: 'rc' },
+			{ date: '2027-05-30', title: '-rc4', type: 'rc' },
+			{ date: '2027-06-06', title: '-rc5', type: 'rc' },
+			{ date: '2027-06-13', title: '-rc6', type: 'rc' },
+			{ date: '2027-06-20', title: '-rc7', type: 'rc' },
+			{ date: '2027-06-27', endDate: '2027-07-11', title: 'v7.8 Merge Window', type: 'window' },
+			{ date: '2027-06-27', title: 'Kernel v7.7', type: 'release', desc: '' },
+			{ date: '2027-07-11', title: '-rc1', type: 'rc' },
+			{ date: '2027-07-18', title: '-rc2', type: 'rc' },
+			{ date: '2027-07-25', title: '-rc3', type: 'rc' },
+			{ date: '2027-08-01', title: '-rc4', type: 'rc' },
+			{ date: '2027-08-08', title: '-rc5', type: 'rc' },
+			{ date: '2027-08-15', title: '-rc6', type: 'rc' },
+			{ date: '2027-08-22', title: '-rc7', type: 'rc' },
+			{ date: '2027-08-29', endDate: '2027-09-12', title: 'v7.9 Merge Window', type: 'window' },
+			{ date: '2027-08-29', title: 'Kernel v7.8', type: 'release', desc: '' },
+			{ date: '2027-09-12', title: '-rc1', type: 'rc' },
+			{ date: '2027-09-19', title: '-rc2', type: 'rc' },
+			{ date: '2027-09-26', title: '-rc3', type: 'rc' },
+			{ date: '2027-10-03', title: '-rc4', type: 'rc' },
+			{ date: '2027-10-10', title: '-rc5', type: 'rc' },
+			{ date: '2027-10-17', title: '-rc6', type: 'rc' },
+			{ date: '2027-10-24', title: '-rc7', type: 'rc' },
+			{ date: '2027-10-31', endDate: '2027-11-14', title: 'v7.10 Merge Window', type: 'window' },
+			{ date: '2027-10-31', title: 'Kernel v7.9', type: 'release', desc: '' },
+			{ date: '2027-11-14', title: '-rc1', type: 'rc' },
+			{ date: '2027-11-21', title: '-rc2', type: 'rc' },
+			{ date: '2027-11-28', title: '-rc3', type: 'rc' },
+			{ date: '2027-12-05', title: '-rc4', type: 'rc' },
+			{ date: '2027-12-12', title: '-rc5', type: 'rc' },
+			{ date: '2027-12-19', title: '-rc6', type: 'rc' },
+			{ date: '2027-12-26', title: '-rc7', type: 'rc' },
+			{ date: '2028-01-02', title: 'Kernel v7.10', type: 'release', desc: '' },
+			{ date: '2028-01-02', endDate: '2028-01-16', title: 'v7.11 Merge Window', type: 'window' },
+		];
+
+		const EVENT_STYLES = {
+			rc: 'text-blue-400 border-blue-500 bg-blue-950',
+			release: 'text-emerald-400 border-emerald-500 bg-emerald-950',
+			window: 'text-purple-400 border-purple-500 bg-purple-950/50',
+			milestone: 'text-amber-400 border-amber-500 bg-amber-950',
+		};
+
+		const EVENT_ICONS = {
+			rc: 'zap',
+			release: 'package',
+			window: 'git-merge',
+			milestone: 'alert-circle'
+		};
+
+		const PIXELS_PER_WEEK = 55;
+		const START_DATE = new Date(2027, 0, 1);
+		const SPLIT_DATE = new Date(2027, 5, 30); // June 30, 2027
+		const TODAY = new Date();
+
+		function getWeeksDiff(d1, d2) {
+			return (d2 - d1) / (7 * 24 * 60 * 60 * 1000);
+		}
+
+		function generateTimelineRow(containerId, startDate, endDate, events) {
+			const container = document.getElementById(containerId);
+
+			const totalWeeks = getWeeksDiff(startDate, endDate);
+			const totalWidth = totalWeeks * PIXELS_PER_WEEK;
+
+			// 0. Add Month Backgrounds
+			let currentMonthDate = new Date(startDate);
+			currentMonthDate.setDate(1);
+
+			while (currentMonthDate < endDate) {
+				const nextMonthDate = new Date(currentMonthDate);
+				nextMonthDate.setMonth(nextMonthDate.getMonth() + 1);
+
+				const diffStart = getWeeksDiff(startDate, currentMonthDate);
+				const diffEnd = getWeeksDiff(startDate, nextMonthDate);
+
+				const startPx = Math.max(0, diffStart * PIXELS_PER_WEEK);
+				const endPx = diffEnd * PIXELS_PER_WEEK;
+				const widthPx = Math.max(0, endPx - startPx);
+
+				const bg = document.createElement('div');
+				const isEven = currentMonthDate.getMonth() % 2 === 0;
+				bg.className = `absolute top-0 bottom-0 ${isEven ? 'bg-slate-800/20' : 'bg-transparent'} border-r border-slate-800/50`;
+				bg.style.left = `${startPx}px`;
+				bg.style.width = `${widthPx}px`;
+				bg.style.zIndex = '0';
+
+				const label = document.createElement('div');
+				label.className = 'absolute bottom-4 left-1/2 -translate-x-1/2 text-[4rem] font-black text-slate-800 select-none pointer-events-none uppercase tracking-tighter opacity-50';
+				label.innerText = currentMonthDate.toLocaleString('default', { month: 'short' });
+				bg.appendChild(label);
+
+				container.appendChild(bg);
+
+				currentMonthDate = nextMonthDate;
+			}
+
+			// 1. Create the axis line
+			const axis = document.createElement('div');
+			axis.className = 'axis-line';
+			axis.style.width = `${totalWidth}px`;
+
+			const arrowHead = document.createElement('div');
+			arrowHead.className = 'axis-arrow-head';
+			axis.appendChild(arrowHead);
+
+			container.appendChild(axis);
+
+			// 2. Add ticks and dates (aligned to Sundays)
+			let currentDate = new Date(startDate);
+			currentDate.setDate(currentDate.getDate() + ((7 - currentDate.getDay()) % 7));
+			while (currentDate <= endDate) {
+				const diffWeeks = getWeeksDiff(startDate, currentDate);
+				const leftPos = diffWeeks * PIXELS_PER_WEEK;
+
+				const tick = document.createElement('div');
+				tick.className = 'tick-mark';
+				tick.style.left = `${leftPos}px`;
+				axis.appendChild(tick);
+
+				const label = document.createElement('div');
+				label.className = 'tick-label flex flex-col items-center';
+				label.style.left = `${leftPos}px`;
+
+				const day = currentDate.getDate();
+				const month = currentDate.toLocaleString('default', { month: 'short' });
+				const isStartOfMonth = day <= 7;
+
+				label.innerHTML = `
+                    <span class="text-[10px] font-bold ${isStartOfMonth ? 'text-slate-300' : 'text-slate-500'} uppercase tracking-wide">${month} ${day}</span>
+                `;
+				axis.appendChild(label);
+
+				currentDate.setDate(currentDate.getDate() + 7);
+			}
+
+			// 3. Today marker
+			if (TODAY >= startDate && TODAY <= endDate) {
+				const todayWeeks = getWeeksDiff(startDate, TODAY);
+				const todayPx = todayWeeks * PIXELS_PER_WEEK;
+
+				const todayLine = document.createElement('div');
+				todayLine.className = 'today-line';
+				todayLine.style.left = `${todayPx}px`;
+
+				const todayLabel = document.createElement('div');
+				todayLabel.className = 'today-label';
+				todayLabel.innerText = 'Today';
+				todayLine.appendChild(todayLabel);
+
+				container.appendChild(todayLine);
+			}
+
+			// 4. Add Events
+			events.forEach(event => {
+				const eventDate = new Date(event.date);
+				const diffWeeks = getWeeksDiff(startDate, eventDate);
+				const leftPos = diffWeeks * PIXELS_PER_WEEK;
+
+				if (event.type === 'window') {
+					const endEventDate = new Date(event.endDate);
+					const durationWeeks = getWeeksDiff(eventDate, endEventDate);
+					const width = durationWeeks * PIXELS_PER_WEEK;
+
+					const segment = document.createElement('div');
+					segment.className = 'absolute h-8 top-1/2 -translate-y-1/2 bg-purple-900/40 border border-purple-500/50 backdrop-blur-sm shadow-sm';
+					segment.style.left = `${leftPos}px`;
+					segment.style.width = `${width}px`;
+					segment.style.borderRadius = '6px';
+					segment.style.zIndex = '1';
+					axis.appendChild(segment);
+
+					const label = document.createElement('div');
+					label.className = 'absolute -top-12 flex flex-col items-center z-10';
+					label.style.left = `${leftPos + width / 2}px`;
+					label.style.transform = 'translateX(-50%)';
+
+					label.innerHTML = `
+                        <div class="px-2 py-1 rounded border ${EVENT_STYLES[event.type]} backdrop-blur-md shadow-lg">
+                            <div class="flex items-center gap-1.5 whitespace-nowrap">
+                                <i data-lucide="${EVENT_ICONS[event.type]}" class="w-3 h-3"></i>
+                                <span class="text-[10px] font-black uppercase tracking-tight">${event.title}</span>
+                            </div>
+                        </div>
+                        <div class="h-4 w-px bg-purple-500/50 mt-1"></div>
+                    `;
+					container.appendChild(label);
+
+				} else {
+					const marker = document.createElement('div');
+					marker.className = 'event-marker';
+					marker.style.left = `${leftPos}px`;
+					marker.style.bottom = '200px';
+
+					marker.innerHTML = `
+                        <div class="group relative flex flex-col items-center transform transition-all hover:scale-110 hover:z-50 cursor-pointer">
+                            <div class="px-3 py-2 rounded-xl border ${EVENT_STYLES[event.type]} shadow-xl mb-3 backdrop-blur-md">
+                                <div class="flex items-center gap-2 mb-1">
+                                    ${event.type === 'rc' ? '' : `<i data-lucide="${EVENT_ICONS[event.type]}" class="w-3 h-3"></i>`}
+                                    <span class="text-xs font-black uppercase whitespace-nowrap">${event.title}</span>
+                                </div>
+                                ${event.desc ? `<div class="text-[9px] opacity-80 font-bold uppercase tracking-tight text-center border-t border-white/10 pt-1 mt-1">${event.desc}</div>` : ''}
+                            </div>
+                            <div class="w-px ${event.type === 'release' ? 'h-24' : 'h-8'} bg-current opacity-50 mb-1 text-slate-400"></div>
+                            <div class="w-3 h-3 rounded-full border-2 border-slate-900 ${event.type === 'rc' ? 'bg-blue-500' : (event.type === 'release' ? 'bg-emerald-500' : 'bg-amber-500')}"></div>
+                        </div>
+                    `;
+
+					marker.style.top = 'auto';
+					marker.style.bottom = 'calc(100% - 200px + 6px)';
+
+					container.appendChild(marker);
+				}
+			});
+
+			lucide.createIcons();
+		}
+
+		function generateTimeline() {
+			// Split events into two groups
+			const firstRowEvents = [];
+			const secondRowEvents = [];
+
+			KERNEL_EVENTS.forEach(event => {
+				const eventDate = new Date(event.date);
+				if (eventDate < SPLIT_DATE) {
+					firstRowEvents.push(event);
+				} else {
+					secondRowEvents.push(event);
+				}
+			});
+
+			// First row: START_DATE to SPLIT_DATE
+			const firstRowEnd = new Date(SPLIT_DATE);
+			firstRowEnd.setDate(firstRowEnd.getDate() + 7);
+			generateTimelineRow('timeline-content-1', START_DATE, firstRowEnd, firstRowEvents);
+
+			// Second row: SPLIT_DATE to end
+			const lastEventDate = new Date(KERNEL_EVENTS[KERNEL_EVENTS.length - 1].endDate || KERNEL_EVENTS[KERNEL_EVENTS.length - 1].date);
+			lastEventDate.setDate(lastEventDate.getDate() + 14);
+			generateTimelineRow('timeline-content-2', SPLIT_DATE, lastEventDate, secondRowEvents);
+
+			setTimeout(() => {
+				document.getElementById('timeline-scroll-area-1').scrollLeft = 0;
+				document.getElementById('timeline-scroll-area-2').scrollLeft = 0;
+			}, 100);
+		}
+
+		function setupScrollArea(areaId) {
+			const slider = document.getElementById(areaId);
+			let isDown = false;
+			let startX;
+			let scrollLeft;
+
+			slider.addEventListener('mousedown', (e) => {
+				isDown = true;
+				slider.classList.add('active');
+				startX = e.pageX - slider.offsetLeft;
+				scrollLeft = slider.scrollLeft;
+			});
+
+			slider.addEventListener('mouseleave', () => {
+				isDown = false;
+				slider.classList.remove('active');
+			});
+
+			slider.addEventListener('mouseup', () => {
+				isDown = false;
+				slider.classList.remove('active');
+			});
+
+			slider.addEventListener('mousemove', (e) => {
+				if (!isDown) return;
+				e.preventDefault();
+				const x = e.pageX - slider.offsetLeft;
+				const walk = (x - startX) * 2;
+				slider.scrollLeft = scrollLeft - walk;
+			});
+
+			slider.addEventListener('wheel', (evt) => {
+				if (evt.deltaY !== 0) {
+					evt.preventDefault();
+					slider.scrollLeft += evt.deltaY;
+				}
+			});
+		}
+
+		window.onload = function () {
+			generateTimeline();
+			setupScrollArea('timeline-scroll-area-1');
+			setupScrollArea('timeline-scroll-area-2');
+		};
+	</script>
+	<!-- GoatCounter Analytics -->
+	<script data-goatcounter="https://docularxu.goatcounter.com/count"
+		async src="//gc.zgo.at/count.js"></script>
+
+</body>
+
+</html>
