@@ -480,6 +480,10 @@
 			text-decoration: underline;
 		}
 
+		.blog-card-link.internal::after {
+			content: none;
+		}
+
 		.blog-card-link::after {
 			content: " ↗";
 			font-size: 0.8em;
@@ -948,9 +952,42 @@
 				for the RISC-V Summit Europe 2026 talk.</p>
 
 			<h2 id="blog">In the Spotlight</h2>
-			<p class="note">Featured talks, blog posts, and press coverage. Newest first.</p>
+			<p class="note">Featured talks, blog posts, and press coverage. Newest first, with the release calendar pinned on top.</p>
 
 			<div class="blog-grid">
+				<div class="blog-card">
+						<div class="blog-card-media chart" style="background: #0f172a;">
+							<img src="assets/images/linux-kernel-release-calendar-2026.png"
+								alt="Linux Kernel Release Calendar 2026: horizontal timeline of merge windows, release candidates and stable releases">
+						</div>
+						<div class="blog-card-lead">
+							<div aria-hidden="true"
+								style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; font-size: 36px; background: #0f172a; border-radius: 6px;">
+								📅</div>
+							<div style="flex: 1;">
+								<div class="blog-card-header">📌 Pinned · Reference Tool</div>
+								<div class="blog-card-date">Maintained through 2026</div>
+							</div>
+						</div>
+						<div class="blog-card-title"><a class="blog-card-link internal"
+								href="linux-kernel-merge-window/2026.html">Linux Kernel Release Calendar 2026</a></div>
+						<div class="blog-card-desc">One horizontal timeline of every 2026 merge window, release
+							candidate, and stable release, with a "today" marker and the Ubuntu 26.04 kernel
+							freeze overlaid. Made to keep myself on track; it is now my most visited page and
+							gets passed around engineering teams.</div>
+						<div class="blog-card-actions">
+							<a href="linux-kernel-merge-window/2026.html">
+								<div class="blog-card-badge">
+									🐧 Kernel 2026
+								</div>
+							</a>
+							<a href="uboot-merge-window/2026.html">
+								<div class="blog-card-badge">
+									🔧 U-Boot 2026
+								</div>
+							</a>
+						</div>
+				</div>
 				<div class="blog-card">
 						<div class="blog-card-lead">
 							<img src="assets/images/lpc-2026-prague-logo.png"
@@ -970,7 +1007,7 @@
 							"userspace can rely on it": extension discovery (hwprobe vs. prctl),
 							a dispatch story distributions can adopt, and pre-RVA23 hardware.</div>
 						<div class="blog-card-actions">
-							<a href="https://lpc.events/event/20/contributions/2626/attachments/1995/4541/lpc26-rva23-in-practice-v3-2026-10-02.pdf"
+							<a href="https://lpc.events/event/20/contributions/2626/attachments/1995/4541/lpc26-rva23-in-practice-v3-2026-10-02.pdf" data-goatcounter-click="slides/lpc-2026-rva23-in-practice" data-goatcounter-title="Slides: LPC 2026 - RVA23 in practice"
 								target="_blank" rel="noopener noreferrer">
 								<div class="blog-card-badge">
 									📊 Slides
@@ -1048,13 +1085,13 @@
 							runtime-detection and compile-time-specialisation series for
 							v7.1. Selected by the RISE Project as a Featured RISE Member Talk.</div>
 						<div class="blog-card-actions">
-							<a href="https://riscv-europe.org/summit/2026/media/proceedings/2026-06-09-RISC-V-Summit-Europe-12h00-XU-slides.pdf"
+							<a href="https://riscv-europe.org/summit/2026/media/proceedings/2026-06-09-RISC-V-Summit-Europe-12h00-XU-slides.pdf" data-goatcounter-click="slides/riscv-summit-europe-2026-rva23" data-goatcounter-title="Slides: RISC-V Summit Europe 2026 - RVA23 Profile Support"
 								target="_blank" rel="noopener noreferrer">
 								<div class="blog-card-badge">
 									📊 Slides
 								</div>
 							</a>
-							<a href="https://youtu.be/kDV-avIs4kU"
+							<a href="https://youtu.be/kDV-avIs4kU" data-goatcounter-click="video/riscv-summit-europe-2026-rva23" data-goatcounter-title="Video: RISC-V Summit Europe 2026 - RVA23 Profile Support"
 								target="_blank" rel="noopener noreferrer">
 								<div class="blog-card-badge">
 									🎥 Video
@@ -1082,13 +1119,13 @@
 							on RVA23 readiness and AI-assisted workflows for daily RISC-V
 							development.</div>
 						<div class="blog-card-actions">
-							<a href="https://www.slideshare.net/slideshow/empowering-risc-v-ecosystem-with-ai-agents-rva23-specs-and-practical-risc-v-skills/286945033"
+							<a href="https://www.slideshare.net/slideshow/empowering-risc-v-ecosystem-with-ai-agents-rva23-specs-and-practical-risc-v-skills/286945033" data-goatcounter-click="slides/rvi-china-meetup-2026-04-ai-agents" data-goatcounter-title="Slides: RVI China Meetup Apr 2026 - AI Agents and RVA23"
 								target="_blank" rel="noopener noreferrer">
 								<div class="blog-card-badge">
 									📊 Slides
 								</div>
 							</a>
-							<a href="https://youtu.be/fp7V90UABJE"
+							<a href="https://youtu.be/fp7V90UABJE" data-goatcounter-click="video/rvi-china-meetup-2026-04-ai-agents" data-goatcounter-title="Video: RVI China Meetup Apr 2026 - AI Agents and RVA23"
 								target="_blank" rel="noopener noreferrer">
 								<div class="blog-card-badge">
 									🎥 Video
@@ -1532,7 +1569,7 @@
 								Conference 2026</a>, Prague</div>
 						<div class="event-details">RISC-V Microconference Talk<br>"RVA23 in
 							practice: discovery, dispatch, and the hardware left behind"<br>[<a
-								href="https://lpc.events/event/20/contributions/2626/attachments/1995/4541/lpc26-rva23-in-practice-v3-2026-10-02.pdf"
+								href="https://lpc.events/event/20/contributions/2626/attachments/1995/4541/lpc26-rva23-in-practice-v3-2026-10-02.pdf" data-goatcounter-click="slides/lpc-2026-rva23-in-practice" data-goatcounter-title="Slides: LPC 2026 - RVA23 in practice"
 								target="_blank" rel="noopener noreferrer">Slides</a>]</div>
 					</div>
 					<div class="event-item">
@@ -1544,9 +1581,9 @@
 							Profile Support in Linux Kernel: From Extension Definitions to
 							Userspace Export"<br><span class="note">Plenary slot right after Greg
 								KH's keynote; Featured RISE Member Talk</span><br>[<a
-								href="https://riscv-europe.org/summit/2026/media/proceedings/2026-06-09-RISC-V-Summit-Europe-12h00-XU-slides.pdf"
+								href="https://riscv-europe.org/summit/2026/media/proceedings/2026-06-09-RISC-V-Summit-Europe-12h00-XU-slides.pdf" data-goatcounter-click="slides/riscv-summit-europe-2026-rva23" data-goatcounter-title="Slides: RISC-V Summit Europe 2026 - RVA23 Profile Support"
 								target="_blank" rel="noopener noreferrer">Slides</a>] [<a
-								href="https://youtu.be/kDV-avIs4kU" target="_blank"
+								href="https://youtu.be/kDV-avIs4kU" data-goatcounter-click="video/riscv-summit-europe-2026-rva23" data-goatcounter-title="Video: RISC-V Summit Europe 2026 - RVA23 Profile Support" target="_blank"
 								rel="noopener noreferrer">Video</a>]</div>
 					</div>
 					<div class="event-item">
@@ -1558,9 +1595,9 @@
 						<div class="event-details">Online Talk (with Jian Zhang)<br>"Empowering
 							RISC-V Ecosystem with AI Agents: RVA23 Specs and Practical RISC-V
 							Skills"<br>[<a
-								href="https://www.slideshare.net/slideshow/empowering-risc-v-ecosystem-with-ai-agents-rva23-specs-and-practical-risc-v-skills/286945033"
+								href="https://www.slideshare.net/slideshow/empowering-risc-v-ecosystem-with-ai-agents-rva23-specs-and-practical-risc-v-skills/286945033" data-goatcounter-click="slides/rvi-china-meetup-2026-04-ai-agents" data-goatcounter-title="Slides: RVI China Meetup Apr 2026 - AI Agents and RVA23"
 								target="_blank" rel="noopener noreferrer">Slides</a>] [<a
-								href="https://youtu.be/fp7V90UABJE" target="_blank"
+								href="https://youtu.be/fp7V90UABJE" data-goatcounter-click="video/rvi-china-meetup-2026-04-ai-agents" data-goatcounter-title="Video: RVI China Meetup Apr 2026 - AI Agents and RVA23" target="_blank"
 								rel="noopener noreferrer">Video</a>]</div>
 					</div>
 				</div>
@@ -1679,15 +1716,15 @@
 				<li>6 Oct 2026, <a href="https://lpc.events/event/20/contributions/2626/" target="_blank"
 						rel="noopener noreferrer">Linux Plumbers Conference 2026</a>, Prague,
 					RISC-V Microconference Talk: "RVA23 in practice: discovery, dispatch, and
-					the hardware left behind" [<a href="https://lpc.events/event/20/contributions/2626/attachments/1995/4541/lpc26-rva23-in-practice-v3-2026-10-02.pdf" target="_blank"
+					the hardware left behind" [<a href="https://lpc.events/event/20/contributions/2626/attachments/1995/4541/lpc26-rva23-in-practice-v3-2026-10-02.pdf" data-goatcounter-click="slides/lpc-2026-rva23-in-practice" data-goatcounter-title="Slides: LPC 2026 - RVA23 in practice" target="_blank"
 						rel="noopener noreferrer">Slides</a>]</li>
 				<li>9 Jun 2026, <a href="https://riscv-europe.org/summit/2026/presentations" target="_blank"
 						rel="noopener noreferrer">RISC-V Summit Europe 2026</a>, Bologna, Main
 					Hall Talk (with Charlie Jenkins): "RVA23 Profile Support in Linux Kernel:
 					From Extension Definitions to Userspace Export" — Featured RISE Member Talk
-					[<a href="https://riscv-europe.org/summit/2026/media/proceedings/2026-06-09-RISC-V-Summit-Europe-12h00-XU-slides.pdf"
+					[<a href="https://riscv-europe.org/summit/2026/media/proceedings/2026-06-09-RISC-V-Summit-Europe-12h00-XU-slides.pdf" data-goatcounter-click="slides/riscv-summit-europe-2026-rva23" data-goatcounter-title="Slides: RISC-V Summit Europe 2026 - RVA23 Profile Support"
 						target="_blank" rel="noopener noreferrer">Slides</a>] [<a
-						href="https://youtu.be/kDV-avIs4kU" target="_blank"
+						href="https://youtu.be/kDV-avIs4kU" data-goatcounter-click="video/riscv-summit-europe-2026-rva23" data-goatcounter-title="Video: RISC-V Summit Europe 2026 - RVA23 Profile Support" target="_blank"
 						rel="noopener noreferrer">Video</a>]</li>
 				<li>10 Apr 2026, <a
 						href="https://community.riscv.org/triggers/read/a8d54f12f20a4a499da81a5dc8e3f25a/"
@@ -1695,9 +1732,9 @@
 						Community Online Meetup</a>, Online Talk (with Jian Zhang):
 					"Empowering RISC-V Ecosystem with AI Agents: RVA23 Specs and Practical
 					RISC-V Skills" [<a
-						href="https://www.slideshare.net/slideshow/empowering-risc-v-ecosystem-with-ai-agents-rva23-specs-and-practical-risc-v-skills/286945033"
+						href="https://www.slideshare.net/slideshow/empowering-risc-v-ecosystem-with-ai-agents-rva23-specs-and-practical-risc-v-skills/286945033" data-goatcounter-click="slides/rvi-china-meetup-2026-04-ai-agents" data-goatcounter-title="Slides: RVI China Meetup Apr 2026 - AI Agents and RVA23"
 						target="_blank" rel="noopener noreferrer">Slides</a>] [<a
-						href="https://youtu.be/fp7V90UABJE" target="_blank"
+						href="https://youtu.be/fp7V90UABJE" data-goatcounter-click="video/rvi-china-meetup-2026-04-ai-agents" data-goatcounter-title="Video: RVI China Meetup Apr 2026 - AI Agents and RVA23" target="_blank"
 						rel="noopener noreferrer">Video</a>]</li>
 				<li>25 Nov 2025, <a href="http://www.rdsa-summit.com/" target="_blank"
 						rel="noopener noreferrer">RISC-V Industry Development Conference and
@@ -1761,7 +1798,7 @@
 								Conference 2026</a>，布拉格</div>
 						<div class="event-details">RISC-V Microconference 演讲<br>"RVA23 in
 							practice: discovery, dispatch, and the hardware left behind"<br>[<a
-								href="https://lpc.events/event/20/contributions/2626/attachments/1995/4541/lpc26-rva23-in-practice-v3-2026-10-02.pdf"
+								href="https://lpc.events/event/20/contributions/2626/attachments/1995/4541/lpc26-rva23-in-practice-v3-2026-10-02.pdf" data-goatcounter-click="slides/lpc-2026-rva23-in-practice" data-goatcounter-title="Slides: LPC 2026 - RVA23 in practice"
 								target="_blank" rel="noopener noreferrer">Slides</a>]</div>
 					</div>
 					<div class="event-item">
@@ -1773,9 +1810,9 @@
 							Profile Support in Linux Kernel: From Extension Definitions to
 							Userspace Export"<br><span class="note">首日主会场，紧接 Greg KH
 								Keynote；RISE 基金会 Featured RISE Member Talk</span><br>[<a
-								href="https://riscv-europe.org/summit/2026/media/proceedings/2026-06-09-RISC-V-Summit-Europe-12h00-XU-slides.pdf"
+								href="https://riscv-europe.org/summit/2026/media/proceedings/2026-06-09-RISC-V-Summit-Europe-12h00-XU-slides.pdf" data-goatcounter-click="slides/riscv-summit-europe-2026-rva23" data-goatcounter-title="Slides: RISC-V Summit Europe 2026 - RVA23 Profile Support"
 								target="_blank" rel="noopener noreferrer">Slides</a>] [<a
-								href="https://youtu.be/kDV-avIs4kU" target="_blank"
+								href="https://youtu.be/kDV-avIs4kU" data-goatcounter-click="video/riscv-summit-europe-2026-rva23" data-goatcounter-title="Video: RISC-V Summit Europe 2026 - RVA23 Profile Support" target="_blank"
 								rel="noopener noreferrer">Video</a>]</div>
 					</div>
 					<div class="event-item">
@@ -1786,9 +1823,9 @@
 								International 中国社区线上 Meetup</a></div>
 						<div class="event-details">线上演讲（与张建联合分享）<br>《用 AI Agent 赋能 RISC-V
 							生态：RVA23 规范与 RISC-V 实用技能》<br>[<a
-								href="https://www.slideshare.net/slideshow/empowering-risc-v-ecosystem-with-ai-agents-rva23-specs-and-practical-risc-v-skills/286945033"
+								href="https://www.slideshare.net/slideshow/empowering-risc-v-ecosystem-with-ai-agents-rva23-specs-and-practical-risc-v-skills/286945033" data-goatcounter-click="slides/rvi-china-meetup-2026-04-ai-agents" data-goatcounter-title="Slides: RVI China Meetup Apr 2026 - AI Agents and RVA23"
 								target="_blank" rel="noopener noreferrer">Slides</a>] [<a
-								href="https://youtu.be/fp7V90UABJE" target="_blank"
+								href="https://youtu.be/fp7V90UABJE" data-goatcounter-click="video/rvi-china-meetup-2026-04-ai-agents" data-goatcounter-title="Video: RVI China Meetup Apr 2026 - AI Agents and RVA23" target="_blank"
 								rel="noopener noreferrer">Video</a>]</div>
 					</div>
 				</div>
@@ -1898,23 +1935,23 @@
 				<li>6 Oct 2026，<a href="https://lpc.events/event/20/contributions/2626/" target="_blank"
 						rel="noopener noreferrer">Linux Plumbers Conference 2026</a>，布拉格，RISC-V
 					Microconference 演讲 "RVA23 in practice: discovery, dispatch, and the hardware
-					left behind" [<a href="https://lpc.events/event/20/contributions/2626/attachments/1995/4541/lpc26-rva23-in-practice-v3-2026-10-02.pdf" target="_blank"
+					left behind" [<a href="https://lpc.events/event/20/contributions/2626/attachments/1995/4541/lpc26-rva23-in-practice-v3-2026-10-02.pdf" data-goatcounter-click="slides/lpc-2026-rva23-in-practice" data-goatcounter-title="Slides: LPC 2026 - RVA23 in practice" target="_blank"
 						rel="noopener noreferrer">Slides</a>]</li>
 				<li>9 Jun 2026，<a href="https://riscv-europe.org/summit/2026/presentations" target="_blank"
 						rel="noopener noreferrer">RISC-V Summit Europe 2026</a>，博洛尼亚，主会场，与 Charlie
 					Jenkins 联合演讲 "RVA23 Profile Support in Linux Kernel: From Extension
 					Definitions to Userspace Export"（RISE 基金会 Featured RISE Member Talk）
-					[<a href="https://riscv-europe.org/summit/2026/media/proceedings/2026-06-09-RISC-V-Summit-Europe-12h00-XU-slides.pdf" target="_blank"
-						rel="noopener noreferrer">Slides</a>] [<a href="https://youtu.be/kDV-avIs4kU"
+					[<a href="https://riscv-europe.org/summit/2026/media/proceedings/2026-06-09-RISC-V-Summit-Europe-12h00-XU-slides.pdf" data-goatcounter-click="slides/riscv-summit-europe-2026-rva23" data-goatcounter-title="Slides: RISC-V Summit Europe 2026 - RVA23 Profile Support" target="_blank"
+						rel="noopener noreferrer">Slides</a>] [<a href="https://youtu.be/kDV-avIs4kU" data-goatcounter-click="video/riscv-summit-europe-2026-rva23" data-goatcounter-title="Video: RISC-V Summit Europe 2026 - RVA23 Profile Support"
 						target="_blank" rel="noopener noreferrer">Video</a>]</li>
 				<li>10 Apr 2026，<a
 						href="https://community.riscv.org/triggers/read/a8d54f12f20a4a499da81a5dc8e3f25a/"
 						target="_blank" rel="noopener noreferrer">RISC-V International
 						中国社区线上 Meetup</a>，与张建联合线上分享《用 AI Agent 赋能 RISC-V 生态：RVA23 规范与 RISC-V
 					实用技能》 [<a
-						href="https://www.slideshare.net/slideshow/empowering-risc-v-ecosystem-with-ai-agents-rva23-specs-and-practical-risc-v-skills/286945033"
+						href="https://www.slideshare.net/slideshow/empowering-risc-v-ecosystem-with-ai-agents-rva23-specs-and-practical-risc-v-skills/286945033" data-goatcounter-click="slides/rvi-china-meetup-2026-04-ai-agents" data-goatcounter-title="Slides: RVI China Meetup Apr 2026 - AI Agents and RVA23"
 						target="_blank" rel="noopener noreferrer">Slides</a>] [<a
-						href="https://youtu.be/fp7V90UABJE" target="_blank"
+						href="https://youtu.be/fp7V90UABJE" data-goatcounter-click="video/rvi-china-meetup-2026-04-ai-agents" data-goatcounter-title="Video: RVI China Meetup Apr 2026 - AI Agents and RVA23" target="_blank"
 						rel="noopener noreferrer">Video</a>]</li>
 				<li>25 Nov 2025，<a href="http://www.rdsa-summit.com/" target="_blank"
 						rel="noopener noreferrer">RISC-V产业发展大会暨RDSA国际论坛</a>，人才分论坛，珠海/澳门，演讲《〈Porting
