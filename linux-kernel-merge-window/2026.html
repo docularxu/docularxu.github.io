@@ -48,6 +48,27 @@
 			/* Prevent truncation of right-edge events */
 		}
 
+		/* Fit-to-width mode: the whole half-year fills the card, no horizontal scroll */
+		.timeline-container.fit {
+			padding-left: 0;
+			padding-right: 0;
+		}
+
+		/* Compact labels when the fitted scale is tighter than the default 55px/week */
+		.timeline-container.compact .event-marker span {
+			font-size: 10px;
+		}
+
+		.timeline-container.compact .event-marker>div>div:first-child {
+			padding: 4px 5px;
+			margin-bottom: 8px;
+		}
+
+		.timeline-container.compact .tick-label span {
+			font-size: 9px;
+			letter-spacing: 0;
+		}
+
 		.axis-line {
 			position: absolute;
 			left: 0;
@@ -424,7 +445,32 @@
 			milestone: 'alert-circle'
 		};
 
-		const PIXELS_PER_WEEK = 55;
+		const PPW_DEFAULT = 55;   // px per week in scroll mode
+		const PPW_MIN = 42;       // tighter than this and the -rc labels collide, so fall back to scrolling
+		const PPW_MAX = 90;       // don't stretch the year too thin on very wide screens
+		let PIXELS_PER_WEEK = PPW_DEFAULT;
+		let FIT_MODE = false;
+
+		// Choose a scale so the longer of the two rows fills the card width.
+		// If the card is too narrow for that, keep the default scale and scroll.
+		function fitPixelsPerWeek(rowWeeks) {
+			const areas = ['timeline-scroll-area-1', 'timeline-scroll-area-2'].map(id => document.getElementById(id));
+			// Axis and events are absolutely positioned from the container's left edge, so the
+			// container padding is dropped in fit mode and the scroll-area gutter (which must
+			// hold the half-width of edge labels) is the only side spacing.
+			const fitGutter = 48;        // scroll-area side padding in fit mode (80px in scroll mode)
+			const arrowRoom = 16;        // axis arrow head past the last week
+			const inner = areas[0].clientWidth - 2 * fitGutter - arrowRoom;
+			const ppw = inner / Math.max(...rowWeeks);
+			FIT_MODE = ppw >= PPW_MIN;
+			PIXELS_PER_WEEK = FIT_MODE ? Math.min(ppw, PPW_MAX) : PPW_DEFAULT;
+			areas.forEach(a => {
+				a.style.paddingLeft = a.style.paddingRight = (FIT_MODE ? fitGutter : 80) + 'px';
+				a.style.overflowX = FIT_MODE ? 'hidden' : 'auto';
+				a.classList.toggle('cursor-grab', !FIT_MODE);
+				a.classList.toggle('active:cursor-grabbing', !FIT_MODE);
+			});
+		}
 		const START_DATE = new Date(2026, 0, 1);
 		const SPLIT_DATE = new Date(2026, 5, 30); // June 30, 2026
 		const TODAY = new Date();
@@ -435,6 +481,9 @@
 
 		function generateTimelineRow(containerId, startDate, endDate, events) {
 			const container = document.getElementById(containerId);
+			container.innerHTML = '';
+			container.classList.toggle('fit', FIT_MODE);
+			container.classList.toggle('compact', FIT_MODE && PIXELS_PER_WEEK < PPW_DEFAULT);
 
 			const totalWeeks = getWeeksDiff(startDate, endDate);
 			const totalWidth = totalWeeks * PIXELS_PER_WEEK;
@@ -451,7 +500,7 @@
 				const diffEnd = getWeeksDiff(startDate, nextMonthDate);
 
 				const startPx = Math.max(0, diffStart * PIXELS_PER_WEEK);
-				const endPx = diffEnd * PIXELS_PER_WEEK;
+				const endPx = Math.min(diffEnd * PIXELS_PER_WEEK, totalWidth); // clip at the row end
 				const widthPx = Math.max(0, endPx - startPx);
 
 				const bg = document.createElement('div');
@@ -464,11 +513,11 @@
 				const label = document.createElement('div');
 				label.className = 'absolute bottom-4 left-1/2 -translate-x-1/2 text-[4rem] font-black text-slate-800 select-none pointer-events-none uppercase tracking-tighter opacity-50';
 				label.innerText = currentMonthDate.toLocaleString('default', { month: 'short' });
-				// Skip the label when only a day or two of the month falls in this row
-				// (e.g. June 30 at the start of the second row), otherwise the name spills
-				// out over the neighbouring month. A full week (the row's trailing
-				// overlap into the next month) keeps its label.
-				if (widthPx >= 0.6 * PIXELS_PER_WEEK) {
+				// Skip the label when less than two weeks of the month fall in this row
+				// (June 30 at the start of the second row, the one-week overlap into
+				// July at the end of the first), otherwise the name lands on top of the
+				// neighbouring month's.
+				if (widthPx >= 2 * PIXELS_PER_WEEK) {
 					bg.appendChild(label);
 				}
 
@@ -540,13 +589,18 @@
 				const leftPos = diffWeeks * PIXELS_PER_WEEK;
 
 				if (event.type === 'window') {
+					// Clamp the window to this row so a window that opens before the row
+					// (e.g. the previous year's December) or runs past its end draws cleanly.
+					const winStart = eventDate < startDate ? startDate : eventDate;
 					const endEventDate = new Date(event.endDate);
-					const durationWeeks = getWeeksDiff(eventDate, endEventDate);
+					const winEnd = endEventDate > endDate ? endDate : endEventDate;
+					const winLeft = getWeeksDiff(startDate, winStart) * PIXELS_PER_WEEK;
+					const durationWeeks = getWeeksDiff(winStart, winEnd);
 					const width = durationWeeks * PIXELS_PER_WEEK;
 
 					const segment = document.createElement('div');
 					segment.className = 'absolute h-8 top-1/2 -translate-y-1/2 bg-purple-900/40 border border-purple-500/50 backdrop-blur-sm shadow-sm';
-					segment.style.left = `${leftPos}px`;
+					segment.style.left = `${winLeft}px`;
 					segment.style.width = `${width}px`;
 					segment.style.borderRadius = '6px';
 					segment.style.zIndex = '1';
@@ -554,7 +608,7 @@
 
 					const label = document.createElement('div');
 					label.className = 'absolute -top-12 flex flex-col items-center z-10';
-					label.style.left = `${leftPos + width / 2}px`;
+					label.style.left = `${winLeft + width / 2}px`;
 					label.style.transform = 'translateX(-50%)';
 
 					label.innerHTML = `
@@ -603,9 +657,17 @@
 			const firstRowEvents = [];
 			const secondRowEvents = [];
 
+			const splitIso = SPLIT_DATE.toISOString().split('T')[0];
 			KERNEL_EVENTS.forEach(event => {
 				const eventDate = new Date(event.date);
-				if (eventDate < SPLIT_DATE) {
+				const endDate = event.endDate ? new Date(event.endDate) : null;
+				if (endDate && eventDate < SPLIT_DATE && endDate > SPLIT_DATE) {
+					// A merge window that straddles the split is drawn in both rows: in full
+					// in the first (the row runs a week past the split, and the drawing code
+					// clamps it to the row end), and from the split onwards in the second.
+					firstRowEvents.push(event);
+					secondRowEvents.push({ ...event, date: splitIso });
+				} else if (eventDate < SPLIT_DATE) {
 					firstRowEvents.push(event);
 				} else {
 					secondRowEvents.push(event);
@@ -615,11 +677,12 @@
 			// First row: START_DATE to SPLIT_DATE
 			const firstRowEnd = new Date(SPLIT_DATE);
 			firstRowEnd.setDate(firstRowEnd.getDate() + 7);
-			generateTimelineRow('timeline-content-1', START_DATE, firstRowEnd, firstRowEvents);
-
-			// Second row: SPLIT_DATE to end
+			// Second row: SPLIT_DATE to two weeks past the last event
 			const lastEventDate = new Date(KERNEL_EVENTS[KERNEL_EVENTS.length - 1].endDate || KERNEL_EVENTS[KERNEL_EVENTS.length - 1].date);
 			lastEventDate.setDate(lastEventDate.getDate() + 14);
+
+			fitPixelsPerWeek([getWeeksDiff(START_DATE, firstRowEnd), getWeeksDiff(SPLIT_DATE, lastEventDate)]);
+			generateTimelineRow('timeline-content-1', START_DATE, firstRowEnd, firstRowEvents);
 			generateTimelineRow('timeline-content-2', SPLIT_DATE, lastEventDate, secondRowEvents);
 
 			setTimeout(() => {
@@ -635,6 +698,7 @@
 			let scrollLeft;
 
 			slider.addEventListener('mousedown', (e) => {
+				if (FIT_MODE) return;
 				isDown = true;
 				slider.classList.add('active');
 				startX = e.pageX - slider.offsetLeft;
@@ -660,6 +724,8 @@
 			});
 
 			slider.addEventListener('wheel', (evt) => {
+				// In fit mode nothing overflows, so let the page scroll normally
+				if (FIT_MODE || slider.scrollWidth <= slider.clientWidth) return;
 				if (evt.deltaY !== 0) {
 					evt.preventDefault();
 					slider.scrollLeft += evt.deltaY;
@@ -671,6 +737,13 @@
 			generateTimeline();
 			setupScrollArea('timeline-scroll-area-1');
 			setupScrollArea('timeline-scroll-area-2');
+
+			// Re-fit when the window is resized (debounced)
+			let resizeTimer;
+			window.addEventListener('resize', () => {
+				clearTimeout(resizeTimer);
+				resizeTimer = setTimeout(generateTimeline, 150);
+			});
 		};
 	</script>
 	<!-- GoatCounter Analytics -->
