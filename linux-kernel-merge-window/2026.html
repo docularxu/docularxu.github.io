@@ -229,24 +229,37 @@
 			</div>
 
 			<div class="relative z-10 grid md:grid-cols-3 gap-10">
-				<div class="md:col-span-1 space-y-4">
+				<div class="md:col-span-1 flex flex-col gap-4">
 					<h3 class="text-xl font-black text-white flex items-center gap-2">
 						<i data-lucide="info" class="w-6 h-6 text-blue-400"></i>
 						Cycle Details
 					</h3>
-					<p class="text-sm text-slate-400 leading-relaxed">
-						This horizontal roadmap displays the Linux kernel's linear progression.
-					</p>
-					<div class="pt-2">
-						<div class="text-[10px] font-black uppercase text-slate-500 mb-2">Pro
-							Tip</div>
-						<p class="text-xs text-slate-500 italic">Scroll horizontally with your
-							mouse wheel or swipe on trackpads.</p>
-					</div>
+					<ul class="text-xs text-slate-400 leading-relaxed space-y-2">
+						<li class="flex gap-2">
+							<i data-lucide="arrow-right" class="w-3 h-3 text-blue-400 shrink-0 mt-0.5"></i>
+							<span>Two-week merge window after each release.</span>
+						</li>
+						<li class="flex gap-2">
+							<i data-lucide="arrow-right" class="w-3 h-3 text-blue-400 shrink-0 mt-0.5"></i>
+							<span>Weekly -rc builds, tagged on Sundays.</span>
+						</li>
+						<li class="flex gap-2">
+							<i data-lucide="arrow-right" class="w-3 h-3 text-blue-400 shrink-0 mt-0.5"></i>
+							<span>Final release normally one-week after rc7.</span>
+						</li>
+						<li class="flex gap-2">
+							<i data-lucide="arrow-right" class="w-3 h-3 text-blue-400 shrink-0 mt-0.5"></i>
+							<span>Past dates are actual.</span>
+						</li>
+						<li class="flex gap-2">
+							<i data-lucide="triangle-alert" class="w-3 h-3 text-amber-500 shrink-0 mt-0.5"></i>
+							<span>Future dates are predictions and shift by a week whenever Linus needs an rc8.</span>
+						</li>
+					</ul>
 					<a href="https://docularxu.github.io/"
-						class="inline-flex items-center gap-2 px-4 py-2 bg-slate-700/50 hover:bg-slate-700 text-slate-400 hover:text-white rounded-lg border border-slate-600/50 transition-all duration-200 text-xs font-medium mt-2">
+						class="inline-flex items-center gap-2 px-4 py-2 bg-slate-700/50 hover:bg-slate-700 text-slate-400 hover:text-white rounded-lg border border-slate-600/50 transition-all duration-200 text-xs font-medium mt-auto self-start">
 						<i data-lucide="user" class="w-3.5 h-3.5"></i>
-						About the Author
+						Guodong Xu
 					</a>
 				</div>
 
@@ -299,17 +312,37 @@
 						<div>
 							<h4
 								class="text-[10px] font-black text-emerald-400 uppercase tracking-widest mb-4">
-								Cadence Rules</h4>
+								More Resources</h4>
 							<ul class="text-[11px] text-slate-400 space-y-2">
 								<li class="flex gap-2">
-									<i data-lucide="arrow-right"
-										class="w-3 h-3 text-emerald-500 shrink-0"></i>
-									Sundays are the canonical release days.
+									<i data-lucide="calendar-arrow-up"
+										class="w-3 h-3 text-amber-400 shrink-0 mt-0.5"></i>
+									<a href="2027.html" class="hover:text-white underline underline-offset-2 decoration-slate-700 hover:decoration-amber-400 transition-colors">Linux Kernel Release Calendar <span class="font-black text-sm text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-orange-400">2027</span></a>
 								</li>
 								<li class="flex gap-2">
 									<i data-lucide="arrow-right"
-										class="w-3 h-3 text-emerald-500 shrink-0"></i>
-									Release Candidates (-rc) occur weekly.
+										class="w-3 h-3 text-emerald-500 shrink-0 mt-0.5"></i>
+									<a href="../uboot-merge-window/2026.html" class="hover:text-white underline underline-offset-2 decoration-slate-700 hover:decoration-slate-400 transition-colors">U-Boot Release Calendar 2026</a>
+								</li>
+								<li class="flex gap-2">
+									<i data-lucide="arrow-right"
+										class="w-3 h-3 text-emerald-500 shrink-0 mt-0.5"></i>
+									<a href="../rva23/rva23-kernel-support-evolution.html" class="hover:text-white underline underline-offset-2 decoration-slate-700 hover:decoration-slate-400 transition-colors">Linux Kernel RVA23 Compliance Checker</a>
+								</li>
+								<li class="flex gap-2">
+									<i data-lucide="arrow-right"
+										class="w-3 h-3 text-emerald-500 shrink-0 mt-0.5"></i>
+									<a href="../rva23/linux-kernel-coverage.html" class="hover:text-white underline underline-offset-2 decoration-slate-700 hover:decoration-slate-400 transition-colors">RVA23 Profile Linux Kernel Coverage Analysis</a>
+								</li>
+								<li class="flex gap-2">
+									<i data-lucide="arrow-right"
+										class="w-3 h-3 text-emerald-500 shrink-0 mt-0.5"></i>
+									<a href="../rva23/rva23-extension-matrix.html" class="hover:text-white underline underline-offset-2 decoration-slate-700 hover:decoration-slate-400 transition-colors">RVA23 Extension Software Stack Matrix</a>
+								</li>
+								<li class="flex gap-2">
+									<i data-lucide="arrow-right"
+										class="w-3 h-3 text-emerald-500 shrink-0 mt-0.5"></i>
+									<a href="../riscv-arm64-targets/index.html" class="hover:text-white underline underline-offset-2 decoration-slate-700 hover:decoration-slate-400 transition-colors">Arm64 vs RISC-V: Supported Board (DTB) Growth</a>
 								</li>
 							</ul>
 						</div>
