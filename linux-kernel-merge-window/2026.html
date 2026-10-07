@@ -464,7 +464,13 @@
 				const label = document.createElement('div');
 				label.className = 'absolute bottom-4 left-1/2 -translate-x-1/2 text-[4rem] font-black text-slate-800 select-none pointer-events-none uppercase tracking-tighter opacity-50';
 				label.innerText = currentMonthDate.toLocaleString('default', { month: 'short' });
-				bg.appendChild(label);
+				// Skip the label when only a day or two of the month falls in this row
+				// (e.g. June 30 at the start of the second row), otherwise the name spills
+				// out over the neighbouring month. A full week (the row's trailing
+				// overlap into the next month) keeps its label.
+				if (widthPx >= 0.6 * PIXELS_PER_WEEK) {
+					bg.appendChild(label);
+				}
 
 				container.appendChild(bg);
 
