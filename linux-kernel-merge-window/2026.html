@@ -5,6 +5,22 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Linux Kernel Release Calendar 2026</title>
+	<meta name="description" content="Linux kernel release calendar 2026: merge window dates, weekly -rc dates, and stable release dates on one timeline, with Ubuntu kernel freezes marked.">
+	<meta name="author" content="Guodong Xu">
+	<link rel="canonical" href="https://docularxu.github.io/linux-kernel-merge-window/2026.html">
+	<meta property="og:type" content="website">
+	<meta property="og:site_name" content="Guodong Xu">
+	<meta property="og:title" content="Linux Kernel Release Calendar 2026">
+	<meta property="og:description" content="Linux kernel release calendar 2026: merge window dates, weekly -rc dates, and stable release dates on one timeline, with Ubuntu kernel freezes marked.">
+	<meta property="og:url" content="https://docularxu.github.io/linux-kernel-merge-window/2026.html">
+	<meta property="og:image" content="https://docularxu.github.io/assets/images/og-linux-kernel-release-calendar-2026.png">
+	<meta property="og:image:width" content="1200">
+	<meta property="og:image:height" content="630">
+	<meta property="og:image:alt" content="Horizontal timeline of Linux kernel merge windows, release candidates and stable releases in 2026">
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:title" content="Linux Kernel Release Calendar 2026">
+	<meta name="twitter:description" content="Linux kernel release calendar 2026: merge window dates, weekly -rc dates, and stable release dates on one timeline, with Ubuntu kernel freezes marked.">
+	<meta name="twitter:image" content="https://docularxu.github.io/assets/images/og-linux-kernel-release-calendar-2026.png">
 	<script src="https://cdn.tailwindcss.com"></script>
 	<script src="https://unpkg.com/lucide@latest"></script>
 	<style>
@@ -238,36 +254,42 @@
 					<div class="bg-slate-900/50 p-5 rounded-2xl border border-slate-700/50">
 						<h4
 							class="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-4">
-							Ubuntu 26.04 Schedule</h4>
+							Ubuntu 26.10 Schedule</h4>
 						<div class="space-y-3">
 							<div
 								class="flex justify-between text-xs border-b border-slate-800 pb-2">
+								<span class="text-slate-400">Target Kernel</span>
+								<span class="font-bold text-emerald-400"><a href="https://discourse.ubuntu.com/t/announcing-7-2-kernel-for-ubuntu-26-10-stonking-stingray/83393" class="hover:underline" target="_blank" rel="noopener noreferrer">Linux 7.3</a></span>
+							</div>
+							<div
+								class="flex justify-between text-xs border-b border-slate-800 pb-2">
+								<span class="text-slate-400">Feature Freeze</span>
+								<span class="font-bold text-amber-500">Aug 20, 2026</span>
+							</div>
+							<div
+								class="flex justify-between text-xs border-b border-slate-800 pb-2">
 								<span class="text-slate-400">Kernel Feature Freeze</span>
-								<span class="font-bold text-amber-500">Mar 19,
-									2026</span>
+								<span class="font-bold text-amber-500">Sep 17, 2026</span>
 							</div>
 							<div
 								class="flex justify-between text-xs border-b border-slate-800 pb-2">
 								<span class="text-slate-400">Beta Freeze / HWE Freeze</span>
-								<span class="font-bold text-amber-500">Mar 23,
-									2026</span>
+								<span class="font-bold text-amber-500">Sep 21, 2026</span>
 							</div>
 							<div
 								class="flex justify-between text-xs border-b border-slate-800 pb-2">
 								<span class="text-slate-400">Kernel Freeze</span>
-								<span class="font-bold text-amber-500">Apr 9,
-									2026</span>
+								<span class="font-bold text-amber-500">Oct 1, 2026</span>
 							</div>
 							<div
 								class="flex justify-between text-xs border-b border-slate-800 pb-2">
 								<span class="text-slate-400">Final Freeze</span>
-								<span class="font-bold text-amber-500">Apr 16,
-									2026</span>
+								<span class="font-bold text-amber-500">Oct 8, 2026</span>
 							</div>
-							<div class="flex justify-between text-xs pb-1">
+							<div
+								class="flex justify-between text-xs pb-1">
 								<span class="text-slate-400">Final Release</span>
-								<span class="font-bold text-emerald-400">Apr 23,
-									2026</span>
+								<span class="font-bold text-emerald-400">Oct 15, 2026</span>
 							</div>
 						</div>
 					</div>
@@ -290,10 +312,6 @@
 									Release Candidates (-rc) occur weekly.
 								</li>
 							</ul>
-						</div>
-						<div
-							class="mt-4 p-2 bg-emerald-500/10 rounded-lg text-emerald-500 text-[9px] font-bold text-center border border-emerald-500/20">
-							VERSION 7.0 LANDING APRIL 2026
 						</div>
 					</div>
 				</div>
@@ -343,6 +361,7 @@
 			{ date: '2026-09-13', title: '-rc3', type: 'rc' },
 			{ date: '2026-09-20', title: '-rc4', type: 'rc' },
 			{ date: '2026-09-27', title: '-rc5', type: 'rc' },
+			{ date: '2026-10-01', title: 'Kernel Freeze', type: 'milestone', desc: 'Ubuntu 26.10' },
 			{ date: '2026-10-04', title: '-rc6', type: 'rc' },
 			{ date: '2026-10-11', title: '-rc7', type: 'rc' },
 			{ date: '2026-10-18', title: 'Kernel v7.3', type: 'release', desc: '' },
