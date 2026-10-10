@@ -534,6 +534,27 @@
 				currentMonthDate = nextMonthDate;
 			}
 
+			// 0b. Year watermarks: one at the start of each calendar year that
+			// shows in this row, along the top edge where no marker sits. Slivers
+			// shorter than a week are skipped; a year that starts near the row end
+			// is pulled left so the number stays inside the row.
+			let yearDate = new Date(startDate.getFullYear(), 0, 1);
+			while (yearDate < endDate) {
+				const nextYearDate = new Date(yearDate.getFullYear() + 1, 0, 1);
+				const yStart = Math.max(0, getWeeksDiff(startDate, yearDate) * PIXELS_PER_WEEK);
+				const yEnd = Math.min(getWeeksDiff(startDate, nextYearDate) * PIXELS_PER_WEEK, totalWidth);
+				if (yEnd - yStart >= PIXELS_PER_WEEK) {
+					const yearMark = document.createElement('div');
+					yearMark.className = 'year-mark absolute top-[76px] text-[3rem] leading-none font-black text-slate-800 select-none pointer-events-none tracking-tighter opacity-50';
+					yearMark.style.zIndex = '0';
+					yearMark.innerText = yearDate.getFullYear();
+					container.appendChild(yearMark);
+					const roomRight = totalWidth + 16 - yearMark.offsetWidth; // 16px arrow head past the row end
+					yearMark.style.left = `${Math.min(yStart + 6, roomRight)}px`;
+				}
+				yearDate = nextYearDate;
+			}
+
 			// 1. Axis line
 			const axis = document.createElement('div');
 			axis.className = 'axis-line';
@@ -563,7 +584,6 @@
 				const day = currentDate.getDate();
 				const month = currentDate.toLocaleString('default', { month: 'short' });
 				const isStartOfMonth = day <= 7;
-
 				label.innerHTML = `
 					<span class="text-[10px] font-bold ${isStartOfMonth ? 'text-slate-300' : 'text-slate-500'} uppercase tracking-wide">${month} ${day}</span>
 				`;
