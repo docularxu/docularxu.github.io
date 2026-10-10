@@ -181,7 +181,7 @@
 									class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-stone-300 bg-stone-50 text-stone-500 text-sm">v</span>
 								<select id="kernelVersion3"
 									class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border-stone-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border">
-									<option value="7.1-rc5" selected>7.1-rc5</option>
+									<option disabled selected>Latest</option>
 									<option disabled>Loading tags...</option>
 								</select>
 							</div>
@@ -199,7 +199,7 @@
 							</button>
 						</div>
 					</div>
-					<p class="mt-2 text-xs text-stone-400">Default: v6.6 & v6.12 (LTS), v7.1-rc5 (Latest).
+					<p class="mt-2 text-xs text-stone-400">Default: v6.6 &amp; v6.12 (LTS), and the newest tag as Latest.
 						<span id="tagLoadStatus" class="text-indigo-600"></span>
 					</p>
 
@@ -572,21 +572,37 @@
 
 		// --- Tag Fetching Logic ---
 
+		// --- Version helpers: "6.5" < "6.5.1" < "6.6-rc1" < "6.6" < "7.0" ---
+		function parseVersion(v) {
+			const m = String(v).match(/^(\d+)\.(\d+)(?:\.(\d+))?(?:-rc(\d+))?$/);
+			if (!m) return [0, 0, 0, 0];
+			return [+m[1], +m[2], +(m[3] || 0), m[4] ? +m[4] : Infinity];
+		}
+		function compareVersions(a, b) {
+			const pa = parseVersion(a), pb = parseVersion(b);
+			for (let i = 0; i < 4; i++) if (pa[i] !== pb[i]) return pa[i] - pb[i];
+			return 0;
+		}
+		// One entry per release series: the release itself, or the newest -rc of a
+		// series that has no release yet (the cycle in development). Point releases
+		// are left out.
+		function seriesVersions(tags) {
+			const best = {};
+			tags.forEach(t => {
+				const p = parseVersion(t);
+				if (p[2] !== 0) return;
+				const series = `${p[0]}.${p[1]}`;
+				if (!best[series] || compareVersions(t, best[series]) > 0) best[series] = t;
+			});
+			return Object.values(best).sort(compareVersions);
+		}
+
 		function getFallbackVersionsFromDatabase() {
 			// Derive fallback versions from the local database instead of hardcoding
 			if (kernelDatabase && kernelDatabase.versions) {
 				const allVersions = Object.keys(kernelDatabase.versions);
-				// Sort ascending by version
-				allVersions.sort((a, b) => {
-					const pa = a.split('.').map(Number);
-					const pb = b.split('.').map(Number);
-					for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
-						const na = pa[i] || 0;
-						const nb = pb[i] || 0;
-						if (na !== nb) return na - nb;
-					}
-					return 0;
-				});
+				// Sort ascending by version (handles point releases and -rc tags)
+				allVersions.sort(compareVersions);
 				console.log(`Database fallback: ${allVersions.length} versions available`);
 				return allVersions;
 			}
@@ -725,6 +741,9 @@
 			select2.innerHTML = '';
 			select3.innerHTML = '';
 
+			// Version 3 defaults to the newest tag available
+			const latestTag = tags.slice().sort(compareVersions).pop();
+
 			// Populate all three dropdowns with the same tags
 			tags.forEach(t => {
 				// Version 1 (default to 6.6)
@@ -741,11 +760,11 @@
 				if (t === '6.12') opt2.selected = true;
 				select2.appendChild(opt2);
 
-				// Version 3 (default to 7.0 or 7.0-rcX, fallback to latest)
+				// Version 3 (default to the newest tag)
 				const opt3 = document.createElement('option');
 				opt3.value = t;
 				opt3.textContent = t;
-				if (t.match(/^7\.1-rc\d+$/) || t === '7.0') opt3.selected = true;
+				if (t === latestTag) opt3.selected = true;
 				select3.appendChild(opt3);
 			});
 
@@ -756,11 +775,7 @@
 			if (!tags.includes('6.12') && tags.length > 1) {
 				select2.value = tags[Math.min(1, tags.length - 1)];
 			}
-			// For version 3: prefer 7.0, then 7.0-rcX, then latest
-			const v3Match = tags.find(t => t.match(/^7\.1-rc\d+$/)) || tags.find(t => t === '7.0') || tags.find(t => t.match(/^7\.0-rc\d+$/));
-			if (!v3Match && tags.length > 2) {
-				select3.value = tags[tags.length - 1]; // Default to latest
-			}
+			if (latestTag) select3.value = latestTag;
 
 			console.log("Comparison dropdowns populated with defaults:", select1.value, select2.value, select3.value);
 		}
@@ -769,39 +784,8 @@
 			const evolutionStartSelect = document.getElementById('evolutionStart');
 			const evolutionEndSelect = document.getElementById('evolutionEnd');
 
-			// Get only major versions (X.Y, not X.Y.Z)
-			const majorVersions = tags.filter(t => {
-				const parts = t.split('.');
-				return parts.length === 2; // Only major.minor
-			}).sort((a, b) => {
-				const pa = a.split('.').map(Number);
-				const pb = b.split('.').map(Number);
-				// Sort ascending for start/end dropdowns
-				if (pa[0] !== pb[0]) return pa[0] - pb[0];
-				return pa[1] - pb[1];
-			});
-
-			// If no major versions, extract them from patch versions
-			let versionsToUse = majorVersions;
-			if (majorVersions.length === 0) {
-				const seenMajor = new Set();
-				versionsToUse = tags.filter(t => {
-					const parts = t.split('.');
-					const majorMinor = `${parts[0]}.${parts[1]}`;
-					if (seenMajor.has(majorMinor)) return false;
-					seenMajor.add(majorMinor);
-					return true;
-				}).map(t => {
-					const parts = t.split('.');
-					return `${parts[0]}.${parts[1]}`;
-				}).sort((a, b) => {
-					const pa = a.split('.').map(Number);
-					const pb = b.split('.').map(Number);
-					if (pa[0] !== pb[0]) return pa[0] - pb[0];
-					return pa[1] - pb[1];
-				});
-			}
-
+			// One entry per release series, newest -rc standing in for an unreleased one
+			const versionsToUse = seriesVersions(tags);
 			console.log("Evolution dropdowns will use versions:", versionsToUse);
 
 			// Populate Start dropdown
@@ -855,7 +839,8 @@
 		async function loadKernelDatabase() {
 			try {
 				// Changed from kernel-data.json to rva23-coverage-data.json
-				const response = await fetch('rva23-coverage-data.json');
+				// Always revalidate: browsers otherwise reuse a cached copy for hours after a refresh
+				const response = await fetch('rva23-coverage-data.json', { cache: 'no-cache' });
 				if (!response.ok) {
 					throw new Error(`HTTP ${response.status}`);
 				}
@@ -1491,7 +1476,7 @@
 			'6.11': '2024-09', '6.12': '2024-11',
 			'6.13': '2025-01', '6.14': '2025-03', '6.15': '2025-05', '6.16': '2025-07',
 			'6.17': '2025-09', '6.18': '2025-11',
-			'6.19': '2026-01', '7.0': '2026-04', '7.1': '2026-06',
+			'6.19': '2026-01', '7.0': '2026-04', '7.1': '2026-06', '7.2': '2026-08', '7.3': '2026-10',
 		};
 
 		const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -1629,18 +1614,10 @@
 						.map(opt => opt.value)
 						.filter(v => v !== 'auto' && v && !v.includes('Loading'));
 
-					// Filter versions >= startVersion
-					versions = availableVersions.filter(v => {
-						const parts = v.split('.').map(Number);
-						if (parts[0] > startParts[0]) return true;
-						if (parts[0] === startParts[0] && parts[1] >= startParts[1]) return true;
-						return false;
-					}).sort((a, b) => {
-						const pa = a.split('.').map(Number);
-						const pb = b.split('.').map(Number);
-						if (pa[0] !== pb[0]) return pa[0] - pb[0];
-						return pa[1] - pb[1];
-					});
+					// Filter versions >= startVersion (rc-aware)
+					versions = availableVersions
+						.filter(v => compareVersions(v, startVersion) >= 0)
+						.sort(compareVersions);
 
 					// If no versions found, generate a reasonable range
 					if (versions.length === 0) {

@@ -15,6 +15,18 @@ This will:
 3. Generate `kernel-data.json` with complete, accurate data
 4. Take ~30-60 seconds for 8-10 versions
 
+### Refresh an Existing Database (Recommended for Updates)
+
+```bash
+cd rva23/
+python3 generate-rva23-coverage.py --update
+```
+
+This keeps every version already in `rva23-coverage-data.json`, fetches only
+the tags kernel.org has added since, and drops `-rc` entries of a series once
+its final release exists. `-rc` tags are included only for the cycle still in
+development, so the page always ends at the newest mainline tag.
+
 ### All Versions (Including Patch Releases)
 
 ```bash

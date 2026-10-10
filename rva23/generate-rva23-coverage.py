@@ -4,7 +4,7 @@ RVA23 Profile Coverage Database Generator
 
 This script automatically:
 1. Loads RVA23 profile definitions (mandatory + optional extensions) from rva23-profile-extensions.json
-2. Fetches all stable kernel tags (v6.5+) from kernel.org
+2. Fetches all kernel tags (v6.5+) from kernel.org, with -rc tags for the cycle in development
 3. Downloads and parses extensions.yaml and cpus.yaml for each version
 4. Analyzes both mandatory AND optional extension support for RVA23U64 and RVA23S64
 5. Generates/updates rva23-coverage-data.json database file
@@ -145,51 +145,47 @@ def fetch_url(url: str, timeout: int = 10, verify_ssl: bool = True) -> str:
         raise Exception(f"Failed to fetch {url}: {e}")
 
 
+VERSION_RE = re.compile(r'^(\d+)\.(\d+)(?:\.(\d+))?(?:-rc(\d+))?$')
+
+
+def version_key(v: str):
+    """Sort key: 6.5 < 6.5.1 < 6.6-rc1 < 6.6 < 7.0."""
+    m = VERSION_RE.match(v)
+    if not m:
+        return (0, 0, 0, 0)
+    major, minor, patch, rc = m.groups()
+    # a release sorts after its rcs; a point release after the release
+    return (int(major), int(minor), int(patch or 0), int(rc) if rc else 10**6)
+
+
 def get_kernel_tags(verify_ssl: bool = True) -> List[str]:
-    """Get all kernel tags from git.kernel.org."""
+    """Get kernel tags >= 6.5 from the stable tree on git.kernel.org.
+
+    Returns releases and point releases, plus -rc tags only for series that
+    have no final release yet (i.e. the cycle currently in development).
+    """
     print("Fetching kernel tags from git.kernel.org...")
-    
-    url = "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/refs/tags"
-    
+
+    url = "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/info/refs?service=git-upload-pack"
+
     try:
-        content = fetch_url(url, verify_ssl=verify_ssl)
-        
-        # Parse HTML to extract tags
-        tags = []
+        content = fetch_url(url, timeout=60, verify_ssl=verify_ssl)
+
+        tags = set()
         for line in content.split('\n'):
-            match = re.search(r"tag/\?h=v(6\.\d+(?:\.\d+)?)'?>v(6\.\d+(?:\.\d+)?)</a>", line)
+            match = re.search(r"refs/tags/v(\d+\.\d+(?:\.\d+)?(?:-rc\d+)?)$", line.strip())
             if match:
-                tag = match.group(2)
-                tags.append(tag)
-        
-        # Filter: all versions >= 6.5
-        valid_tags = []
-        seen = set()
-        
-        for tag in tags:
-            if tag in seen:
-                continue
-                
-            parts = tag.split('.')
-            if len(parts) >= 2:
-                major, minor = int(parts[0]), int(parts[1])
-                
-                if major == 6 and minor >= 5:
-                    valid_tags.append(tag)
-                    seen.add(tag)
-        
-        # Sort by version
-        def version_key(v):
-            parts = v.split('.')
-            while len(parts) < 3:
-                parts.append('0')
-            return tuple(map(int, parts[:3]))
-        
-        valid_tags.sort(key=version_key)
-        
-        print(f"Found {len(valid_tags)} kernel versions >= 6.5")
-        return valid_tags
-        
+                tags.add(match.group(1))
+
+        valid = [t for t in tags if version_key(t)[:2] >= (6, 5)]
+        released = {f"{version_key(t)[0]}.{version_key(t)[1]}" for t in valid if '-rc' not in t}
+        valid = [t for t in valid
+                 if '-rc' not in t or f"{version_key(t)[0]}.{version_key(t)[1]}" not in released]
+        valid.sort(key=version_key)
+
+        print(f"Found {len(valid)} kernel versions >= 6.5 ({len(released)} release series)")
+        return valid
+
     except Exception as e:
         print(f"ERROR: {e}")
         print("Falling back to manual version list...")
@@ -343,8 +339,14 @@ def analyze_version(version: str, extension_groups: Dict, verify_ssl: bool = Tru
     }
 
 
-def generate_database(versions: List[str], extension_groups: Dict, output_file: str, verify_ssl: bool = True):
-    """Generate the complete database file."""
+def generate_database(versions: List[str], extension_groups: Dict, output_file: str, verify_ssl: bool = True,
+                      existing: Optional[Dict] = None):
+    """Generate the complete database file.
+
+    With `existing`, versions already in that database are kept as they are
+    and only the new ones are fetched; -rc entries of a series that now has a
+    final release are dropped.
+    """
     print(f"\n{'='*70}")
     print(f"Generating RVA23 coverage database for {len(versions)} versions")
     print(f"{'='*70}")
@@ -371,6 +373,16 @@ def generate_database(versions: List[str], extension_groups: Dict, output_file: 
     successful = []
     failed = []
     
+    if existing:
+        kept = {v: data for v, data in existing.get("versions", {}).items() if v in versions}
+        dropped = sorted(set(existing.get("versions", {})) - set(kept), key=version_key)
+        if dropped:
+            print(f"Dropping superseded entries: {', '.join(dropped)}")
+        database["versions"].update(kept)
+        successful.extend(kept)
+        versions = [v for v in versions if v not in kept]
+        print(f"Keeping {len(kept)} existing versions, fetching {len(versions)} new ones")
+    
     for version in versions:
         result = analyze_version(version, extension_groups, verify_ssl=verify_ssl)
         if result:
@@ -380,6 +392,10 @@ def generate_database(versions: List[str], extension_groups: Dict, output_file: 
             failed.append(version)
     
     if successful:
+        # Keep the database in version order
+        successful.sort(key=version_key)
+        database["versions"] = {v: database["versions"][v] for v in successful}
+        
         # Update metadata
         database["_metadata"]["versions_included"] = successful
         
@@ -431,6 +447,9 @@ Examples:
   # Analyze specific versions
   python3 generate-rva23-coverage.py --versions 6.10,6.11,6.12 --no-verify-ssl
 
+  # Refresh an existing database: fetch only the tags it does not have yet
+  python3 generate-rva23-coverage.py --update
+
   # Specify custom profile file and output
   python3 generate-rva23-coverage.py --profile custom-profile.json --output custom-db.json --no-verify-ssl
         """
@@ -459,6 +478,13 @@ Examples:
         '--output',
         help='Output JSON file path (default: rva23-coverage-data.json)',
         default='rva23-coverage-data.json'
+    )
+    
+    parser.add_argument(
+        '--update',
+        action='store_true',
+        help='Load the existing output file and only fetch versions it lacks',
+        default=False
     )
     
     parser.add_argument(
@@ -507,8 +533,14 @@ Examples:
         print("ERROR: No versions to analyze")
         sys.exit(1)
     
+    existing = None
+    if args.update and Path(args.output).exists():
+        with open(args.output) as f:
+            existing = json.load(f)
+        print(f"Updating {args.output} ({len(existing.get('versions', {}))} versions present)")
+    
     # Generate database
-    generate_database(versions, extension_groups, args.output, verify_ssl=verify_ssl)
+    generate_database(versions, extension_groups, args.output, verify_ssl=verify_ssl, existing=existing)
     
     print(f"\n{'='*70}")
     print("Done! Database ready for analysis and visualization.")
