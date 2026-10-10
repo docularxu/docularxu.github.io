@@ -179,7 +179,7 @@
 
 <body class="bg-slate-900 text-slate-100 min-h-screen selection-pink">
 
-	<div class="max-w-[1600px] mx-auto p-4 md:p-10">
+	<div class="max-w-[1920px] mx-auto p-4 md:px-8 md:py-8">
 		<!-- Header -->
 		<header
 			class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-slate-800 pb-8">
@@ -187,7 +187,7 @@
 				<div
 					class="flex items-center gap-2 text-pink-400 font-bold uppercase tracking-[0.2em] text-xs">
 					<i data-lucide="clock" class="w-4 h-4"></i>
-					Horizontal Release Timeline
+					U-Boot · Release Calendar
 				</div>
 				<h1 class="text-4xl md:text-5xl font-black tracking-tighter">
 					U-Boot Release <span
@@ -466,7 +466,7 @@
 			// Axis and events are absolutely positioned from the container's left edge, so the
 			// container padding is dropped in fit mode and the scroll-area gutter (which must
 			// hold the half-width of edge labels) is the only side spacing.
-			const fitGutter = 48;        // scroll-area side padding in fit mode (80px in scroll mode)
+			const fitGutter = 32;        // scroll-area side padding in fit mode (80px in scroll mode)
 			const arrowRoom = 16;        // axis arrow head past the last week
 			const inner = areas[0].clientWidth - 2 * fitGutter - arrowRoom;
 			const ppw = inner / Math.max(...rowWeeks);
