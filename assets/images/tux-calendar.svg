@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
-<svg version="1.1" viewBox="0 0 216 256" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<!-- Tux + calendar favicon for the Linux kernel release calendar pages.
+     Tux by Larry Ewing (lewing@isc.tamu.edu) and The GIMP; SVG from Wikimedia Commons. -->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 64 64"><svg viewBox="0 0 216 256" x="0" y="0" width="48" height="64" preserveAspectRatio="xMidYMax meet">
 	<title>Tux</title>
 	<defs id="tux_fx">
 		<linearGradient id="gradient_belly_shadow">
@@ -435,4 +436,4 @@
 			</g>
 		</g>
 	</g>
-</svg>
+</svg><rect x="30" y="30" width="34" height="32" rx="6" fill="#f8fafc" stroke="#ffffff" stroke-width="2"/><path d="M30 36 a6 6 0 0 1 6 -6 h22 a6 6 0 0 1 6 6 v5 h-34 z" fill="#2563eb"/><rect x="35" y="45" width="5" height="4" rx="1" fill="#cbd5e1"/><rect x="43" y="45" width="5" height="4" rx="1" fill="#cbd5e1"/><rect x="51" y="45" width="5" height="4" rx="1" fill="#cbd5e1"/><rect x="35" y="51" width="5" height="4" rx="1" fill="#cbd5e1"/><rect x="43" y="51" width="5" height="4" rx="1" fill="#2563eb"/><rect x="51" y="51" width="5" height="4" rx="1" fill="#cbd5e1"/></svg>
