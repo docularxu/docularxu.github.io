@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="64" viewBox="0 0 64 64">
 <!-- Tux + calendar favicon for the Linux kernel release calendar pages.
      Tux by Larry Ewing (lewing@isc.tamu.edu) and The GIMP; SVG from Wikimedia Commons. -->
-<rect x="6" y="2" width="52" height="50" rx="7" fill="#f8fafc"/><path d="M6 9 a7 7 0 0 1 7 -7 h38 a7 7 0 0 1 7 7 v6 h-52 z" fill="#2563eb"/><rect x="20.1" y="-1" width="3" height="9" rx="1.5" fill="#e2e8f0" stroke="#64748b" stroke-width="0.8"/><rect x="40.9" y="-1" width="3" height="9" rx="1.5" fill="#e2e8f0" stroke="#64748b" stroke-width="0.8"/><rect x="12.0" y="20" width="7.0" height="4" rx="1" fill="#cbd5e1"/><rect x="22.0" y="20" width="7.0" height="4" rx="1" fill="#cbd5e1"/><rect x="32.0" y="20" width="7.0" height="4" rx="1" fill="#cbd5e1"/><rect x="42.0" y="20" width="7.0" height="4" rx="1" fill="#cbd5e1"/><rect x="12.0" y="27" width="7.0" height="4" rx="1" fill="#cbd5e1"/><rect x="22.0" y="27" width="7.0" height="4" rx="1" fill="#cbd5e1"/><rect x="32.0" y="27" width="7.0" height="4" rx="1" fill="#cbd5e1"/><rect x="42.0" y="27" width="7.0" height="4" rx="1" fill="#cbd5e1"/><rect x="12.0" y="34" width="7.0" height="4" rx="1" fill="#cbd5e1"/><rect x="22.0" y="34" width="7.0" height="4" rx="1" fill="#cbd5e1"/><rect x="32.0" y="34" width="7.0" height="4" rx="1" fill="#cbd5e1"/><rect x="42.0" y="34" width="7.0" height="4" rx="1" fill="#cbd5e1"/><svg viewBox="0 0 216 256" x="10" y="12" width="44" height="52" preserveAspectRatio="xMidYMax meet">
+<svg viewBox="0 0 216 256" x="14" y="0" width="36" height="42" preserveAspectRatio="xMidYMax meet">
 	
 	<defs id="tux_fx">
 		<linearGradient id="gradient_belly_shadow">
@@ -437,4 +437,4 @@
 			</g>
 		</g>
 	</g>
-</svg></svg>
+</svg><rect x="3" y="22" width="58" height="40" rx="7" fill="#f8fafc"/><path d="M3 29 a7 7 0 0 1 7 -7 h44 a7 7 0 0 1 7 7 v5 h-58 z" fill="#2563eb"/><rect x="18.9" y="19" width="3" height="9" rx="1.5" fill="#e2e8f0" stroke="#64748b" stroke-width="0.8"/><rect x="42.099999999999994" y="19" width="3" height="9" rx="1.5" fill="#e2e8f0" stroke="#64748b" stroke-width="0.8"/><rect x="9.0" y="39" width="8.5" height="4" rx="1" fill="#cbd5e1"/><rect x="20.5" y="39" width="8.5" height="4" rx="1" fill="#cbd5e1"/><rect x="32.0" y="39" width="8.5" height="4" rx="1" fill="#cbd5e1"/><rect x="43.5" y="39" width="8.5" height="4" rx="1" fill="#cbd5e1"/><rect x="9.0" y="46" width="8.5" height="4" rx="1" fill="#cbd5e1"/><rect x="20.5" y="46" width="8.5" height="4" rx="1" fill="#cbd5e1"/><rect x="32.0" y="46" width="8.5" height="4" rx="1" fill="#cbd5e1"/><rect x="43.5" y="46" width="8.5" height="4" rx="1" fill="#cbd5e1"/><rect x="9.0" y="53" width="8.5" height="4" rx="1" fill="#cbd5e1"/><rect x="20.5" y="53" width="8.5" height="4" rx="1" fill="#cbd5e1"/><rect x="32.0" y="53" width="8.5" height="4" rx="1" fill="#cbd5e1"/><rect x="43.5" y="53" width="8.5" height="4" rx="1" fill="#cbd5e1"/></svg>
