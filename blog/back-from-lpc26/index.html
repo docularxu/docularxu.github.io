@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Back from LPC26: One RVA23U64 Bit, Four Asks, and a Penguin Hat | Guodong Xu</title>
+	<meta name="description" content="Notes from the Linux Plumbers Conference 2026 RISC-V Microconference: why the Linux kernel should answer “is this machine RVA23?” with one bit, the four asks I brought to Prague, and what came back.">
+	<meta name="author" content="Guodong Xu">
+	<link rel="canonical" href="https://docularxu.github.io/blog/back-from-lpc26/">
+	<link rel="alternate" type="application/rss+xml" title="Guodong Xu — Blog" href="../feed.xml">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="Back from LPC26: One RVA23U64 Bit, Four Asks, and a Penguin Hat">
+	<meta property="og:description" content="Why the Linux kernel should answer “is this machine RVA23?” with one bit, the four asks I brought to the LPC26 RISC-V Microconference, and what came back.">
+	<meta property="og:url" content="https://docularxu.github.io/blog/back-from-lpc26/">
+	<meta property="og:image" content="https://docularxu.github.io/blog/back-from-lpc26/images/lpc26-penguin-hat.jpg">
+	<meta property="og:site_name" content="Guodong Xu">
+	<meta property="article:published_time" content="2026-10-11">
+	<meta property="article:author" content="Guodong Xu">
+	<meta name="twitter:card" content="summary_large_image">
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f4f4f4;
+			color: #1a1a1a;
+			margin: 0;
+			padding: 0;
+			transition: background-color .2s ease, color .2s ease;
+		}
+
+		header {
+			color: white;
+			padding: 2.2em 1em 2.6em 1em;
+			background: linear-gradient(135deg, #0ea5a0 0%, #50b3a2 50%, #0aa4b8 100%);
+			position: relative;
+		}
+
+		.header-inner {
+			max-width: 860px;
+			margin: 0 auto;
+		}
+
+		.crumbs {
+			font-size: 0.95em;
+			opacity: 0.92;
+			margin-bottom: 1.2em;
+		}
+
+		.crumbs a {
+			color: #fff;
+			text-decoration: none;
+			border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+		}
+
+		.crumbs a:hover {
+			border-bottom-color: #fff;
+		}
+
+		header h1 {
+			font-size: 2em;
+			line-height: 1.25;
+			margin: 0 0 0.6em 0;
+		}
+
+		.byline {
+			opacity: 0.95;
+			font-size: 0.98em;
+		}
+
+		.byline a {
+			color: #fff;
+			text-decoration: underline;
+			text-decoration-color: rgba(255, 255, 255, 0.5);
+		}
+
+		.toggle {
+			position: absolute;
+			top: 14px;
+			right: 14px;
+			background: rgba(255, 255, 255, 0.15);
+			border: 1px solid rgba(255, 255, 255, 0.5);
+			color: #fff;
+			padding: 6px 10px;
+			border-radius: 16px;
+			cursor: pointer;
+		}
+
+		main {
+			max-width: 860px;
+			margin: -22px auto 2.5em auto;
+			padding: 28px 32px 36px;
+			background-color: white;
+			border-radius: 14px;
+			box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+			box-sizing: border-box;
+		}
+
+		@media (max-width: 600px) {
+			main {
+				padding: 22px 18px 28px;
+				margin-left: 12px;
+				margin-right: 12px;
+			}
+
+			header h1 {
+				font-size: 1.55em;
+			}
+		}
+
+		article {
+			font-size: 1.06em;
+			line-height: 1.65;
+		}
+
+		article p {
+			margin: 0 0 1.15em 0;
+		}
+
+		article h2 {
+			border-bottom: 2px solid #50b3a2;
+			padding-bottom: 8px;
+			margin-top: 2em;
+			font-size: 1.45em;
+		}
+
+		article h3 {
+			margin-top: 1.7em;
+			font-size: 1.15em;
+			color: #0a7b6c;
+		}
+
+		article ul {
+			padding-left: 22px;
+			margin: 0 0 1.15em 0;
+		}
+
+		article li {
+			margin-bottom: 0.55em;
+		}
+
+		a {
+			color: #0a7b6c;
+			text-decoration: none;
+		}
+
+		a:hover {
+			text-decoration: underline;
+		}
+
+		code {
+			font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+			font-size: 0.9em;
+			background: #eef7f6;
+			padding: 1px 5px;
+			border-radius: 4px;
+		}
+
+		blockquote {
+			margin: 1.1em 0 1.3em 0;
+			padding: 0.2em 0 0.2em 1.1em;
+			border-left: 4px solid #50b3a2;
+			color: #3b4a48;
+			font-style: italic;
+		}
+
+		blockquote p {
+			margin: 0;
+		}
+
+		figure {
+			margin: 1.6em 0 1.8em 0;
+		}
+
+		figure img {
+			display: block;
+			width: 100%;
+			height: auto;
+			border-radius: 8px;
+			box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+		}
+
+		figure.slide img {
+			border: 1px solid #d7e5e2;
+			box-shadow: none;
+		}
+
+		figcaption {
+			margin-top: 0.6em;
+			font-size: 0.9em;
+			color: #666;
+			line-height: 1.45;
+		}
+
+		a.cite {
+			font-size: 0.85em;
+			vertical-align: super;
+			line-height: 0;
+			padding: 0 1px;
+		}
+
+		.update {
+			background: #eef7f6;
+			border-radius: 8px;
+			padding: 12px 16px;
+			margin: 1.4em 0;
+		}
+
+		.update p {
+			margin: 0;
+		}
+
+		ol.refs {
+			padding-left: 1.6em;
+			font-size: 0.95em;
+			line-height: 1.55;
+		}
+
+		ol.refs li {
+			margin-bottom: 0.45em;
+			overflow-wrap: anywhere;
+		}
+
+		.credits {
+			margin-top: 2.2em;
+			padding-top: 1em;
+			border-top: 1px solid #e1ecea;
+			font-size: 0.9em;
+			color: #666;
+		}
+
+		footer {
+			text-align: center;
+			margin-top: 2em;
+			margin-bottom: 2em;
+			color: #555;
+		}
+
+		/* Dark Mode */
+		body.dark {
+			background-color: #0e1716;
+			color: #d9e6e4;
+		}
+
+		body.dark main {
+			background-color: #10201e;
+			box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+		}
+
+		body.dark a {
+			color: #7ae0d2;
+		}
+
+		body.dark article h3 {
+			color: #7ae0d2;
+		}
+
+		body.dark code,
+		body.dark .update {
+			background: #12302c;
+		}
+
+		body.dark blockquote {
+			color: #b4cfcb;
+			border-left-color: #275e57;
+		}
+
+		body.dark figcaption,
+		body.dark .credits,
+		body.dark footer {
+			color: #a9c6c2;
+		}
+
+		body.dark .credits {
+			border-top-color: #275e57;
+		}
+
+		body.dark figure.slide img {
+			border-color: #275e57;
+		}
+	</style>
+</head>
+
+<body>
+
+	<header>
+		<button class="toggle" id="themeToggle" aria-label="Toggle dark mode">🌓</button>
+		<div class="header-inner">
+			<div class="crumbs"><a href="../../">Guodong Xu</a> › <a href="../">Blog</a></div>
+			<h1>Back from LPC26: One RVA23U64 Bit, Four Asks, and a Penguin Hat</h1>
+			<div class="byline">Guodong Xu · October 11, 2026 · 10 min read · Also in <a
+					href="https://mp.weixin.qq.com/s/te3sBIL6XFK73vHhru7rnA" target="_blank"
+					rel="noopener noreferrer" lang="zh">中文</a> (WeChat)</div>
+		</div>
+	</header>
+
+	<main>
+		<article>
+			<p>Attending Linux Plumbers Conference this October felt different from being at RISC-V Summit Europe in
+				June. Since joining Qualcomm, I’ve had more opportunities to work with others across the RISC-V
+				ecosystem.</p>
+
+			<figure>
+				<img src="images/prague-red-tram.jpg" alt="A red tram on a street in Prague" width="1600" height="1200">
+				<figcaption><strong>Figure 1.</strong> A red tram on a street in Prague.</figcaption>
+			</figure>
+
+			<p>One of those opportunities has been through RISE. Within Qualcomm’s RISC-V team, I’ve gotten to know
+				colleagues representing Qualcomm in RISC-V International and RISE working groups, along with developers
+				contributing to those efforts. I’ve also joined two RISE working groups: Platform and Enablement &amp;
+				Optimization.</p>
+
+			<p>Meanwhile, my work on the Linux kernel’s <code>rva23u64</code> <code>hwprobe</code> patch series has
+				continued. The v8 series is available on lore. <a class="cite" href="#ref-1">[1]</a> I submitted my first
+				version in February and gave a joint talk with Charlie Jenkins of Tesla at RISC-V Summit Europe 2026 in
+				June. Working on RVA23 support in Linux has been a recurring theme for me over the past several months.
+			</p>
+
+			<h2 id="why-an-rva23u64-bit">Why an rva23u64 Bit?</h2>
+
+			<p>RVA23 Profile 1.0 was ratified by RISC-V International in October 2024. It targets application
+				processors, including those used in servers, client devices, and mobile phones. It includes 39 mandatory
+				extensions and 15 optional extensions.</p>
+
+			<p>Thanks to the work of many community contributors, all 39 mandatory extensions had Linux kernel support
+				by v7.0-rc1 in February this year. By then, most of these extensions already had their own feature bits
+				in the kernel’s <code>riscv_isa</code> bitmap. A few, including B and Zic64b, still lacked dedicated
+				bits, which my patch series added later.</p>
+
+			<figure>
+				<img src="images/rva23-kernel-coverage-2026-10-10.png"
+					alt="Linux kernel coverage of mandatory RVA23 extensions, from v6.5 to v7.3-rc6" width="1600"
+					height="1079" loading="lazy">
+				<figcaption><strong>Figure 2.</strong> Linux kernel support for the 39 mandatory RVA23U64 extensions
+					reached 100% in v7.0. Full timeline <a class="cite" href="#ref-2">[2]</a>.</figcaption>
+			</figure>
+
+			<p>Having all the mandatory extensions supported in the kernel is one thing. Knowing whether the machine
+				you’re using is RVA23-compliant is another.</p>
+
+			<p>From a user’s perspective, the question is simple: <strong>is my machine RVA23-compliant?</strong></p>
+
+			<p>It should be a simple yes or no. Yet the existing interfaces expose individual features rather than a
+				single answer about the profile as a whole.</p>
+
+			<p>Across the software stack, glibc and GCC, libraries such as OpenSSL and zlib-ng, and language runtimes
+				such as Go maintain their own feature-detection logic. Each checks the extensions relevant to its code
+				paths. For software that wants to use RVA23 as a baseline, however, there is an additional task: checking
+				those features against the profile’s requirements. That is not always possible with the information
+				available.</p>
+
+			<p>The <code>hwprobe</code> detection tool written by Heinrich Schuchardt of Canonical provides a concrete
+				example. It performs 40 checks across three <code>hwprobe</code> keys, yet can only conclude that a
+				machine is “probably RVA23.” <a class="cite" href="#ref-3">[3]</a></p>
+
+			<p>The patch series I’m working on <a class="cite" href="#ref-1">[1]</a> moves that profile check into the
+				kernel. At boot, the kernel would determine whether the system meets the RVA23 requirements and expose
+				the result as a single bit. Kernel code could check it directly, while user space could query it through
+				the <code>hwprobe</code> UAPI, with a low-cost path through the vDSO. Software could then establish a
+				common baseline with one check, while still checking additional features where needed.</p>
+
+			<figure class="slide">
+				<img src="images/lpc26-slide-3.png" alt="Slide 3: “Is this machine RVA23?” One bit from the kernel"
+					width="1467" height="825" loading="lazy">
+				<figcaption><strong>Figure 3.</strong> “Is this machine RVA23?” One bit from the kernel (slide 3 of my
+					LPC26 presentation).</figcaption>
+			</figure>
+
+			<p>The problem seemed straightforward enough. Andrew Jones of Qualcomm posted RFC v1 on February 6, a day
+				before I posted my own series. Since his RFC came first, I set mine aside and focused on reviewing his
+				proposal. I spent part of the Chinese New Year holiday writing a detailed review, and the feedback was
+				well received.</p>
+
+			<p>Later, when Andrew had less time to spend on the series, we agreed that I would take over, starting with
+				v2, and work toward getting it merged. The code itself wasn’t especially complicated, and I initially
+				expected the series to be merged before the RISC-V Summit Europe in June. Eight versions later, with v9
+				on the way, it’s clear that there were more architectural details to work through than I had
+				anticipated.</p>
+
+			<p><strong>That hasn’t been a bad thing.</strong></p>
+
+			<p>Along the way, the discussions have helped move at least five related patch efforts forward, directly or
+				indirectly:</p>
+
+			<ul>
+				<li><strong>Preparatory patches:</strong> Jesse Taube of Red Hat first posted his Zicclsm support patch
+					in June 2024. Charlie Jenkins first posted his patch to standardize extension-name capitalization in
+					December 2025. Both reached mainline through my v5 series, among six preparatory patches merged
+					across Linux v7.2 and v7.3 ahead of the core changes.</li>
+				<li><strong>Zic64b support:</strong> Qingwei Hu of ByteDance contributed Zic64b cpufeature and
+					<code>hwprobe</code> support. We worked together to incorporate it into the series.</li>
+				<li><strong>Reporting only usable extensions:</strong> While responding to Radim Krčmář of Qualcomm’s
+					review of v8, I found that <code>hwprobe</code> incorrectly reported Zfa and Zcd on harts without an
+					FPU. Radim expanded the fix into a six-patch series, “riscv: <code>hwprobe</code>: do not report
+					disabled extensions” <a class="cite" href="#ref-4">[4]</a>.</li>
+				<li><strong>Simplifying cpufeature macros:</strong> Conor Dooley of Microchip posted an RFC to remove
+					<code>RISCV_ISA_EXT_BUNDLE</code> from cpufeature and retain <code>SUPERSET</code>. It followed a
+					discussion under the first patch of my v8 series about which macro should represent the B
+					extension. In his email <a class="cite" href="#ref-5">[5]</a>, he noted that he had written the RFC
+					during a talk at LPC26, on a laptop where he couldn’t test it.</li>
+				<li><strong>Deprecating the controls for disabling V:</strong> Samuel Holland of SiFive posted a patch
+					series <a class="cite" href="#ref-6">[6]</a> to deprecate the <code>prctl</code> and
+					<code>sysctl</code> interfaces that allow user space to dynamically disable the V extension. That
+					grew out of the discussion around Ask 3, which I’ll return to below.</li>
+			</ul>
+
+			<p>Those related changes matter too. Even while the profile bit itself is still under review, the
+				discussions around it have led to useful work elsewhere in the kernel.</p>
+
+			<h2 id="bringing-the-discussion-to-prague">Bringing the Discussion to Prague</h2>
+
+			<p>In mid-August, with support from Qualcomm, I decided to try submitting a proposal to Linux Plumbers
+				Conference. By then, the August 7 proposal deadline had passed by 12 days. Only two days remained before
+				the microconferences finalized their schedules, and attendee registration had sold out on August 15.</p>
+
+			<p>On August 19, I wrote to Drew Fustini of Tenstorrent, one of the RISC-V Microconference organizers, to
+				explain the topic and ask whether there was still a chance to present it. He replied that day:</p>
+
+			<blockquote>
+				<p>“I think this is a great topic and it is too bad it is not earlier.”</p>
+			</blockquote>
+
+			<p>Three days later, he added:</p>
+
+			<blockquote>
+				<p>“I think the RVA23 topic is important.”</p>
+			</blockquote>
+
+			<p>Things fell into place after that. Drew explained to the conference organizers that the proposal
+				continued a discussion from the previous year, and offered me the one remaining speaker pass of the two
+				allocated to the RISC-V Microconference.</p>
+
+			<p><strong>Having a clear purpose helped me step outside my comfort zone.</strong></p>
+
+			<p>Over the next month and a half, I read through Bugzilla 220795, the report about glibc crashing after V
+				was disabled, and the related linux-riscv discussions. I then shared my thoughts <a class="cite"
+					href="#ref-7">[7]</a> on the mailing list.</p>
+
+			<p>In parallel, I looked into how glibc uses IFUNC resolvers for function-level dispatch, and how x86-64 and
+				arm64 handle successive architecture baselines: x86-64-v2/v3/v4 levels detected through CPUID, and
+				ARMv8.x baselines combined with HWCAP feature bits.</p>
+
+			<p>On September 15, I started a discussion in the RISE Platform Working Group. At the meeting the following
+				day, participants included Peter Bergner of Tenstorrent, a glibc contributor; Andy Chiu, the original
+				author of the interfaces for disabling V; Linux kernel developers Drew Fustini of Tenstorrent and Samuel
+				Holland of SiFive. Contributors from Andes, Red Hat, SUSE and SpacemiT also joined. I appreciated how
+				seriously everyone engaged with the topic. Several points of agreement from that meeting became the
+				foundation of my LPC talk.</p>
+
+			<p>I also contacted GCC RISC-V maintainer Jeff Law, now a colleague at Qualcomm. He saw value in the series,
+				writing:</p>
+
+			<blockquote>
+				<p>“I can see numerous ways that would be interesting/valuable.”</p>
+			</blockquote>
+
+			<p>Jeff invited me to the RISC-V BoF he chaired at GNU Tools Cauldron on October 3. His final slide covered
+				glibc and raised a closely related question: should there be RVA23-profile builds of glibc, selected
+				automatically through glibc-hwcaps? My Ask 2 took that idea to the distros: would they ship RVA23U64
+				builds of selected libraries?</p>
+
+			<p>As he put it:</p>
+
+			<blockquote>
+				<p>“do we want RVA23 profile builds of glibc, selected through glibc-hwcaps - so that if you have an
+					RVA20 and an RVA23 library for glibc, it will just select the right one automatically, and then we
+					have overrides on a per-microarchitecture basis as needed.”</p>
+			</blockquote>
+
+			<p>By then, I felt much more confident about the four asks in my slides.</p>
+
+			<h2 id="four-asks-at-lpc26">Four Asks at LPC26</h2>
+
+			<p>At 4 p.m. on October 6, I stood on stage in the Small Theatre at the Prague Congress Centre. In the
+				audience were RISC-V kernel contributors from Tenstorrent, SiFive, Google, Andes, ByteDance, SpacemiT,
+				BayLibre, and Qualcomm. The RISC-V Microconference had ten talks this year, three presented by Qualcomm
+				contributors.</p>
+
+			<figure>
+				<img src="images/lpc26-companies-and-qualcomm-talks.png"
+					alt="Left: company representation across the ten LPC26 RISC-V Microconference talks. Right: Qualcomm speakers Himanshu Chauhan, Sunil V L, and Guodong Xu, with their talk titles."
+					width="1600" height="733" loading="lazy">
+				<figcaption><strong>Figure 4.</strong> Left: company representation across the ten talks at the LPC26
+					RISC-V Microconference. Right: the three talks presented by my Qualcomm colleagues and me.
+				</figcaption>
+			</figure>
+
+			<figure>
+				<img src="images/on-stage-slide-2.jpg"
+					alt="During the talk, with slide 2, “Who knows the baseline?”, on screen" width="1600" height="1200"
+					loading="lazy">
+				<figcaption><strong>Figure 5.</strong> During my talk, with slide 2, “Who knows the baseline?”, on
+					screen.</figcaption>
+			</figure>
+
+			<p>I brought four asks to the session, and came away with clear responses to most of them. The eight-page
+				slide deck <a class="cite" href="#ref-8">[8]</a> and the conference session page <a class="cite"
+					href="#ref-9">[9]</a> are available online.</p>
+
+			<figure class="slide">
+				<img src="images/lpc26-slide-8.png" alt="Slide 8: the four asks" width="1467" height="377"
+					loading="lazy">
+				<figcaption><strong>Figure 6.</strong> The four asks (excerpt from slide 8 of my LPC26 presentation).
+				</figcaption>
+			</figure>
+
+			<h3 id="ask-1">Ask 1: Does the rva23u64 Bit Make Sense?</h3>
+
+			<p>My first question was whether the proposed <code>rva23u64</code> bit had the right semantics. Paul
+				Walmsley of SiFive, one of the maintainers of the RISC-V architecture in the Linux kernel, responded:</p>
+
+			<blockquote>
+				<p>“It looks pretty good to me ... most of them are ready to go.”</p>
+			</blockquote>
+
+			<p>Three days later, on October 9, Paul picked up the first eight of the eleven patches in v8 into
+				<code>riscv/for-next</code>, as recorded in the patchwork notification <a class="cite"
+					href="#ref-10">[10]</a>. They are queued for the next merge window, not yet merged into mainline.</p>
+
+			<p>The remaining three core patches will be revised in v9 to address two points raised during the
+				discussion. Peter wanted the bit to mean “supports RVA23,” with corresponding RVA22 and RVA20 bits so
+				glibc could fall back through the profiles. Palmer Dabbelt asked for explicit documentation that this
+				bit does not inherit the historical implicit behavior associated with the IMA bits.</p>
+
+			<h3 id="ask-2">Ask 2: Can Profiles Guide Library Selection?</h3>
+
+			<p>My second ask was for the distros: once the kernel bit lands, would they ship RVA23U64 builds of selected
+				libraries?</p>
+
+			<p>Peter reiterated the proposed approach for glibc: build libraries for different profiles and let the
+				loader select the appropriate version through glibc-hwcaps, using the profile bits reported by the
+				kernel. IFUNC would still handle microarchitecture-specific choices. This echoed the direction Jeff Law
+				had discussed at the RISC-V BoF at GNU Tools Cauldron three days earlier.</p>
+
+			<p>The idea had already drawn interest from the distro side. In a June 9 email, Debian developer Aurélien
+				Jarno had described the proposed <code>hwprobe</code> interface as a good fit for shipping
+				RVA23-optimized versions of selected libraries through glibc-hwcaps.</p>
+
+			<p>It was encouraging to hear the kernel, toolchain, and distro discussions coming together around the same
+				idea.</p>
+
+			<h3 id="ask-3">Ask 3: Should We Deprecate Disabling V?</h3>
+
+			<p>My third question concerned the interfaces that let user space dynamically disable V, which can
+				undermine the assumptions behind library dispatch. Paul said deprecation “makes sense,” provided that no
+				existing users depended on the interfaces. No such users were identified in the discussion.</p>
+
+			<p>The following morning, Samuel Holland posted a three-patch series to linux-riscv <a class="cite"
+					href="#ref-6">[6]</a>. Its cover letter stated:</p>
+
+			<blockquote>
+				<p>“After several discussions within RISE and at Linux Plumbers 2026, consensus is that these controls
+					create more trouble than benefits”</p>
+			</blockquote>
+
+			<h3 id="ask-4">Ask 4: What About Future Stateful Extensions?</h3>
+
+			<p>My final question was how to handle future extensions that introduce register state, such as matrix
+				extensions. We ran out of time to explore this in detail during the session. In his cover letter, posted
+				after the conference session, Samuel outlined the direction for future extensions:</p>
+
+			<blockquote>
+				<p>“There is also no plan to add similar controls for future extensions that add register state (e.g.
+					matrix)”</p>
+			</blockquote>
+
+			<p>In other words, the stated intention is not to repeat the model of allowing user space to dynamically
+				disable an extension such as V. This was not a separate, detailed discussion of future matrix support,
+				but it did give us a useful indication of the direction.</p>
+
+			<h2 id="a-penguin-hat">A Penguin Hat</h2>
+
+			<p>It was rewarding to see so many people engage with questions I’d spent the past few months working on.
+				There was also an unexpected personal moment: on October 7, after the final talk of LPC26, Drew Fustini
+				stopped me and handed me a felt hat with the LPC plumber penguin embroidered on it. I was delighted.</p>
+
+			<figure>
+				<img src="images/lpc26-penguin-hat.jpg"
+					alt="The LPC plumber penguin hat Drew Fustini gave me after the conference" width="1600"
+					height="1200" loading="lazy">
+				<figcaption><strong>Figure 7.</strong> The LPC plumber penguin hat.</figcaption>
+			</figure>
+
+			<p>Thank you to everyone who reviewed the patches, took part in the discussions, and helped move the work
+				forward.</p>
+
+			<div class="update">
+				<p><strong>Update (October 10):</strong> At its largest, the series contained 17 patches. Six are now in
+					mainline, and another eight have been picked up into <code>riscv/for-next</code>. I’ll carry the
+					remaining three into v9 and address the concerns raised during review.</p>
+			</div>
+
+			<h2 id="references">References</h2>
+
+			<ol class="refs">
+				<li id="ref-1"><a href="https://lore.kernel.org/r/20260920-rva23u64-hwprobe-v2-v8-0-5f14bc5c23d3@oss.qualcomm.com"
+						target="_blank" rel="noopener noreferrer">Guodong Xu: RVA23U64 <code>hwprobe</code> patch
+						series, v8</a></li>
+				<li id="ref-2"><a href="../../rva23/rva23-kernel-support-evolution.html">Guodong Xu: RVA23 kernel
+						support timeline</a></li>
+				<li id="ref-3"><a href="https://github.com/xypron/hwprobe" target="_blank"
+						rel="noopener noreferrer">Heinrich Schuchardt: <code>hwprobe</code> detection tool</a></li>
+				<li id="ref-4"><a href="https://lore.kernel.org/all/20261006075303.205216-1-radim.krcmar@oss.qualcomm.com/"
+						target="_blank" rel="noopener noreferrer">Radim Krčmář: “riscv: <code>hwprobe</code>: do not
+						report disabled extensions”</a></li>
+				<li id="ref-5"><a href="https://lore.kernel.org/all/asUa6pJVpXb2EadB@squawk/" target="_blank"
+						rel="noopener noreferrer">Conor Dooley: RFC discussion on simplifying cpufeature macros</a></li>
+				<li id="ref-6"><a href="https://lore.kernel.org/all/20261007085126.222688-1-samuel.holland@sifive.com/"
+						target="_blank" rel="noopener noreferrer">Samuel Holland: patch series to deprecate the
+						controls for disabling V</a></li>
+				<li id="ref-7"><a href="https://lore.kernel.org/r/b811b28d52275928699251b0b064a642.guodong.xu@oss.qualcomm.com"
+						target="_blank" rel="noopener noreferrer">Guodong Xu: mailing-list reply on vector
+						availability and library dispatch</a></li>
+				<li id="ref-8"><a href="https://lpc.events/event/20/contributions/2626/attachments/1995/4541/lpc26-rva23-in-practice-v3-2026-10-02.pdf"
+						target="_blank" rel="noopener noreferrer" data-goatcounter-click="slides/lpc-2026-rva23-in-practice"
+						data-goatcounter-title="Slides: LPC 2026 - RVA23 in practice">Guodong Xu: “RVA23 in
+						practice”, LPC26 slide deck</a></li>
+				<li id="ref-9"><a href="https://lpc.events/event/20/contributions/2626/" target="_blank"
+						rel="noopener noreferrer">LPC26: “RVA23 in practice” conference session</a></li>
+				<li id="ref-10"><a href="https://lore.kernel.org/all/179157660809.984023.2184718764665109991.git-patchwork-notify@kernel.org/"
+						target="_blank" rel="noopener noreferrer">Patchwork notification: v8 patches picked up into
+						riscv/for-next</a></li>
+			</ol>
+
+			<p class="credits">Photos by Guodong Xu. Slides from the LPC26 talk deck <a class="cite"
+					href="#ref-8">[8]</a>. The coverage chart is from the <a
+					href="../../rva23/rva23-kernel-support-evolution.html">RVA23 kernel support timeline</a> on this
+				site. The LPC plumber penguin is the Linux Plumbers Conference mascot.</p>
+		</article>
+	</main>
+
+	<footer>
+		© <span id="year"></span> Guodong Xu. All rights reserved.
+		<br>
+		<a href="https://docularxu.goatcounter.com" target="_blank" rel="noopener noreferrer"
+			style="font-size: 0.8rem; color: inherit; opacity: 0.6; text-decoration: none;">Analytics by GoatCounter</a>
+	</footer>
+
+	<script>
+		document.getElementById('year').textContent = new Date().getFullYear();
+
+		// Theme toggle, shared with the homepage via localStorage
+		(function () {
+			var body = document.body;
+			if (localStorage.getItem('theme') === 'dark') {
+				body.classList.add('dark');
+			}
+			var btn = document.getElementById('themeToggle');
+			var setLabel = function () {
+				btn.textContent = body.classList.contains('dark') ? '🌙' : '🌓';
+			};
+			setLabel();
+			btn.addEventListener('click', function () {
+				body.classList.toggle('dark');
+				localStorage.setItem('theme', body.classList.contains('dark') ? 'dark' : 'light');
+				setLabel();
+			});
+		})();
+	</script>
+	<script data-goatcounter="https://docularxu.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
+</body>
+
+</html>

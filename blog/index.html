@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Blog | Guodong Xu</title>
+	<meta name="description" content="Blog posts by Guodong Xu on Linux kernel and RISC-V work: RVA23, hwprobe, conference notes, and the tooling behind them.">
+	<link rel="canonical" href="https://docularxu.github.io/blog/">
+	<link rel="alternate" type="application/rss+xml" title="Guodong Xu — Blog" href="feed.xml">
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f4f4f4;
+			color: #1a1a1a;
+			margin: 0;
+			padding: 0;
+			transition: background-color .2s ease, color .2s ease;
+		}
+
+		header {
+			color: white;
+			padding: 2.2em 1em 2.6em 1em;
+			background: linear-gradient(135deg, #0ea5a0 0%, #50b3a2 50%, #0aa4b8 100%);
+			position: relative;
+		}
+
+		.header-inner {
+			max-width: 860px;
+			margin: 0 auto;
+		}
+
+		.crumbs {
+			font-size: 0.95em;
+			opacity: 0.92;
+			margin-bottom: 1.2em;
+		}
+
+		.crumbs a {
+			color: #fff;
+			text-decoration: none;
+			border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+		}
+
+		header h1 {
+			font-size: 2em;
+			margin: 0 0 0.4em 0;
+		}
+
+		.subtitle {
+			opacity: 0.95;
+		}
+
+		.subtitle a {
+			color: #fff;
+			text-decoration: underline;
+			text-decoration-color: rgba(255, 255, 255, 0.5);
+		}
+
+		.toggle {
+			position: absolute;
+			top: 14px;
+			right: 14px;
+			background: rgba(255, 255, 255, 0.15);
+			border: 1px solid rgba(255, 255, 255, 0.5);
+			color: #fff;
+			padding: 6px 10px;
+			border-radius: 16px;
+			cursor: pointer;
+		}
+
+		main {
+			max-width: 860px;
+			margin: -22px auto 2.5em auto;
+			padding: 28px 32px 36px;
+			background-color: white;
+			border-radius: 14px;
+			box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+			box-sizing: border-box;
+		}
+
+		@media (max-width: 600px) {
+			main {
+				padding: 22px 18px 28px;
+				margin-left: 12px;
+				margin-right: 12px;
+			}
+		}
+
+		a {
+			color: #0a7b6c;
+			text-decoration: none;
+		}
+
+		a:hover {
+			text-decoration: underline;
+		}
+
+		.post {
+			display: grid;
+			grid-template-columns: 200px 1fr;
+			gap: 20px;
+			padding: 18px 0;
+			border-bottom: 1px solid #e1ecea;
+		}
+
+		.post:last-of-type {
+			border-bottom: none;
+		}
+
+		@media (max-width: 600px) {
+			.post {
+				grid-template-columns: 1fr;
+			}
+		}
+
+		.post img {
+			display: block;
+			width: 100%;
+			height: auto;
+			aspect-ratio: 16 / 9;
+			object-fit: cover;
+			border-radius: 8px;
+		}
+
+		.post-date {
+			color: #666;
+			font-size: 0.9em;
+			margin-bottom: 4px;
+		}
+
+		.post h2 {
+			margin: 0 0 8px 0;
+			font-size: 1.25em;
+			line-height: 1.35;
+		}
+
+		.post p {
+			margin: 0;
+			line-height: 1.55;
+		}
+
+		.note {
+			color: #666;
+			font-size: 0.95em;
+		}
+
+		footer {
+			text-align: center;
+			margin-top: 2em;
+			margin-bottom: 2em;
+			color: #555;
+		}
+
+		body.dark {
+			background-color: #0e1716;
+			color: #d9e6e4;
+		}
+
+		body.dark main {
+			background-color: #10201e;
+			box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+		}
+
+		body.dark a {
+			color: #7ae0d2;
+		}
+
+		body.dark .post {
+			border-bottom-color: #275e57;
+		}
+
+		body.dark .post-date,
+		body.dark .note,
+		body.dark footer {
+			color: #a9c6c2;
+		}
+	</style>
+</head>
+
+<body>
+
+	<header>
+		<button class="toggle" id="themeToggle" aria-label="Toggle dark mode">🌓</button>
+		<div class="header-inner">
+			<div class="crumbs"><a href="../">Guodong Xu</a> › Blog</div>
+			<h1>Blog</h1>
+			<div class="subtitle">Notes on Linux kernel and RISC-V work. Follow by <a href="feed.xml">RSS</a>.</div>
+		</div>
+	</header>
+
+	<main>
+		<div class="post">
+			<a href="back-from-lpc26/"><img src="../assets/images/blog-back-from-lpc26-hat.jpg"
+					alt="The LPC plumber penguin hat" width="800" height="450"></a>
+			<div>
+				<div class="post-date">October 11, 2026</div>
+				<h2><a href="back-from-lpc26/">Back from LPC26: One RVA23U64 Bit, Four Asks, and a Penguin Hat</a></h2>
+				<p>Why the Linux kernel should answer “is this machine RVA23?” with one bit, how the <code>rva23u64</code>
+					<code>hwprobe</code> series got to v8 and what it moved along the way, the four asks I brought to the
+					LPC26 RISC-V Microconference in Prague, and what came back.</p>
+			</div>
+		</div>
+
+		<p class="note" style="margin-top: 24px;">Talks, press coverage and the release calendars are listed on the
+			<a href="../#blog">homepage</a>.</p>
+	</main>
+
+	<footer>
+		© <span id="year"></span> Guodong Xu. All rights reserved.
+		<br>
+		<a href="https://docularxu.goatcounter.com" target="_blank" rel="noopener noreferrer"
+			style="font-size: 0.8rem; color: inherit; opacity: 0.6; text-decoration: none;">Analytics by GoatCounter</a>
+	</footer>
+
+	<script>
+		document.getElementById('year').textContent = new Date().getFullYear();
+		(function () {
+			var body = document.body;
+			if (localStorage.getItem('theme') === 'dark') {
+				body.classList.add('dark');
+			}
+			var btn = document.getElementById('themeToggle');
+			var setLabel = function () {
+				btn.textContent = body.classList.contains('dark') ? '🌙' : '🌓';
+			};
+			setLabel();
+			btn.addEventListener('click', function () {
+				body.classList.toggle('dark');
+				localStorage.setItem('theme', body.classList.contains('dark') ? 'dark' : 'light');
+				setLabel();
+			});
+		})();
+	</script>
+	<script data-goatcounter="https://docularxu.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
+</body>
+
+</html>

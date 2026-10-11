@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Guodong Xu — Blog</title>
+    <link>https://docularxu.github.io/blog/</link>
+    <description>Notes on Linux kernel and RISC-V work by Guodong Xu: RVA23, hwprobe, conference notes, and the tooling behind them.</description>
+    <language>en</language>
+    <atom:link href="https://docularxu.github.io/blog/feed.xml" rel="self" type="application/rss+xml"/>
+    <lastBuildDate>Sun, 11 Oct 2026 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Back from LPC26: One RVA23U64 Bit, Four Asks, and a Penguin Hat</title>
+      <link>https://docularxu.github.io/blog/back-from-lpc26/</link>
+      <guid isPermaLink="true">https://docularxu.github.io/blog/back-from-lpc26/</guid>
+      <pubDate>Sun, 11 Oct 2026 00:00:00 +0000</pubDate>
+      <description>Why the Linux kernel should answer “is this machine RVA23?” with one bit, how the rva23u64 hwprobe series got to v8 and what it moved along the way, the four asks I brought to the LPC26 RISC-V Microconference in Prague, and what came back.</description>
+    </item>
+  </channel>
+</rss>
