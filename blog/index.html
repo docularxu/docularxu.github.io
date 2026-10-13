@@ -133,10 +133,23 @@
 			border-radius: 8px;
 		}
 
+		.post img.logo {
+			object-fit: contain;
+			padding: 12%;
+			box-sizing: border-box;
+			background: #eef4f3;
+		}
+
 		.post-date {
 			color: #666;
 			font-size: 0.9em;
 			margin-bottom: 4px;
+		}
+
+		.post-venue {
+			color: #666;
+			font-size: 0.85em;
+			margin-top: 8px;
 		}
 
 		.post h2 {
@@ -180,7 +193,12 @@
 			border-bottom-color: #275e57;
 		}
 
+		body.dark .post img.logo {
+			background: #18302d;
+		}
+
 		body.dark .post-date,
+		body.dark .post-venue,
 		body.dark .note,
 		body.dark footer {
 			color: #a9c6c2;
@@ -195,7 +213,7 @@
 		<div class="header-inner">
 			<div class="crumbs"><a href="../">Guodong Xu</a> › Blog</div>
 			<h1>Blog</h1>
-			<div class="subtitle">Notes on Linux kernel and RISC-V work. Follow by <a href="feed.xml">RSS</a>.</div>
+			<div class="subtitle">Notes on Linux kernel and RISC-V work, plus my posts published elsewhere. Follow by <a href="feed.xml">RSS</a>.</div>
 		</div>
 	</header>
 
@@ -209,6 +227,51 @@
 				<p>Why the Linux kernel should answer “is this machine RVA23?” with one bit, how the <code>rva23u64</code>
 					<code>hwprobe</code> series got to v8 and what it moved along the way, the four asks I brought to the
 					LPC26 RISC-V Microconference in Prague, and what came back.</p>
+			</div>
+		</div>
+
+		<div class="post">
+			<a href="https://riscstar.com/blog/rva23-from-ratification-to-real-world-readiness/" target="_blank"
+				rel="noopener noreferrer"><img class="logo" src="../RiscStar_Logo08.png" alt="RISCstar Solutions"
+					width="800" height="450"></a>
+			<div>
+				<div class="post-date">August 12, 2026</div>
+				<h2><a href="https://riscstar.com/blog/rva23-from-ratification-to-real-world-readiness/" target="_blank"
+						rel="noopener noreferrer">RVA23: From Ratification to Real-World Readiness</a></h2>
+				<p>RVA23 was ratified in October 2024, and the SpacemiT K3 is now on shelves with more RVA23 silicon close
+					behind. What was the industry up to in between, and is the software stack ready for the chips that have
+					arrived?</p>
+				<div class="post-venue">Published on riscstar.com ↗</div>
+			</div>
+		</div>
+
+		<div class="post">
+			<a href="https://riscv.org/blog/2025/07/risc-v-summit-china-2025-reflections-from-a-risc-v-software-contributor/"
+				target="_blank" rel="noopener noreferrer"><img class="logo" src="../RISC-V_ Stacked_Color.png"
+					alt="RISC-V International" width="800" height="450"></a>
+			<div>
+				<div class="post-date">July 24, 2025</div>
+				<h2><a href="https://riscv.org/blog/2025/07/risc-v-summit-china-2025-reflections-from-a-risc-v-software-contributor/"
+						target="_blank" rel="noopener noreferrer">RISC-V Summit China 2025: Reflections from a RISC-V Software
+						Contributor</a></h2>
+				<p>Insights and observations from attending the 5th RISC-V Summit China, sharing perspectives on ecosystem
+					development and community growth. Republished by the China RISC-V Alliance.</p>
+				<div class="post-venue">Published on riscv.org ↗</div>
+			</div>
+		</div>
+
+		<div class="post">
+			<a href="https://riscstar.com/blog/risc-v-linux-kernel-upstreaming-china-conference/" target="_blank"
+				rel="noopener noreferrer"><img class="logo" src="../RiscStar_Logo08.png" alt="RISCstar Solutions"
+					width="800" height="450"></a>
+			<div>
+				<div class="post-date">April 14, 2025</div>
+				<h2><a href="https://riscstar.com/blog/risc-v-linux-kernel-upstreaming-china-conference/" target="_blank"
+						rel="noopener noreferrer">RISC-V Linux Kernel Upstreaming: Insights from the 2025 China RISC-V Ecosystem
+						Conference</a></h2>
+				<p>Key insights on the current state of RISC-V Linux kernel upstreaming and the challenges faced by the
+					community.</p>
+				<div class="post-venue">Published on riscstar.com ↗</div>
 			</div>
 		</div>
 
