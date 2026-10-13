@@ -315,7 +315,7 @@
 
 			<p>Meanwhile, my work on the Linux kernel’s <code>rva23u64</code> <code>hwprobe</code> patch series has
 				continued. The v8 series is available on lore. <a class="cite" href="#ref-1">[1]</a> I submitted my first
-				version in February and gave a joint talk with Charlie Jenkins of Tesla at RISC-V Summit Europe 2026 in
+				version in February and gave a joint talk with <a href="https://www.linkedin.com/in/charles--jenkins" target="_blank" rel="noopener noreferrer">Charlie Jenkins</a> of Tesla at RISC-V Summit Europe 2026 in
 				June. Working on RVA23 support in Linux has been a recurring theme for me over the past several months.
 			</p>
 
@@ -352,7 +352,7 @@
 				those features against the profile’s requirements. That is not always possible with the information
 				available.</p>
 
-			<p>The <code>hwprobe</code> detection tool written by Heinrich Schuchardt of Canonical provides a concrete
+			<p>The <code>hwprobe</code> detection tool written by <a href="https://www.linkedin.com/in/heinrich-schuchardt-31bab4194" target="_blank" rel="noopener noreferrer">Heinrich Schuchardt</a> of Canonical provides a concrete
 				example. It performs 40 checks across three <code>hwprobe</code> keys, yet can only conclude that a
 				machine is “probably RVA23.” <a class="cite" href="#ref-3">[3]</a></p>
 
@@ -369,7 +369,7 @@
 					LPC26 presentation).</figcaption>
 			</figure>
 
-			<p>The problem seemed straightforward enough. Andrew Jones of Qualcomm posted RFC v1 on February 6, a day
+			<p>The problem seemed straightforward enough. <a href="https://www.linkedin.com/in/jones-drew" target="_blank" rel="noopener noreferrer">Andrew Jones</a> of Qualcomm posted RFC v1 on February 6, a day
 				before I posted my own series. Since his RFC came first, I set mine aside and focused on reviewing his
 				proposal. I spent part of the Chinese New Year holiday writing a detailed review, and the feedback was
 				well received.</p>
@@ -386,22 +386,22 @@
 				indirectly:</p>
 
 			<ul>
-				<li><strong>Preparatory patches:</strong> Jesse Taube of Red Hat first posted his Zicclsm support patch
+				<li><strong>Preparatory patches:</strong> <a href="https://jachan.dev" target="_blank" rel="noopener noreferrer">Jesse Taube</a> of Red Hat first posted his Zicclsm support patch
 					in June 2024. Charlie Jenkins first posted his patch to standardize extension-name capitalization in
 					December 2025. Both reached mainline through my v5 series, among six preparatory patches merged
 					across Linux v7.2 and v7.3 ahead of the core changes.</li>
-				<li><strong>Zic64b support:</strong> Qingwei Hu of ByteDance contributed Zic64b cpufeature and
+				<li><strong>Zic64b support:</strong> <a href="https://lore.kernel.org/linux-riscv/?q=f%3Aqingwei.hu%40bytedance.com" title="Qingwei Hu’s patches and reviews on linux-riscv (lore.kernel.org)" target="_blank" rel="noopener noreferrer">Qingwei Hu</a> of ByteDance contributed Zic64b cpufeature and
 					<code>hwprobe</code> support. We worked together to incorporate it into the series.</li>
-				<li><strong>Reporting only usable extensions:</strong> While responding to Radim Krčmář of Qualcomm’s
+				<li><strong>Reporting only usable extensions:</strong> While responding to <a href="https://lore.kernel.org/linux-riscv/?q=f%3Aradim.krcmar%40oss.qualcomm.com" title="Radim Krčmář’s patches and reviews on linux-riscv (lore.kernel.org)" target="_blank" rel="noopener noreferrer">Radim Krčmář</a> of Qualcomm’s
 					review of v8, I found that <code>hwprobe</code> incorrectly reported Zfa and Zcd on harts without an
 					FPU. Radim expanded the fix into a six-patch series, “riscv: <code>hwprobe</code>: do not report
 					disabled extensions” <a class="cite" href="#ref-4">[4]</a>.</li>
-				<li><strong>Simplifying cpufeature macros:</strong> Conor Dooley of Microchip posted an RFC to remove
+				<li><strong>Simplifying cpufeature macros:</strong> <a href="https://www.linkedin.com/in/conor-dooley-32165998" target="_blank" rel="noopener noreferrer">Conor Dooley</a> of Microchip posted an RFC to remove
 					<code>RISCV_ISA_EXT_BUNDLE</code> from cpufeature and retain <code>SUPERSET</code>. It followed a
 					discussion under the first patch of my v8 series about which macro should represent the B
 					extension. In his email <a class="cite" href="#ref-5">[5]</a>, he noted that he had written the RFC
 					during a talk at LPC26, on a laptop where he couldn’t test it.</li>
-				<li><strong>Deprecating the controls for disabling V:</strong> Samuel Holland of SiFive posted a patch
+				<li><strong>Deprecating the controls for disabling V:</strong> <a href="https://www.linkedin.com/in/smaeul" target="_blank" rel="noopener noreferrer">Samuel Holland</a> of SiFive posted a patch
 					series <a class="cite" href="#ref-6">[6]</a> to deprecate the <code>prctl</code> and
 					<code>sysctl</code> interfaces that allow user space to dynamically disable the V extension. That
 					grew out of the discussion around Ask 3, which I’ll return to below.</li>
@@ -416,7 +416,7 @@
 				Conference. By then, the August 7 proposal deadline had passed by 12 days. Only two days remained before
 				the microconferences finalized their schedules, and attendee registration had sold out on August 15.</p>
 
-			<p>On August 19, I wrote to Drew Fustini of Tenstorrent, one of the RISC-V Microconference organizers, to
+			<p>On August 19, I wrote to <a href="https://www.linkedin.com/in/drew-fustini-9732421b" target="_blank" rel="noopener noreferrer">Drew Fustini</a> of Tenstorrent, one of the RISC-V Microconference organizers, to
 				explain the topic and ask whether there was still a chance to present it. He replied that day:</p>
 
 			<blockquote>
@@ -444,13 +444,13 @@
 				ARMv8.x baselines combined with HWCAP feature bits.</p>
 
 			<p>On September 15, I started a discussion in the RISE Platform Working Group. At the meeting the following
-				day, participants included Peter Bergner of Tenstorrent, a glibc contributor; Andy Chiu, the original
+				day, participants included <a href="http://www.bergner.org" target="_blank" rel="noopener noreferrer">Peter Bergner</a> of Tenstorrent, a glibc contributor; <a href="https://www.linkedin.com/in/taochiu" target="_blank" rel="noopener noreferrer">Andy Chiu</a>, the original
 				author of the interfaces for disabling V; Linux kernel developers Drew Fustini of Tenstorrent and Samuel
 				Holland of SiFive. Contributors from Andes, Red Hat, SUSE and SpacemiT also joined. I appreciated how
 				seriously everyone engaged with the topic. Several points of agreement from that meeting became the
 				foundation of my LPC talk.</p>
 
-			<p>I also contacted GCC RISC-V maintainer Jeff Law, now a colleague at Qualcomm. He saw value in the series,
+			<p>I also contacted GCC RISC-V maintainer <a href="https://www.linkedin.com/in/jeff-law-39899a122" target="_blank" rel="noopener noreferrer">Jeff Law</a>, now a colleague at Qualcomm. He saw value in the series,
 				writing:</p>
 
 			<blockquote>
@@ -509,8 +509,8 @@
 
 			<h3 id="ask-1">Ask 1: Does the rva23u64 Bit Make Sense?</h3>
 
-			<p>My first question was whether the proposed <code>rva23u64</code> bit had the right semantics. Paul
-				Walmsley of SiFive, one of the maintainers of the RISC-V architecture in the Linux kernel, responded:</p>
+			<p>My first question was whether the proposed <code>rva23u64</code> bit had the right semantics. <a href="https://www.linkedin.com/in/paul-walmsley-8614a7183" target="_blank" rel="noopener noreferrer">Paul
+				Walmsley</a> of SiFive, one of the maintainers of the RISC-V architecture in the Linux kernel, responded:</p>
 
 			<blockquote>
 				<p>“It looks pretty good to me ... most of them are ready to go.”</p>
@@ -522,7 +522,7 @@
 
 			<p>The remaining three core patches will be revised in v9 to address two points raised during the
 				discussion. Peter wanted the bit to mean “supports RVA23,” with corresponding RVA22 and RVA20 bits so
-				glibc could fall back through the profiles. Palmer Dabbelt asked for explicit documentation that this
+				glibc could fall back through the profiles. <a href="http://dabbelt.com/~palmer/" target="_blank" rel="noopener noreferrer">Palmer Dabbelt</a> asked for explicit documentation that this
 				bit does not inherit the historical implicit behavior associated with the IMA bits.</p>
 
 			<h3 id="ask-2">Ask 2: Can Profiles Guide Library Selection?</h3>
@@ -535,8 +535,8 @@
 				kernel. IFUNC would still handle microarchitecture-specific choices. This echoed the direction Jeff Law
 				had discussed at the RISC-V BoF at GNU Tools Cauldron three days earlier.</p>
 
-			<p>The idea had already drawn interest from the distro side. In a June 9 email, Debian developer Aurélien
-				Jarno had described the proposed <code>hwprobe</code> interface as a good fit for shipping
+			<p>The idea had already drawn interest from the distro side. In a June 9 email, Debian developer <a href="https://aurel32.net" target="_blank" rel="noopener noreferrer">Aurélien
+				Jarno</a> had described the proposed <code>hwprobe</code> interface as a good fit for shipping
 				RVA23-optimized versions of selected libraries through glibc-hwcaps.</p>
 
 			<p>It was encouraging to hear the kernel, toolchain, and distro discussions coming together around the same
