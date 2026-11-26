@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Yes/no table of the extensions mandatory in RVA20U64, RVA22U64 and RVA23U64, with RV64GC as the baseline.">
+<style>body{margin:0}</style>
+<title>RVA Mandatory Extensions Compared</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+  /* Layout: one reference column. Header with the four ISA targets, then a
+     yes/no matrix grouped by the profile release that first mandates each
+     extension, then short reading notes and sources. */
+  :root {
+    --bg: #f4f6f8;
+    --surface: #ffffff;
+    --fg: #17202b;
+    --muted: #586474;
+    --line: #d7dde5;
+    --band: #e3e8ee;
+    --accent: #1d5c9e;
+    --yes-bg: #cdebdc;
+    --yes-fg: #0c4a37;
+    --no-bg: #f3dfdc;
+    --no-fg: #8a433b;
+    --font-text: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-data: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f141a;
+      --surface: #161d25;
+      --fg: #e3e8ee;
+      --muted: #95a2b2;
+      --line: #2a3440;
+      --band: #1e2731;
+      --accent: #82b6ee;
+      --yes-bg: #17523f;
+      --yes-fg: #cdf3e2;
+      --no-bg: #3b2528;
+      --no-fg: #dfaaa6;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0f141a;
+    --surface: #161d25;
+    --fg: #e3e8ee;
+    --muted: #95a2b2;
+    --line: #2a3440;
+    --band: #1e2731;
+    --accent: #82b6ee;
+    --yes-bg: #17523f;
+    --yes-fg: #cdf3e2;
+    --no-bg: #3b2528;
+    --no-fg: #dfaaa6;
+    color-scheme: dark;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-text);
+    font-size: 1rem;
+    line-height: 1.55;
+    padding-block: 2.5rem 4rem;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  .page {
+    max-width: 58rem;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2.25rem;
+  }
+  h1, h2 { margin: 0; text-wrap: balance; font-weight: 600; }
+  h1 { font-size: 1.9rem; line-height: 1.15; letter-spacing: -0.01em; }
+  h2 { font-size: 1.15rem; }
+  p { margin: 0; }
+  code, .mono { font-family: var(--font-data); font-size: 0.92em; }
+  a { color: var(--accent); }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+
+  header { display: flex; flex-direction: column; gap: 0.9rem; }
+  .lede { max-width: 65ch; color: var(--muted); }
+  .checked { font-size: 0.82rem; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; }
+
+  /* The four targets, as a compact definition strip */
+  .targets {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12.5rem, 1fr));
+    gap: 0;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--surface);
+    overflow: hidden;
+  }
+  .target {
+    min-width: 0;
+    padding: 0.85rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    margin: 0 -1px -1px 0;
+  }
+  .target .name { font-family: var(--font-data); font-weight: 600; font-size: 1rem; }
+  .target .count { font-size: 0.9rem; }
+  .target .count b { font-family: var(--font-data); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .target .what { font-size: 0.82rem; color: var(--muted); overflow-wrap: anywhere; }
+
+  /* Matrix */
+  .scroll { overflow-x: auto; min-width: 0; }
+  table {
+    width: 100%;
+    min-width: 35rem;
+    border-collapse: separate;
+    border-spacing: 2px;
+    font-variant-numeric: tabular-nums;
+  }
+  th, td { padding: 0.42rem 0.7rem; text-align: left; vertical-align: middle; }
+  tr.group th {
+    background: var(--band);
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding-block: 0.5rem;
+  }
+  tr.group th:first-child { color: var(--fg); border-radius: 4px 0 0 4px; }
+  tr.group th:last-child { border-radius: 0 4px 4px 0; }
+  tr.group th.col { text-align: center; font-family: var(--font-data); letter-spacing: 0.02em; text-transform: none; font-size: 0.8rem; }
+  tbody + tbody tr.group th { border-top: 0.9rem solid var(--bg); }
+  th.ext { background: var(--surface); font-weight: 400; border-radius: 3px; }
+  th.ext .id { font-family: var(--font-data); font-weight: 600; font-size: 0.95rem; }
+  th.ext .desc { color: var(--muted); font-size: 0.86rem; margin-left: 0.5rem; }
+  td.cell {
+    width: 6.6rem;
+    text-align: center;
+    font-family: var(--font-data);
+    font-size: 0.88rem;
+    font-weight: 500;
+    border-radius: 3px;
+  }
+  td.yes { background: var(--yes-bg); color: var(--yes-fg); }
+  td.no { background: var(--no-bg); color: var(--no-fg); }
+  td.cell small { display: block; font-size: 0.68rem; font-weight: 400; line-height: 1.2; }
+  .legend { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; font-size: 0.86rem; color: var(--muted); align-items: center; }
+  .legend .chip { font-family: var(--font-data); font-weight: 500; padding: 0.1rem 0.6rem; border-radius: 3px; margin-right: 0.4rem; }
+  .legend .chip.yes { background: var(--yes-bg); color: var(--yes-fg); }
+  .legend .chip.no { background: var(--no-bg); color: var(--no-fg); }
+
+  section { display: flex; flex-direction: column; gap: 0.8rem; }
+  .matrix { gap: 0.9rem; }
+  .notes ul { margin: 0; padding-left: 1.1rem; display: flex; flex-direction: column; gap: 0.6rem; max-width: 68ch; }
+  .notes li::marker { color: var(--muted); }
+  .sources { font-size: 0.88rem; color: var(--muted); }
+  .sources ul { margin: 0; padding-left: 1.1rem; display: flex; flex-direction: column; gap: 0.35rem; max-width: 75ch; }
+  footer { border-top: 1px solid var(--line); padding-top: 1.25rem; }
+</style>
+
+<div class="page">
+  <header>
+    <div class="checked">Checked 25 November 2026</div>
+    <h1>RVA profile mandatory extensions compared</h1>
+    <p class="lede">The ISA extensions that each user-mode RVA profile (RVA20U64, RVA22U64, RVA23U64) makes mandatory, side by side, with RV64GC as the baseline column. Extensions that a profile only lists as an option are counted as no.</p>
+    <div class="targets" id="targets"></div>
+  </header>
+
+  <section class="matrix">
+    <div class="legend">
+      <span><span class="chip yes">yes</span>mandatory in the profile, or part of the RV64GC string</span>
+      <span><span class="chip no">no</span>not required (includes profile options)</span>
+    </div>
+    <div class="scroll">
+      <table id="matrix" aria-label="Mandatory extensions by profile"></table>
+    </div>
+  </section>
+
+  <section class="notes">
+    <h2>Reading notes</h2>
+    <ul>
+      <li><strong>RVA20U64 is almost RV64GC.</strong> In instruction terms it drops <code>fence.i</code> and adds the Zicntr counters. The other five additions (Ziccif, Ziccrse, Ziccamoa, Zicclsm, Za128rs) are guarantees about main memory and LR/SC behaviour, which RV64GC leaves unspecified.</li>
+      <li><strong>Zifencei is left out of every user-mode profile on purpose.</strong> <code>fence.i</code> only synchronises the hart that executes it, and the OS can migrate the thread afterwards, so the profile text says the instruction cache flush should always go through an OS call. On Linux that is the <code>riscv_flush_icache</code> syscall or vDSO call. Zifencei is mandatory in the supervisor-mode profiles (RVA20S64, RVA22S64, RVA23S64).</li>
+      <li><strong>Za128rs after RVA20.</strong> RVA22U64 tightened the limit to Za64rs, and its text names only that. A reservation set of at most 64 bytes also meets the 128-byte limit, so the row stays yes.</li>
+      <li><strong>B in RVA22U64.</strong> At ratification the profile listed Zba, Zbb and Zbs one by one because B had not been defined yet. The current text says mandating B is equivalent.</li>
+      <li><strong>Implied sub-extensions have no rows.</strong> Zmmul (from M), Zaamo and Zalrsc (from A), and Zca and Zcd (from C with D) apply to all four columns. In RVA23U64, V also brings Zve32x, Zve32f, Zve64x, Zve64f, Zve64d, Zvl32b, Zvl64b and Zvl128b, and Zvbb brings Zvkb.</li>
+      <li><strong>Promoted from option to mandatory:</strong> Zihpm was an RVA20U64 option and is mandatory from RVA22U64. V was an RVA22U64 option and is mandatory in RVA23U64.</li>
+    </ul>
+  </section>
+
+  <footer class="sources">
+    <ul>
+      <li>Ratified profile text: <a href="https://github.com/riscv/riscv-profiles">riscv/riscv-profiles</a>, <code>src/profiles.adoc</code> (RVA20U64, RVA22U64) and <code>src/rva23-profile.adoc</code> (RVA23U64, ratified in commit <code>0273f3c921b6</code>).</li>
+      <li>Extension lists cross-checked against <a href="https://github.com/riscv/riscv-unified-db">riscv/riscv-unified-db</a> at upstream main <code>7914a5845eb4</code> (2026-09-23).</li>
+      <li>Definition of G as IMAFD, Zicsr, Zifencei: <a href="https://github.com/riscv/riscv-isa-manual">riscv/riscv-isa-manual</a>, <code>src/unpriv/rv-32-64g.adoc</code>.</li>
+      <li>Compiled by <a href="https://docularxu.github.io/">Guodong Xu</a>.</li>
+      <li>Mandatory counts follow the profile text: the RV64I base is not counted and B counts as one.</li>
+    </ul>
+  </footer>
+</div>
+
+<script>
+  // Column order used everywhere on the page.
+  var COLS = ["RV64GC", "RVA20U64", "RVA22U64", "RVA23U64"];
+  // Index of each column's value inside a row, in display order.
+  var COL_INDEX = [5, 2, 3, 4];
+
+  var TARGETS = [
+    { name: "RV64GC", count: 7, what: "ISA string: rv64imafdc_zicsr_zifencei" },
+    { name: "RVA20U64", count: 12, what: "User-mode profile, first RVA release" },
+    { name: "RVA22U64", count: 21, what: "Adds bit manipulation and cache-block operations" },
+    { name: "RVA23U64", count: 33, what: "Adds vector, pointer masking and more" }
+  ];
+
+  // Each row: [extension, description, RVA20U64, RVA22U64, RVA23U64, RV64GC]
+  // (stored in that order, displayed in COLS order).
+  // 1 = yes, 0 = no, "text" = yes with a short qualifier,
+  // { no: "text" } = no with a short qualifier.
+  var VIA = "via Za64rs";
+  var SMODE = { no: "S-mode: yes" };
+  var GROUPS = [
+    { label: "RV64GC set", rows: [
+      ["I", "RV64I base, little-endian", 1, 1, 1, 1],
+      ["M", "integer multiply and divide", 1, 1, 1, 1],
+      ["A", "atomics", 1, 1, 1, 1],
+      ["F", "single-precision floating point", 1, 1, 1, 1],
+      ["D", "double-precision floating point", 1, 1, 1, 1],
+      ["C", "compressed instructions", 1, 1, 1, 1],
+      ["Zicsr", "CSR instructions", 1, 1, 1, 1],
+      ["Zifencei", "fence.i instruction", SMODE, SMODE, SMODE, 1]
+    ]},
+    { label: "Mandatory from RVA20U64", rows: [
+      ["Zicntr", "base counters and timers", 1, 1, 1, 0],
+      ["Ziccif", "main memory fetchable, aligned fetches atomic", 1, 1, 1, 0],
+      ["Ziccrse", "LR/SC makes forward progress", 1, 1, 1, 0],
+      ["Ziccamoa", "main memory supports all AMOs", 1, 1, 1, 0],
+      ["Zicclsm", "misaligned loads and stores supported", 1, 1, 1, 0],
+      ["Za128rs", "reservation set at most 128 bytes", 1, VIA, VIA, 0]
+    ]},
+    { label: "Mandatory from RVA22U64", rows: [
+      ["Zihpm", "hardware performance counters", 0, 1, 1, 0],
+      ["Za64rs", "reservation set at most 64 bytes", 0, 1, 1, 0],
+      ["B", "bit manipulation: Zba, Zbb, Zbs", 0, 1, 1, 0],
+      ["Zihintpause", "pause hint", 0, 1, 1, 0],
+      ["Zic64b", "64-byte cache blocks", 0, 1, 1, 0],
+      ["Zicbom", "cache-block management", 0, 1, 1, 0],
+      ["Zicbop", "cache-block prefetch", 0, 1, 1, 0],
+      ["Zicboz", "cache-block zero", 0, 1, 1, 0],
+      ["Zfhmin", "half-precision FP load, store, convert", 0, 1, 1, 0],
+      ["Zkt", "data-independent execution latency", 0, 1, 1, 0]
+    ]},
+    { label: "Mandatory from RVA23U64", rows: [
+      ["V", "vector", 0, 0, 1, 0],
+      ["Zvfhmin", "vector minimal half-precision FP", 0, 0, 1, 0],
+      ["Zvbb", "vector basic bit manipulation", 0, 0, 1, 0],
+      ["Zvkt", "vector data-independent execution latency", 0, 0, 1, 0],
+      ["Zihintntl", "non-temporal locality hints", 0, 0, 1, 0],
+      ["Zicond", "integer conditional operations", 0, 0, 1, 0],
+      ["Zimop", "may-be-operations", 0, 0, 1, 0],
+      ["Zcmop", "compressed may-be-operations", 0, 0, 1, 0],
+      ["Zcb", "additional compressed instructions", 0, 0, 1, 0],
+      ["Zfa", "additional floating-point instructions", 0, 0, 1, 0],
+      ["Zawrs", "wait on reservation set", 0, 0, 1, 0],
+      ["Supm", "user-mode pointer masking", 0, 0, 1, 0]
+    ]}
+  ];
+
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+
+  var targets = document.getElementById("targets");
+  TARGETS.forEach(function (t) {
+    var box = el("div", "target");
+    box.appendChild(el("div", "name", t.name));
+    var count = el("div", "count");
+    count.appendChild(el("b", null, String(t.count)));
+    count.appendChild(document.createTextNode(t.name === "RV64GC" ? " extensions on RV64I" : " mandatory extensions"));
+    box.appendChild(count);
+    box.appendChild(el("div", "what", t.what));
+    targets.appendChild(box);
+  });
+
+  var table = document.getElementById("matrix");
+  GROUPS.forEach(function (g) {
+    var body = el("tbody");
+    var head = el("tr", "group");
+    var label = el("th", null, g.label);
+    label.scope = "col";
+    head.appendChild(label);
+    COLS.forEach(function (c) {
+      var th = el("th", "col", c);
+      th.scope = "col";
+      head.appendChild(th);
+    });
+    body.appendChild(head);
+
+    g.rows.forEach(function (r) {
+      var tr = el("tr");
+      var th = el("th", "ext");
+      th.scope = "row";
+      th.appendChild(el("span", "id", r[0]));
+      th.appendChild(el("span", "desc", r[1]));
+      tr.appendChild(th);
+      COL_INDEX.forEach(function (i) {
+        var v = r[i];
+        var isNo = !v || typeof v === "object";
+        var td = el("td", "cell " + (isNo ? "no" : "yes"), isNo ? "no" : "yes");
+        var note = typeof v === "string" ? v : (v && v.no);
+        if (note) td.appendChild(el("small", null, note));
+        tr.appendChild(td);
+      });
+      body.appendChild(tr);
+    });
+    table.appendChild(body);
+  });
+</script>
